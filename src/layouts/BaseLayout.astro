@@ -1,0 +1,68 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Migas from '../components/Migas.astro';
+import { organizationSchema, breadcrumbSchema, BASE_URL } from '../lib/seo';
+import { SITIO } from '../data/sitio';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  schema?: object | object[];
+  noindex?: boolean;
+}
+const { title, description, schema, noindex = false } = Astro.props;
+const canonical = `${BASE_URL}${Astro.url.pathname}`;
+const migasSchema = breadcrumbSchema(Astro.url.pathname);
+const schemas = [organizationSchema, migasSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])].filter(Boolean);
+const fuentes = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap';
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {noindex
+    ? <meta name="robots" content="noindex, follow" />
+    : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />}
+  <meta name="theme-color" content="#F6F0E6" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:site_name" content={SITIO.nombre} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={fuentes} />
+
+  {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <script is:inline>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <Header />
+  <Migas />
+  <main id="contenido">
+    <slot />
+  </main>
+  <Footer />
+
+  <script>
+    // Entrada suave de los bloques marcados con .aparece y arranque de las
+    // escenas ilustradas (.escena recibe .visible y eso dispara sus animaciones).
+    const io = new IntersectionObserver((entradas) => {
+      for (const e of entradas) if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.aparece, .escena').forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>

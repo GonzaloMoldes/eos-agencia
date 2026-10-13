@@ -1,0 +1,51 @@
+---
+import Logo from './Logo.astro';
+import { SITIO } from '../data/sitio';
+import { SERVICIOS, urlServicio } from '../data/servicios';
+const publicados = SERVICIOS.filter((s) => s.publicado);
+---
+<footer class="pie" id="contacto">
+  <div class="greca"></div>
+  <div class="contenedor pie-in">
+    <div class="pie-marca">
+      <Logo claro />
+      <p>Agencia de SEO, GEO y marketing en {SITIO.ciudad}. Cada mañana, Eos abre las puertas del día. Nosotros abrimos las de tu marca en Google y en la IA.</p>
+      <a class="btn btn--aurora" href={`mailto:${SITIO.email}`}>{SITIO.email} <span class="flecha">→</span></a>
+    </div>
+    <nav class="pie-col" aria-label="Servicios">
+      <p class="pie-titulo">Servicios</p>
+      <ul>
+        {publicados.map((s) => <li><a href={urlServicio(s.slug)}>{s.nombre}</a></li>)}
+        <li><a href="/servicios/">Todos los servicios</a></li>
+      </ul>
+    </nav>
+    <nav class="pie-col" aria-label="Agencia">
+      <p class="pie-titulo">Agencia</p>
+      <ul>
+        <li><a href="/#metodo">Método</a></li>
+        <li><a href="/#equipo">Equipo</a></li>
+        <li><a href={`mailto:${SITIO.email}`}>Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="contenedor pie-legal">
+    <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.ciudad}</span>
+    <span>Ἠώς · la que trae la luz</span>
+  </div>
+</footer>
+
+<style>
+  .pie{background:var(--noche);color:#CFC8BD;padding-bottom:28px;}
+  .pie .greca{filter:brightness(.7);margin-bottom:64px;}
+  .pie-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:48px;}
+  .pie-marca{display:grid;gap:20px;align-content:start;}
+  .pie-marca p{max-width:44ch;}
+  .pie-marca .btn{justify-self:start;}
+  .pie-titulo{font-family:var(--inscripcion);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--azafran);margin-bottom:14px;}
+  .pie-col ul{list-style:none;display:grid;gap:8px;}
+  .pie-col a{color:#E8E1D5;text-decoration:none;}
+  .pie-col a:hover{color:var(--azafran);}
+  .pie-legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:22px;font-size:.85rem;color:#A9A3B5;}
+  .pie-legal span:last-child{font-family:var(--serif);font-style:italic;font-size:1rem;}
+  @media (max-width:760px){ .pie-in{grid-template-columns:1fr;} }
+</style>

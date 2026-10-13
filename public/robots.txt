@@ -1,0 +1,39 @@
+# eosstudio.es — EOS Studio
+User-agent: *
+Allow: /
+
+# Buscadores y asistentes de IA: bienvenidos. Que nos citen es parte del oficio.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://www.eosstudio.es/sitemap.xml

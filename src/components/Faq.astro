@@ -1,0 +1,37 @@
+---
+import { faqSchema } from '../lib/seo';
+import { md, plano } from '../lib/texto';
+export interface Props { titulo: string; preguntas: { p: string; r: string }[]; letra?: string }
+const { titulo, preguntas, letra = 'Ω' } = Astro.props;
+const schema = faqSchema(preguntas.map((q) => ({ p: q.p, r: plano(q.r) })));
+---
+<section class="seccion" id="preguntas">
+  <div class="contenedor faq">
+    <div class="cabecera-seccion">
+      <span class="eyebrow"><span class="letra">{letra}</span>Preguntas frecuentes</span>
+      <h2>{titulo}</h2>
+    </div>
+    <div class="faq-lista">
+      {preguntas.map((q) => (
+        <details class="faq-item">
+          <summary><h3>{q.p}</h3><span class="faq-mas" aria-hidden="true">+</span></summary>
+          <div class="faq-r">{q.r.split('\n\n').map((par) => <p set:html={md(par)} />)}</div>
+        </details>
+      ))}
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</section>
+<style>
+  .faq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:start;}
+  .faq .cabecera-seccion{position:sticky;top:110px;margin:0;}
+  .faq-lista{border-top:1px solid var(--linea);}
+  .faq-item{border-bottom:1px solid var(--linea);}
+  .faq-item summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;align-items:baseline;padding:22px 0;}
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item h3{font-size:1.32rem;font-weight:600;}
+  .faq-mas{font-size:1.6rem;line-height:1;color:var(--oro);transition:transform .25s;flex:none;}
+  .faq-item[open] .faq-mas{transform:rotate(45deg);}
+  .faq-r{padding:0 0 26px;display:grid;gap:12px;color:var(--tinta-2);}
+  @media (max-width:900px){ .faq{grid-template-columns:1fr;gap:28px;} .faq .cabecera-seccion{position:static;} }
+</style>

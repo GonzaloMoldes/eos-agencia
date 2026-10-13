@@ -1,0 +1,25 @@
+---
+// Marca: un sol que asoma sobre el horizonte (la aurora) junto a «EOS» en
+// letras de inscripción. El horizonte es la línea base del texto.
+export interface Props { claro?: boolean }
+const { claro = false } = Astro.props;
+---
+<span class:list={['logo', { 'logo--claro': claro }]}>
+  <svg class="logo-sol" viewBox="0 0 48 32" aria-hidden="true">
+    <g stroke="var(--azafran)" stroke-width="2.6" stroke-linecap="round">
+      <path d="M24 3v5M12 7.5l3.2 3.8M36 7.5l-3.2 3.8M5 17h5M38 17h5"/>
+    </g>
+    <path d="M13 27a11 11 0 0 1 22 0z" fill="var(--aurora)"/>
+    <path d="M3 29.5h42" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>
+  <span class="logo-texto">EOS<span class="logo-studio">Studio</span></span>
+</span>
+<style>
+  .logo{display:inline-flex;align-items:flex-end;gap:10px;color:var(--tinta);line-height:1;}
+  .logo--claro{color:#FBF4E8;}
+  .logo-sol{width:40px;height:27px;flex:none;}
+  .logo-texto{font-family:var(--inscripcion);font-weight:700;font-size:1.45rem;letter-spacing:.16em;display:inline-flex;align-items:baseline;gap:.45em;}
+  .logo-studio{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.05rem;letter-spacing:.02em;color:var(--aurora-ink);text-transform:none;}
+  .logo--claro .logo-studio{color:var(--azafran);}
+  @media (max-width:420px){ .logo-texto{font-size:1.2rem;} .logo-sol{width:32px;height:22px;} }
+</style>

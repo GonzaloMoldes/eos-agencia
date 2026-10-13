@@ -1,0 +1,12 @@
+{
+  "framework": "astro",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "eosstudio.es" }],
+      "destination": "https://www.eosstudio.es/:path*",
+      "permanent": true
+    }
+  ]
+}

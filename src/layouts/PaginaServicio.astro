@@ -1,0 +1,311 @@
+---
+// Plantilla de las páginas de servicio. Pinta los bloques de src/data/paginas/<slug>.ts
+// en su orden, numerando cada sección con una letra griega (Α, Β, Γ...).
+import BaseLayout from './BaseLayout.astro';
+import Escena from '../components/Escena.astro';
+import Faq from '../components/Faq.astro';
+import TarjetasServicios from '../components/TarjetasServicios.astro';
+import { servicio, CATEGORIAS, SERVICIOS } from '../data/servicios';
+import { SITIO } from '../data/sitio';
+import { servicioSchema } from '../lib/seo';
+import { md } from '../lib/texto';
+import type { PaginaServicio } from '../data/tipos';
+
+export interface Props { pagina: PaginaServicio }
+const { pagina } = Astro.props;
+const s = servicio(pagina.slug);
+const cat = CATEGORIAS[s.categoria];
+const url = `/servicios/${pagina.slug}/`;
+
+const LETRAS = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϛ', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ'];
+const ETIQUETAS: Record<string, string> = {
+  problema: 'El problema', enfoque: 'El enfoque', paraQuien: 'Para quién', zona: 'Dónde trabajamos',
+  planes: 'Planes', extras: 'Servicios puntuales', proceso: 'Método', beneficios: 'Lo que ganas',
+  garantias: 'Transparencia', pilares: 'Cómo trabajamos', logros: 'Qué conseguimos', formula: 'Por qué EOS',
+  ayuda: 'En qué te ayudamos', cta: 'Hablemos',
+};
+const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+const mailto = `mailto:${SITIO.email}?subject=${encodeURIComponent(`${s.nombre}: quiero una valoración`)}`;
+const tienePlanes = pagina.bloques.some((b) => b.tipo === 'planes' || b.tipo === 'extras');
+const relacionados = SERVICIOS.filter((x) => x.publicado && x.slug !== s.slug).slice(0, 3);
+let n = 0;
+const letra = () => LETRAS[n++ % LETRAS.length];
+---
+<BaseLayout
+  title={pagina.title}
+  description={pagina.description}
+  schema={servicioSchema({ nombre: s.nombre, descripcion: pagina.description, url, precioDesde: pagina.precioDesde })}
+>
+  <!-- Hero -->
+  <section class="hero contenedor">
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra">{cat.letra}</span>{cat.nombre}</span>
+      <h1 set:html={pagina.hero.h1} />
+      {pagina.hero.subtitulo && <p class="hero-sub" set:html={md(pagina.hero.subtitulo)} />}
+      {pagina.hero.intro.map((p, i) => <p class:list={['lead', { 'lead--2': i > 0 }]} set:html={md(p)} />)}
+      <div class="hero-botones">
+        <a class="btn btn--aurora" href={mailto}>{pagina.hero.cta} <span class="flecha">→</span></a>
+        {tienePlanes && <a class="btn btn--linea" href="#planes">Ver planes y precios</a>}
+      </div>
+    </div>
+    <Escena nombre={pagina.escena} class="hero-escena" />
+  </section>
+
+  {pagina.bloques.map((b) => {
+    const eti = ETIQUETAS[b.tipo];
+    const cab = (centro = false) => (
+      <div class:list={['cabecera-seccion', { 'cabecera-seccion--centro': centro }]}>
+        <span class="eyebrow"><span class="letra">{letra()}</span>{eti}</span>
+        <h2 set:html={b.titulo} />
+        {'intro' in b && b.intro && <p class="lead" set:html={md(b.intro)} />}
+      </div>
+    );
+
+    switch (b.tipo) {
+      case 'problema': return (
+        <section class="seccion"><div class="contenedor dos-col">
+          {cab()}
+          <ol class="dolores aparece">
+            {b.puntos.map((p, i) => <li><span class="romano">{ROMANOS[i]}</span><span set:html={md(p)} /></li>)}
+          </ol>
+        </div></section>
+      );
+      case 'enfoque': case 'beneficios': return (
+        <section class:list={['seccion', { 'seccion--piedra': b.tipo === 'beneficios' }]}><div class="contenedor">
+          {cab()}
+          <div class:list={['rejilla', b.items.length > 3 ? 'rejilla--3' : 'rejilla--3']}>
+            {b.items.map((it, i) => (
+              <article class="tarjeta enfoque aparece">
+                <span class="enfoque-num">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{it.t}</h3>
+                <p set:html={md(it.d)} />
+              </article>
+            ))}
+          </div>
+        </div></section>
+      );
+      case 'paraQuien': return (
+        <section class="seccion seccion--piedra"><div class="contenedor dos-col">
+          {cab()}
+          <ul class="lista-sol aparece">{b.puntos.map((p) => <li set:html={md(p)} />)}</ul>
+        </div></section>
+      );
+      case 'zona': return (
+        <section class="seccion"><div class="contenedor dos-col">
+          {cab()}
+          <div class="prosa aparece">{b.parrafos.map((p) => <p set:html={md(p)} />)}</div>
+        </div></section>
+      );
+      case 'planes': return (
+        <section class="seccion seccion--piedra" id="planes"><div class="contenedor">
+          {cab(true)}
+          <div class:list={['planes', `planes--${b.planes.length}`]}>
+            {b.planes.map((pl) => (
+              <article class:list={['plan aparece', { 'plan--destacado': pl.destacado }]}>
+                {pl.destacado && <span class="plan-cinta">Recomendado</span>}
+                <h3>{pl.nombre}</h3>
+                <p class="plan-precio"><span>{pl.precio}</span> <small>{pl.periodo}</small></p>
+                {pl.paraQuien && <p class="plan-para">{pl.paraQuien}</p>}
+                {pl.objetivo && <p class="plan-obj"><strong>Objetivo:</strong> {pl.objetivo}</p>}
+                {pl.base && <p class="plan-base">{pl.base}</p>}
+                <ul class="plan-lista">{pl.incluye.map((x) => <li>{x}</li>)}</ul>
+                {pl.condiciones && <p class="plan-cond">{pl.condiciones}</p>}
+                <a class:list={['btn', pl.destacado ? 'btn--aurora' : 'btn--tinta']} href={`mailto:${SITIO.email}?subject=${encodeURIComponent(pl.nombre)}`}>Lo quiero <span class="flecha">→</span></a>
+              </article>
+            ))}
+          </div>
+          {b.nota && <p class="nota planes-nota">{b.nota}</p>}
+        </div></section>
+      );
+      case 'extras': return (
+        <section class="seccion" id={tienePlanes && !pagina.bloques.some((x) => x.tipo === 'planes') ? 'planes' : undefined}><div class="contenedor">
+          {cab()}
+          <div class="extras">
+            {b.items.map((x) => (
+              <details class="extra aparece">
+                <summary>
+                  <span class="extra-nombre">{x.nombre}</span>
+                  <span class="extra-precio">{x.precio}</span>
+                  <span class="extra-para">{x.paraQuien}</span>
+                  <span class="extra-mas" aria-hidden="true">+</span>
+                </summary>
+                <div class="extra-cuerpo">
+                  <ul class="lista-sol">{x.incluye.map((i) => <li>{i}</li>)}</ul>
+                  {x.nota && <p class="nota">{x.nota}</p>}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div></section>
+      );
+      case 'proceso': return (
+        <section class="seccion seccion--noche"><div class="contenedor">
+          {cab()}
+          <ol class="pasos">
+            {b.pasos.map((p, i) => (
+              <li class="aparece"><span class="paso-num">{ROMANOS[i]}</span><h3>{p.t}</h3><p set:html={md(p.d)} /></li>
+            ))}
+          </ol>
+          {b.cta && <a class="btn btn--aurora pasos-cta" href={mailto}>{b.cta} <span class="flecha">→</span></a>}
+        </div></section>
+      );
+      case 'garantias': return (
+        <section class="seccion"><div class="contenedor dos-col">
+          {cab()}
+          <div class="aparece">
+            <ul class="lista-sol">{b.puntos.map((p) => <li><strong>{p.t}:</strong> <span set:html={md(p.d)} /></li>)}</ul>
+            {b.nota && <p class="nota" style="margin-top:20px">{b.nota}</p>}
+          </div>
+        </div></section>
+      );
+      case 'pilares': return (
+        <section class="seccion"><div class="contenedor">
+          {cab()}
+          <div class="pilares">
+            {b.items.map((it, i) => (
+              <article class="pilar aparece">
+                <span class="pilar-num">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{it.t}</h3>
+                  <p class="pilar-lema">{it.lema}</p>
+                  <p set:html={md(it.d)} />
+                </div>
+                <ul class="lista-sol">{it.puntos.map((p) => <li set:html={md(p)} />)}</ul>
+              </article>
+            ))}
+          </div>
+        </div></section>
+      );
+      case 'logros': return (
+        <section class="seccion seccion--noche"><div class="contenedor">
+          {cab(true)}
+          <div class="rejilla rejilla--4">
+            {b.items.map((it) => <div class="logro aparece"><h3>{it.t}</h3><p>{it.d}</p></div>)}
+          </div>
+          {b.cta && <div class="centro"><a class="btn btn--aurora" href={mailto}>{b.cta} <span class="flecha">→</span></a></div>}
+        </div></section>
+      );
+      case 'formula': return (
+        <section class="seccion"><div class="contenedor">
+          {cab(true)}
+          <p class="lead centro-texto" set:html={md(b.texto)} />
+          <p class="formula aparece">
+            {b.formula.map((x, i) => <>{i > 0 && <span class="op">+</span>}<span class="term">{x}</span></>)}
+            <span class="op">=</span><span class="term term--res">{b.resultado}</span>
+          </p>
+          <p class="formula-cierre">{b.cierre}</p>
+          {b.cta && <div class="centro"><a class="btn btn--aurora" href={mailto}>{b.cta} <span class="flecha">→</span></a></div>}
+        </div></section>
+      );
+      case 'ayuda': return (
+        <section class="seccion seccion--piedra"><div class="contenedor">
+          {cab()}
+          <dl class="ayuda">
+            {b.items.map((it) => <div class="aparece"><dt>{it.t}</dt><dd>{it.d}</dd></div>)}
+          </dl>
+        </div></section>
+      );
+      case 'cta': return (
+        <section class="banda-cta"><div class="contenedor banda-in aparece">
+          <span class="eyebrow"><span class="letra">{letra()}</span>{eti}</span>
+          <h2 set:html={b.titulo} />
+          <p class="lead">{b.texto}</p>
+          <a class="btn btn--aurora" href={mailto}>{b.boton} <span class="flecha">→</span></a>
+          {b.nota && <p class="nota">{b.nota}</p>}
+        </div></section>
+      );
+    }
+  })}
+
+  <Faq titulo={pagina.faq.titulo} preguntas={pagina.faq.preguntas} letra={letra()} />
+
+  <section class="seccion seccion--piedra"><div class="contenedor">
+    <div class="cabecera-seccion">
+      <span class="eyebrow"><span class="letra">{letra()}</span>Otros servicios</span>
+      <h2>Lo que suele ir <em>de la mano</em></h2>
+    </div>
+    <TarjetasServicios servicios={relacionados} />
+  </div></section>
+</BaseLayout>
+
+<style>
+  .hero-sub{font-family:var(--serif);font-style:italic;font-size:1.5rem;line-height:1.3;color:var(--aurora-ink);}
+  .lead--2{font-size:1.05rem;}
+
+  .dos-col{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start;}
+  .dos-col .cabecera-seccion{margin-bottom:0;position:sticky;top:110px;}
+  @media (max-width:900px){ .dos-col{grid-template-columns:1fr;gap:32px;} .dos-col .cabecera-seccion{position:static;} }
+
+  .dolores{list-style:none;display:grid;gap:0;border-top:1px solid var(--linea);}
+  .dolores li{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:22px 0;border-bottom:1px solid var(--linea);font-size:1.08rem;}
+  .romano{font-family:var(--serif);font-weight:600;font-size:1.5rem;color:var(--aurora);line-height:1.2;}
+
+  .enfoque{display:grid;gap:10px;align-content:start;transition:transform .25s,box-shadow .25s;}
+  .enfoque:hover{transform:translateY(-4px);box-shadow:var(--sombra);}
+  .enfoque-num{font-family:var(--mono);font-size:.8rem;color:var(--oro);}
+  .enfoque p{color:var(--tinta-2);}
+
+  .prosa{display:grid;gap:18px;font-size:1.08rem;color:var(--tinta-2);}
+
+  .planes{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));align-items:stretch;}
+  .plan{position:relative;background:var(--papel);border:1px solid var(--linea);border-radius:22px;padding:34px 30px;display:flex;flex-direction:column;gap:14px;}
+  .plan h3{font-size:1.6rem;}
+  .plan-precio span{font-variant-numeric:lining-nums;font-family:var(--serif);font-size:2.5rem;font-weight:600;line-height:1;}
+  .plan-precio small{color:var(--tinta-3);font-size:.95rem;}
+  .plan-para{color:var(--tinta-2);}
+  .plan-obj,.plan-base{font-size:.95rem;color:var(--tinta-2);}
+  .plan-base{font-weight:500;color:var(--tinta);}
+  .plan-lista{list-style:none;display:grid;gap:9px;margin:4px 0 8px;flex:1;align-content:start;}
+  .plan-lista li{position:relative;padding-left:26px;font-size:.95rem;color:var(--tinta-2);}
+  .plan-lista li::before{content:"";position:absolute;left:2px;top:.5em;width:12px;height:7px;border-left:2.4px solid var(--aurora);border-bottom:2.4px solid var(--aurora);transform:rotate(-45deg);}
+  .plan-cond{font-size:.82rem;color:var(--tinta-3);border-top:1px dashed var(--linea-2);padding-top:12px;}
+  .plan .btn{align-self:flex-start;}
+  .plan--destacado{background:var(--noche);border-color:var(--noche);color:#E8E1D5;box-shadow:0 30px 60px -30px rgba(23,26,54,.6);}
+  .plan--destacado h3{color:#FBF4E8;}
+  .plan--destacado .plan-para,.plan--destacado .plan-obj,.plan--destacado .plan-lista li{color:#CFC8BD;}
+  .plan--destacado .plan-base{color:#FBF4E8;}
+  .plan--destacado .plan-precio small,.plan--destacado .plan-cond{color:#A9A3B5;}
+  .plan--destacado .plan-lista li::before{border-color:var(--azafran);}
+  .plan-cinta{position:absolute;top:-13px;left:30px;background:var(--azafran);color:var(--tinta);font-family:var(--inscripcion);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-weight:700;}
+  .planes-nota{text-align:center;margin:28px auto 0;max-width:70ch;}
+
+  .extras{border-top:1px solid var(--linea);}
+  .extra{border-bottom:1px solid var(--linea);}
+  .extra summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1.2fr auto 1.6fr 32px;gap:24px;align-items:baseline;padding:26px 0;}
+  .extra summary::-webkit-details-marker{display:none;}
+  .extra-nombre{font-family:var(--serif);font-size:1.45rem;font-weight:600;}
+  .extra-precio{font-family:var(--mono);font-size:.92rem;color:var(--aurora-ink);white-space:nowrap;}
+  .extra-para{color:var(--tinta-2);font-size:.98rem;}
+  .extra-mas{font-size:1.6rem;line-height:1;color:var(--oro);transition:transform .25s;justify-self:end;}
+  .extra[open] .extra-mas{transform:rotate(45deg);}
+  .extra-cuerpo{padding:0 0 30px;display:grid;gap:14px;max-width:780px;}
+  @media (max-width:760px){ .extra summary{grid-template-columns:1fr 32px;gap:8px;} .extra-precio,.extra-para{grid-column:1;} .extra-mas{grid-row:1;grid-column:2;} }
+
+  .pasos-cta{margin-top:44px;}
+
+  .pilares{display:grid;gap:0;border-top:1px solid var(--linea);}
+  .pilar{display:grid;grid-template-columns:90px 1.1fr 1fr;gap:32px;padding:40px 0;border-bottom:1px solid var(--linea);}
+  .pilar-num{font-family:var(--serif);font-size:3.2rem;line-height:1;color:var(--aurora);font-weight:600;}
+  .pilar h3{font-size:1.9rem;margin-bottom:8px;}
+  .pilar-lema{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--aurora-ink);margin-bottom:10px;}
+  .pilar p{color:var(--tinta-2);}
+  @media (max-width:900px){ .pilar{grid-template-columns:1fr;gap:14px;} }
+
+  .logro{border-top:2px solid var(--azafran);padding-top:18px;display:grid;gap:8px;}
+  .logro h3{font-size:1.6rem;}
+  .centro{display:flex;justify-content:center;margin-top:44px;}
+  .centro-texto{margin:0 auto;text-align:center;}
+
+  .formula{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 16px;margin:40px auto 18px;font-family:var(--serif);font-size:clamp(1.6rem,3.2vw,2.5rem);font-weight:600;}
+  .formula .term{background:var(--papel);border:1px solid var(--linea);border-radius:999px;padding:6px 22px;}
+  .formula .term--res{background:var(--aurora);border-color:var(--aurora);}
+  .formula .op{color:var(--oro);}
+  .formula-cierre{text-align:center;font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--aurora-ink);margin:0 auto;}
+
+  .ayuda{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:0 48px;}
+  .ayuda div{border-top:1px solid var(--linea-2);padding:18px 0;}
+  .ayuda dt{font-family:var(--serif);font-size:1.3rem;font-weight:600;margin-bottom:4px;}
+  .ayuda dd{color:var(--tinta-2);font-size:.98rem;}
+
+</style>

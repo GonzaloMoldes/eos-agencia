@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Escena from '../../components/Escena.astro';
+import TarjetasServicios from '../../components/TarjetasServicios.astro';
+import { SERVICIOS, CATEGORIAS, urlServicio, type Categoria } from '../../data/servicios';
+import { SITIO, } from '../../data/sitio';
+import { BASE_URL } from '../../lib/seo';
+
+const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({ ...CATEGORIAS[c], servicios: SERVICIOS.filter((s) => s.categoria === c) }));
+const publicados = SERVICIOS.filter((s) => s.publicado);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Servicios de EOS Studio',
+  itemListElement: publicados.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.nombre, url: `${BASE_URL}${urlServicio(s.slug)}` })),
+};
+---
+<BaseLayout
+  title="Servicios de SEO, GEO y marketing digital | EOS Studio"
+  description="SEO local, SEO para YouTube, autoridad digital, marketing automation y consultoría CRM. Servicios con alcance y precio claros para que te encuentren, confíen en ti y te compren."
+  schema={schema}
+>
+  <section class="hero contenedor">
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra">Ἠώς</span>Servicios</span>
+      <h1>Servicios de SEO, GEO y <em>marketing digital</em></h1>
+      <p class="lead">Que te encuentren en Google, en Maps, en YouTube y en las respuestas de la IA. Que hablen de tu marca. Y que cada contacto llegue a cliente. Elige por dónde empezar.</p>
+      <div class="hero-botones">
+        <a class="btn btn--aurora" href={`mailto:${SITIO.email}?subject=${encodeURIComponent('¿Por dónde empiezo?')}`}>Ayúdame a elegir <span class="flecha">→</span></a>
+      </div>
+    </div>
+    <Escena nombre="servicios" class="hero-escena" />
+  </section>
+
+  {grupos.map((g, i) => (
+    <section class:list={['seccion', { 'seccion--piedra': i % 2 === 1 }]} id={g.nombre.toLowerCase().split(' ')[0]}>
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <span class="eyebrow"><span class="letra">{g.letra}</span>{g.nombre}</span>
+          <h2>{g.descripcion}</h2>
+        </div>
+        <TarjetasServicios servicios={g.servicios} />
+      </div>
+    </section>
+  ))}
+</BaseLayout>

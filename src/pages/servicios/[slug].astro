@@ -1,0 +1,10 @@
+---
+import PaginaServicio from '../../layouts/PaginaServicio.astro';
+import { PAGINAS } from '../../data/paginas';
+
+export function getStaticPaths() {
+  return PAGINAS.map((pagina) => ({ params: { slug: pagina.slug }, props: { pagina } }));
+}
+const { pagina } = Astro.props;
+---
+<PaginaServicio pagina={pagina} />

@@ -1,0 +1,20 @@
+---
+import { migas } from '../lib/seo';
+const items = migas(Astro.url.pathname);
+---
+{items.length > 1 && (
+  <nav class="migas contenedor" aria-label="Migas de pan">
+    <ol>
+      {items.map((it, i) => (
+        <li>{i < items.length - 1 ? <a href={it.url}>{it.nombre}</a> : <span aria-current="page">{it.nombre}</span>}</li>
+      ))}
+    </ol>
+  </nav>
+)}
+<style>
+  .migas{padding-top:22px;font-size:.85rem;}
+  .migas ol{list-style:none;display:flex;flex-wrap:wrap;gap:8px;color:var(--tinta-3);}
+  .migas li+li::before{content:"·";margin-right:8px;color:var(--linea-2);}
+  .migas a{color:var(--tinta-3);text-decoration:none;}
+  .migas a:hover{color:var(--aurora-ink);}
+</style>

@@ -1,0 +1,35 @@
+---
+import { CATEGORIAS, urlServicio, type Servicio } from '../data/servicios';
+export interface Props { servicios: Servicio[] }
+const { servicios } = Astro.props;
+---
+<ul class="tarjetas">
+  {servicios.map((s) => (
+    <li class:list={['ts aparece', { 'ts--pronto': !s.publicado }]}>
+      {s.publicado
+        ? <a href={urlServicio(s.slug)} class="ts-in">
+            <span class="ts-cat">{CATEGORIAS[s.categoria].letra} · {CATEGORIAS[s.categoria].nombre}</span>
+            <h3>{s.nombre}</h3>
+            <p>{s.resumen}</p>
+            <span class="ts-ir">Ver servicio <span aria-hidden="true">→</span></span>
+          </a>
+        : <div class="ts-in">
+            <span class="ts-cat">{CATEGORIAS[s.categoria].letra} · {CATEGORIAS[s.categoria].nombre}</span>
+            <h3>{s.nombre}</h3>
+            <p>{s.resumen}</p>
+            <span class="ts-ir ts-ir--pronto">Próximamente</span>
+          </div>}
+    </li>
+  ))}
+</ul>
+<style>
+  .tarjetas{list-style:none;display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));}
+  .ts-in{height:100%;display:flex;flex-direction:column;gap:10px;background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:28px;text-decoration:none;color:var(--tinta);transition:transform .25s,box-shadow .25s,border-color .25s;}
+  a.ts-in:hover{transform:translateY(-4px);box-shadow:var(--sombra);border-color:var(--linea-2);color:var(--tinta);}
+  .ts-cat{font-family:var(--inscripcion);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-3);}
+  .ts-in h3{font-size:1.55rem;}
+  .ts-in p{color:var(--tinta-2);font-size:.98rem;flex:1;}
+  .ts-ir{font-weight:500;color:var(--aurora-ink);}
+  .ts-ir--pronto{font-family:var(--mono);font-size:.82rem;color:var(--tinta-3);}
+  .ts--pronto .ts-in{background:transparent;border-style:dashed;}
+</style>

@@ -1,0 +1,16 @@
+{
+  "name": "eos-studio-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "ilustraciones": "node scripts/ilustraciones/generar.mjs",
+    "build": "node scripts/ilustraciones/generar.mjs && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^11.0.5",
+    "astro": "^7.1.6"
+  }
+}
