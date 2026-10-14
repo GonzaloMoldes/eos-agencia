@@ -24,12 +24,18 @@ const { servicios } = Astro.props;
 </ul>
 <style>
   .tarjetas{list-style:none;display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));}
-  .ts-in{height:100%;display:flex;flex-direction:column;gap:10px;background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:28px;text-decoration:none;color:var(--tinta);transition:transform .25s,box-shadow .25s,border-color .25s;}
+  .ts-in{position:relative;overflow:hidden;height:100%;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.7);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:var(--radio);padding:28px;text-decoration:none;color:var(--tinta);transition:transform .3s,box-shadow .3s,border-color .3s;}
+  /* Al pasar por encima, amanece: un brillo de aurora sube desde abajo. */
+  .ts-in::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-70%;height:90%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,122,69,.28),rgba(231,169,58,.12),transparent);opacity:0;transform:translateY(30%);transition:opacity .45s,transform .45s;pointer-events:none;}
   a.ts-in:hover{transform:translateY(-4px);box-shadow:var(--sombra);border-color:var(--linea-2);color:var(--tinta);}
-  .ts-cat{font-family:var(--inscripcion);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-3);}
-  .ts-in h3{font-size:1.55rem;}
+  a.ts-in:hover::after{opacity:1;transform:none;}
+  .ts-cat{font-family:var(--etiqueta);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-3);}
+  .ts-in h3{font-size:1.9rem;}
   .ts-in p{color:var(--tinta-2);font-size:.98rem;flex:1;}
-  .ts-ir{font-weight:500;color:var(--aurora-ink);}
+  .ts-ir{font-weight:500;color:var(--tinta);display:inline-flex;align-items:center;gap:10px;}
+  .ts-ir span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--degradado);color:var(--tinta);transition:transform .3s;}
+  a.ts-in:hover .ts-ir span{transform:rotate(-45deg);}
   .ts-ir--pronto{font-family:var(--mono);font-size:.82rem;color:var(--tinta-3);}
-  .ts--pronto .ts-in{background:transparent;border-style:dashed;}
+  .ts--pronto .ts-in{background:transparent;backdrop-filter:none;border-style:dashed;}
+  .ts-ir--pronto{display:inline-block;}
 </style>

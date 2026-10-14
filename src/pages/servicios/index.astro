@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Escena from '../../components/Escena.astro';
+import AuroraFondo from '../../components/AuroraFondo.astro';
 import TarjetasServicios from '../../components/TarjetasServicios.astro';
 import { SERVICIOS, CATEGORIAS, urlServicio, type Categoria } from '../../data/servicios';
 import { SITIO, } from '../../data/sitio';
@@ -21,8 +22,9 @@ const schema = {
   schema={schema}
 >
   <section class="hero contenedor">
+    <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra">Ἠώς</span>Servicios</span>
+      <span class="eyebrow"><span class="letra">✦</span>Servicios</span>
       <h1>Servicios de SEO, GEO y <em>marketing digital</em></h1>
       <p class="lead">Que te encuentren en Google, en Maps, en YouTube y en las respuestas de la IA. Que hablen de tu marca. Y que cada contacto llegue a cliente. Elige por dónde empezar.</p>
       <div class="hero-botones">

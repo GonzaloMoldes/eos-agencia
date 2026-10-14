@@ -20,6 +20,7 @@ npm run ilustraciones  # solo regenera los SVG de las escenas
 | Copy de cada servicio | `src/data/paginas/<slug>.ts` |
 | Plantilla de página de servicio | `src/layouts/PaginaServicio.astro` |
 | Sistema de diseño | `src/styles/global.css` |
+| Decoración de los laterales | `src/components/Marco.astro` |
 | Personajes y escenas ilustradas | `scripts/ilustraciones/` (generan `src/assets/ilustraciones/`) |
 | Documentos de copy originales | `docs/copy/` |
 | Plan de estructura, URLs y pendientes | `docs/PLAN_ESTRUCTURA_WEB.md` |

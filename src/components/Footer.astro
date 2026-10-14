@@ -5,7 +5,6 @@ import { SERVICIOS, urlServicio } from '../data/servicios';
 const publicados = SERVICIOS.filter((s) => s.publicado);
 ---
 <footer class="pie" id="contacto">
-  <div class="greca"></div>
   <div class="contenedor pie-in">
     <div class="pie-marca">
       <Logo claro />
@@ -32,16 +31,17 @@ const publicados = SERVICIOS.filter((s) => s.publicado);
     <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.ciudad}</span>
     <span>Ἠώς · la que trae la luz</span>
   </div>
+  <p class="pie-gigante" aria-hidden="true">EOS</p>
 </footer>
 
 <style>
-  .pie{background:var(--noche);color:#CFC8BD;padding-bottom:28px;}
-  .pie .greca{filter:brightness(.7);margin-bottom:64px;}
+  .pie{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(70% 50% at 50% 100%,rgba(240,122,69,.28),rgba(185,167,236,.08) 50%,transparent 75%),var(--noche);color:#C3BFD6;padding-top:88px;}
+  .pie-gigante{font-family:var(--inscripcion);font-weight:700;font-size:clamp(7rem,26vw,22rem);line-height:.78;letter-spacing:.08em;text-align:center;margin:40px auto -0.06em;max-width:none;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(240,122,69,.22),transparent 70%);-webkit-background-clip:text;background-clip:text;user-select:none;}
   .pie-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:48px;}
   .pie-marca{display:grid;gap:20px;align-content:start;}
   .pie-marca p{max-width:44ch;}
   .pie-marca .btn{justify-self:start;}
-  .pie-titulo{font-family:var(--inscripcion);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--azafran);margin-bottom:14px;}
+  .pie-titulo{font-family:var(--etiqueta);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--azafran);margin-bottom:14px;}
   .pie-col ul{list-style:none;display:grid;gap:8px;}
   .pie-col a{color:#E8E1D5;text-decoration:none;}
   .pie-col a:hover{color:var(--azafran);}

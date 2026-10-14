@@ -1,0 +1,25 @@
+---
+// Cinta de servicios en movimiento continuo. El contenido va duplicado para
+// que el bucle no tenga salto; la copia se oculta a los lectores de pantalla.
+// Con «reducir movimiento» se queda quieta.
+export interface Props { items: string[] }
+const { items } = Astro.props;
+---
+<div class="cinta" role="presentation">
+  <div class="cinta-pista">
+    {[0, 1].map((copia) => (
+      <ul class="cinta-grupo" aria-hidden={copia === 1 ? 'true' : undefined}>
+        {items.map((t) => <li>{t}<span class="cinta-sep" aria-hidden="true">✦</span></li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+<style>
+  .cinta{overflow:hidden;border-block:1px solid var(--linea);background:rgba(255,255,255,.45);backdrop-filter:blur(6px);padding:20px 0;}
+  .cinta-pista{display:flex;width:max-content;}
+  .cinta-grupo{list-style:none;display:flex;flex:none;}
+  .cinta-grupo li{font-family:var(--serif);font-style:italic;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1;color:var(--tinta);white-space:nowrap;display:flex;align-items:center;}
+  .cinta-sep{font-style:normal;font-size:.7em;margin:0 .9em;background:var(--degradado);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  @media (prefers-reduced-motion: no-preference){ .cinta-pista{animation:cinta 40s linear infinite;} .cinta:hover .cinta-pista{animation-play-state:paused;} }
+  @keyframes cinta{to{transform:translateX(-50%)}}
+</style>
