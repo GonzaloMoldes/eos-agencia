@@ -1,18 +1,17 @@
 // Personajes de EOS Studio, en SVG y paramétricos.
 //
-// Es el mismo reparto que las escenas de GMV Solutions (la del moño, el de la
-// barba y camisa azul, el de gafas y camisa clara), redibujado en clave de
-// dibujo animado: cabeza grande, contorno de tinta, ojos con brillo, mejillas,
-// extremidades «de manguera» con codo y rodilla, y sombreado suave.
+// Estilo: ilustración plana editorial. Proporciones alargadas (cabeza pequeña,
+// piernas largas), sin contorno, caras sin rasgos y volumen a base de un
+// segundo tono: el brazo y la pierna de detrás van más oscuros.
+//
+// El reparto es el de las escenas de GMV Solutions (la del moño, el de barba y
+// camisa azul, el de gafas y corbata) más dos personajes nuevos.
 //
 // Coordenadas locales: los pies en y=0, el eje del cuerpo en x=0. El personaje
-// mide unos 280 px a escala 1. El tronco se dibuja en sus propias coordenadas
-// (cadera en y=-114) y se baja SUBIR px para dejar las piernas cortas, de dibujo
-// animado; por eso las manos que reciben los accesorios van en esas coordenadas. `mira` = 1 mira a la derecha, -1 a la izquierda.
+// mide unos 300 px a escala 1. `mira` = 1 mira a la derecha, -1 a la izquierda.
 
-export const TINTA = '#2A2440';
-const TRAZO = 3.4;
-const SUBIR = 20; // cuánto se baja el tronco sobre las piernas
+// Se mantiene el nombre: el atrezo lo usa como color de detalle.
+export const TINTA = '#27304F';
 
 // Los id (clipPath, degradados) llevan el nombre de la escena delante: dos
 // escenas en la misma página no pueden compartir id.
@@ -22,229 +21,237 @@ export const reiniciarIds = (pre = 'e') => { contador = 0; prefijo = pre; };
 
 const f = (n) => Math.round(n * 10) / 10;
 
-// Curva que pasa (aprox.) por el punto medio: control = 2·medio − (a+b)/2.
-function curva(a, m, b) {
-  const c = [2 * m[0] - (a[0] + b[0]) / 2, 2 * m[1] - (a[1] + b[1]) / 2];
-  return `M${f(a[0])} ${f(a[1])}Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`;
+// Oscurece un color #rrggbb (para el lado en sombra).
+export function sombra(hex, k = 0.82) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(v * k));
+  return '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-// Extremidad con contorno: un trazo grueso de tinta y encima el de color.
-function extremidad(a, m, b, color, ancho) {
-  const d = curva(a, m, b);
-  return `<path d="${d}" fill="none" stroke="${TINTA}" stroke-width="${ancho + TRAZO * 2}" stroke-linecap="round" stroke-linejoin="round"/>` +
-    `<path d="${d}" fill="none" stroke="${color}" stroke-width="${ancho}" stroke-linecap="round" stroke-linejoin="round"/>`;
+// Extremidad afilada: un polígono que une puntos con anchos distintos en cada
+// articulación, suavizado con un trazo del mismo color.
+function miembro(puntos, anchos, color) {
+  const izq = [], der = [];
+  for (let i = 0; i < puntos.length; i++) {
+    const a = puntos[Math.max(0, i - 1)], b = puntos[Math.min(puntos.length - 1, i + 1)];
+    let dx = b[0] - a[0], dy = b[1] - a[1];
+    const l = Math.hypot(dx, dy) || 1;
+    const nx = -dy / l, ny = dx / l, w = anchos[i] / 2;
+    izq.push([puntos[i][0] + nx * w, puntos[i][1] + ny * w]);
+    der.push([puntos[i][0] - nx * w, puntos[i][1] - ny * w]);
+  }
+  const pts = [...izq, ...der.reverse()];
+  const d = 'M' + pts.map((p) => `${f(p[0])} ${f(p[1])}`).join('L') + 'Z';
+  return `<path d="${d}" fill="${color}" stroke="${color}" stroke-width="3" stroke-linejoin="round"/>`;
 }
 
-const mano = (p, piel) => `<circle cx="${f(p[0])}" cy="${f(p[1])}" r="9.5" fill="${piel}" stroke="${TINTA}" stroke-width="${TRAZO}"/>`;
+// ── Poses ── (relativas al hombro / la cadera; x positiva = hacia delante)
+const BRAZOS = {
+  reposo:       { codo: [5, 56], mano: [9, 108] },
+  cadera:       { codo: [30, 42], mano: [7, 80] },
+  saluda:       { codo: [34, 18], mano: [44, -36] },
+  senala:       { codo: [48, -2], mano: [102, -22] },
+  senalaAbajo:  { codo: [46, 30], mano: [96, 42] },
+  sostiene:     { codo: [12, 56], mano: [56, 44] },
+  sostieneAlto: { codo: [18, 50], mano: [58, 10] },
+  arriba:       { codo: [14, -50], mano: [20, -104] },
+  teclea:       { codo: [14, 58], mano: [56, 68] },
+  estrecha:     { codo: [26, 52], mano: [78, 60] },
+};
+const PIERNAS = {
+  pie:   { del: { rodilla: [3, 72], tobillo: [4, 142] }, tra: { rodilla: [-2, 72], tobillo: [-4, 142] } },
+  paso:  { del: { rodilla: [24, 68], tobillo: [42, 136] }, tra: { rodilla: [-12, 72], tobillo: [-40, 136] } },
+  firme: { del: { rodilla: [8, 72], tobillo: [12, 142] }, tra: { rodilla: [-8, 72], tobillo: [-12, 142] } },
+};
 
+const CADERA_Y = -150, HOMBRO_Y = -234, CABEZA_Y = -270;
+
+// Zapato plano y afilado, apoyado en el suelo.
 function zapato([x, y], dir, color) {
   const d = (n) => f(x + n * dir);
-  return `<path d="M${d(-12)} ${f(y + 13)}L${d(-12)} ${f(y + 1)}Q${d(-11)} ${f(y - 9)} ${d(2)} ${f(y - 9)}Q${d(20)} ${f(y - 7)} ${d(25)} ${f(y + 5)}Q${d(26)} ${f(y + 13)} ${d(18)} ${f(y + 13)}Z" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>` +
-    `<path d="M${d(-8)} ${f(y - 2)}Q${d(2)} ${f(y - 6)} ${d(10)} ${f(y - 4)}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round"/>`;
+  return `<path d="M${d(-7)} ${f(y - 6)}Q${d(4)} ${f(y - 9)} ${d(12)} ${f(y - 4)}L${d(24)} ${f(y + 6)}Q${d(25)} ${f(y + 9)} ${d(20)} ${f(y + 9)}L${d(-8)} ${f(y + 9)}Q${d(-10)} ${f(y + 1)} ${d(-7)} ${f(y - 6)}Z" fill="${color}"/>`;
 }
 
-// ── Poses de brazos: codo y mano relativos al hombro, con x hacia «delante» ──
-// (delante = hacia donde mira el personaje). Brazo «frontal» y «trasero».
-const BRAZOS = {
-  reposo:   { codo: [8, 52], mano: [10, 100] },
-  cadera:   { codo: [34, 40], mano: [6, 78] },
-  saluda:   { codo: [34, 10], mano: [44, -44] },
-  senala:   { codo: [44, -6], mano: [92, -30] },
-  senalaAbajo: { codo: [46, 30], mano: [92, 40] },
-  sostiene: { codo: [24, 56], mano: [56, 36] },
-  sostieneAlto: { codo: [26, 44], mano: [58, 6] },
-  arriba:   { codo: [20, -40], mano: [28, -92] },
-  teclea:   { codo: [20, 58], mano: [60, 70] },
-};
-
-// ── Poses de piernas: rodilla y tobillo relativos a la cadera ──
-const PIERNAS = {
-  pie:   { del: { rodilla: [4, 44], tobillo: [4, 86] }, tra: { rodilla: [-2, 44], tobillo: [-4, 86] } },
-  paso:  { del: { rodilla: [16, 42], tobillo: [24, 84] }, tra: { rodilla: [-8, 44], tobillo: [-22, 82] } },
-  firme: { del: { rodilla: [8, 44], tobillo: [12, 86] }, tra: { rodilla: [-8, 44], tobillo: [-12, 86] } },
-};
-
-// ── Peinados ──
-function pelo(estilo, color, mira, id) {
-  const m = mira;
-  const brillo = (d) => `<path d="${d}" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="3" stroke-linecap="round"/>`;
+// ── Pelo ──
+function pelo(estilo, c, m) {
+  const cs = sombra(c, 0.8);
   switch (estilo) {
-    case 'mono': // moño alto, raya ladeada
+    case 'larga': // melena larga y ondulada que cae por la espalda
       return {
-        detras: `<circle cx="${f(-m * 14)}" cy="-306" r="19" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}"/>` +
-          `<path d="M${f(-m * 4)} -292 q${f(-m * 10)} -6 ${f(-m * 20)} 2" fill="none" stroke="${TINTA}" stroke-width="2.4" stroke-opacity=".5"/>`,
-        delante: `<path d="M-43 -246Q-48 -300 0 -300Q46 -302 43 -250Q40 -270 ${f(m * 22)} -280Q${f(-m * 4)} -262 -43 -246Z" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>` +
-          brillo(`M${f(-m * 24)} -288Q${f(-m * 8)} -296 ${f(m * 10)} -294`),
+        detras: `<path d="M${f(m * 6)} -292Q${f(-m * 22)} -296 ${f(-m * 20)} -266Q${f(-m * 18)} -246 ${f(-m * 30)} -228Q${f(-m * 44)} -208 ${f(-m * 30)} -192Q${f(-m * 20)} -182 ${f(-m * 34)} -170Q${f(-m * 50)} -176 ${f(-m * 52)} -196Q${f(-m * 56)} -222 ${f(-m * 40)} -244Q${f(-m * 30)} -262 ${f(-m * 34)} -280Q${f(-m * 30)} -298 ${f(m * 6)} -292Z" fill="${c}"/>` +
+          `<path d="M${f(-m * 34)} -238Q${f(-m * 44)} -214 ${f(-m * 36)} -196" fill="none" stroke="${cs}" stroke-width="3" stroke-linecap="round"/>`,
+        delante: `<path d="M${f(-m * 16)} -270Q${f(-m * 18)} -294 ${f(m * 2)} -292Q${f(m * 18)} -290 ${f(m * 16)} -276Q${f(m * 4)} -284 ${f(-m * 6)} -276Q${f(-m * 10)} -268 ${f(-m * 16)} -258Z" fill="${c}"/>`,
       };
-    case 'corto':
+    case 'mono':
+      return {
+        detras: `<circle cx="${f(-m * 10)}" cy="-293" r="10" fill="${c}"/>`,
+        delante: `<path d="M${f(-m * 16)} -264Q${f(-m * 19)} -292 ${f(m * 2)} -290Q${f(m * 19)} -288 ${f(m * 15)} -270Q${f(m * 6)} -282 ${f(-m * 6)} -274Q${f(-m * 10)} -266 ${f(-m * 16)} -256Z" fill="${c}"/>`,
+      };
+    case 'corto': // tupé con volumen hacia delante
       return {
         detras: '',
-        delante: `<path d="M-42 -248Q-50 -306 2 -302Q50 -300 43 -246Q40 -266 30 -272Q14 -262 -4 -276Q-20 -262 -42 -248Z" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>` +
-          brillo(`M${f(-m * 22)} -290Q${f(-m * 4)} -298 ${f(m * 16)} -292`),
+        delante: `<path d="M${f(-m * 15)} -262Q${f(-m * 20)} -290 ${f(-m * 4)} -294Q${f(m * 4)} -302 ${f(m * 16)} -296Q${f(m * 24)} -292 ${f(m * 18)} -282Q${f(m * 22)} -276 ${f(m * 14)} -276Q${f(m * 2)} -280 ${f(-m * 6)} -276Q${f(-m * 10)} -268 ${f(-m * 15)} -256Z" fill="${c}"/>`,
       };
-    case 'rizos': // nube de rizos
-      {
-        const bolas = [[-40, -262, 18], [-32, -292, 20], [-8, -308, 21], [20, -304, 20], [40, -282, 18], [44, -256, 14], [-46, -240, 12]];
-        const c = bolas.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('');
-        return {
-          detras: `<g fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}">${c}</g><g fill="${color}">${bolas.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r - 3.4}"/>`).join('')}</g>`,
-          delante: `<path d="M-40 -256Q-38 -286 -6 -288Q30 -290 40 -258Q24 -272 -2 -270Q-24 -272 -40 -256Z" fill="${color}"/>` +
-            brillo(`M-26 -298Q-12 -306 4 -304`),
-        };
-      }
-    case 'melena': // media melena con flequillo
+    case 'rizos': {
+      const bolas = [[-18, -280, 11], [-10, -293, 12], [4, -297, 12], [16, -288, 11], [-22, -264, 10], [-20, -250, 8], [18, -274, 8]];
       return {
-        detras: `<path d="M-46 -260Q-56 -196 -38 -184L38 -184Q56 -196 46 -260Z" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>`,
-        delante: `<path d="M-44 -244Q-50 -302 2 -302Q52 -302 44 -244Q38 -262 ${f(m * 14)} -270Q${f(-m * 10)} -258 -44 -244Z" fill="${color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>` +
-          brillo(`M${f(-m * 24)} -288Q${f(-m * 6)} -296 ${f(m * 12)} -292`),
+        detras: `<g fill="${c}">${bolas.map(([x, y, r]) => `<circle cx="${f(x * m)}" cy="${y}" r="${r}"/>`).join('')}</g>`,
+        delante: `<path d="M${f(-m * 15)} -278Q${f(-m * 2)} -296 ${f(m * 15)} -282Q${f(m * 2)} -286 ${f(-m * 15)} -270Z" fill="${c}"/>`,
+      };
+    }
+    case 'melena': // media melena recta hasta los hombros
+      return {
+        detras: `<path d="M${f(-m * 20)} -276Q${f(-m * 28)} -240 ${f(-m * 22)} -228Q${f(-m * 4)} -224 ${f(m * 10)} -232Q${f(m * 14)} -252 ${f(m * 6)} -276Z" fill="${c}"/>`,
+        delante: `<path d="M${f(-m * 17)} -262Q${f(-m * 21)} -296 ${f(m * 2)} -294Q${f(m * 21)} -292 ${f(m * 17)} -266Q${f(m * 8)} -282 ${f(-m * 4)} -276Q${f(-m * 10)} -262 ${f(-m * 17)} -244Z" fill="${c}"/>`,
       };
     default:
       return { detras: '', delante: '' };
   }
 }
 
-// ── Torsos (ropa) ──
-function torso(ropa, mira, idClip) {
-  const silueta = 'M-30 -210Q0 -216 30 -210Q44 -206 44 -190L37 -122Q36 -112 26 -112L-26 -112Q-36 -112 -37 -122L-44 -190Q-44 -206 -30 -210Z';
-  const sombra = `<clipPath id="${idClip}"><path d="${silueta}"/></clipPath>` +
-    `<path clip-path="url(#${idClip})" d="M${f(-mira * 20)} -220L${f(-mira * 60)} -220L${f(-mira * 60)} -100L${f(-mira * 26)} -100Z" fill="${TINTA}" opacity=".13"/>`;
-  const base = `<path d="${silueta}" fill="${ropa.color}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>`;
+// ── Tronco y ropa ──
+function tronco(ropa, m, idClip) {
+  const c = ropa.color;
+  const sil = `M-20 -244Q0 -249 20 -244Q26 -241 26 -232L21 -162Q20 -150 12 -150L-12 -150Q-20 -150 -21 -162L-26 -232Q-26 -241 -20 -244Z`;
+  const sombraLado = `<clipPath id="${idClip}"><path d="${sil}"/></clipPath>` +
+    `<path clip-path="url(#${idClip})" d="M${f(-m * 8)} -250L${f(-m * 40)} -250L${f(-m * 40)} -140L${f(-m * 14)} -140Z" fill="#000" opacity=".1"/>`;
   let det = '';
   switch (ropa.tipo) {
-    case 'quiton': // blusa drapeada con cinturón dorado: guiño al quitón griego
-      det = `<path d="M${f(-mira * 30)} -208Q${f(mira * 2)} -176 ${f(mira * 34)} -140" fill="none" stroke="${TINTA}" stroke-width="2.4" stroke-opacity=".35" stroke-linecap="round"/>` +
-        `<path d="M${f(-mira * 16)} -208Q${f(mira * 10)} -184 ${f(mira * 38)} -166" fill="none" stroke="${TINTA}" stroke-width="2.2" stroke-opacity=".25" stroke-linecap="round"/>` +
-        `<rect x="-38" y="-136" width="76" height="11" rx="5" fill="${ropa.cinturon}" stroke="${TINTA}" stroke-width="${TRAZO}"/>` +
-        `<circle cx="${f(mira * 2)}" cy="-130.5" r="4" fill="#FFF4D6" stroke="${TINTA}" stroke-width="2"/>`;
+    case 'quiton': // blusa drapeada con cinturón dorado
+      det = `<path d="M${f(-m * 18)} -244Q${f(m * 4)} -214 ${f(m * 22)} -186" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round"/>` +
+        `<path d="M${f(-m * 6)} -245Q${f(m * 10)} -228 ${f(m * 24)} -214" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2" stroke-linecap="round"/>` +
+        `<rect x="-21" y="-172" width="42" height="5" rx="2" fill="${ropa.cinturon}"/>`;
       break;
     case 'camisa':
-      det = `<path d="M-14 -210L0 -190L14 -210" fill="${ropa.cuello ?? '#fff'}" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-        `<path d="M0 -190V-116" stroke="${TINTA}" stroke-width="2" stroke-opacity=".35"/>` +
-        [-176, -158, -140].map((y) => `<circle cx="${f(mira * 3)}" cy="${y}" r="2.2" fill="${TINTA}" opacity=".45"/>`).join('') +
-        `<path d="M${f(mira * 14)} -180h${f(mira * 14)}v12h${f(-mira * 14)}z" fill="none" stroke="${TINTA}" stroke-width="2" stroke-opacity=".35"/>`;
+      det = `<path d="M-8 -246L0 -234L8 -246" fill="${sombra(c, 0.88)}"/>` +
+        `<path d="M${f(m * 1)} -234V-152" stroke="#fff" stroke-opacity=".3" stroke-width="1.6"/>`;
       break;
     case 'corbata':
-      det = `<path d="M-15 -210L0 -194L15 -210" fill="#fff" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-        `<path d="M-5 -196L5 -196L8 -150L0 -140L-8 -150Z" fill="${ropa.corbata}" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>`;
+      det = `<path d="M-9 -246L0 -236L9 -246Z" fill="#fff"/>` +
+        `<path d="M-3 -237L3 -237L5 -196L0 -188L-5 -196Z" fill="${ropa.corbata}"/>`;
       break;
     case 'americana':
-      det = `<path d="M-12 -210L0 -170L12 -210Z" fill="${ropa.interior ?? '#fff'}" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-        `<path d="M-14 -210L-4 -170L-20 -186L-22 -206" fill="${ropa.solapa ?? ropa.color}" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-        `<path d="M14 -210L4 -170L20 -186L22 -206" fill="${ropa.solapa ?? ropa.color}" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-        `<path d="M0 -170V-114" stroke="${TINTA}" stroke-width="2.4"/>` +
-        `<circle cx="${f(mira * 5)}" cy="-150" r="3" fill="${TINTA}"/>`;
+      det = `<path d="M-8 -246L0 -214L8 -246Z" fill="${ropa.interior}"/>` +
+        `<path d="M-9 -246L-2 -214L-14 -226L-14 -244Z" fill="${sombra(c, 0.86)}"/>` +
+        `<path d="M9 -246L2 -214L14 -226L14 -244Z" fill="${sombra(c, 0.86)}"/>` +
+        `<path d="M0 -214V-152" stroke="${sombra(c, 0.75)}" stroke-width="1.6"/>`;
       break;
     case 'jersey':
-      det = `<path d="M-16 -211Q0 -198 16 -211" fill="none" stroke="${TINTA}" stroke-width="2.6"/>` +
-        `<path d="M-37 -126H37" stroke="${TINTA}" stroke-width="2.2" stroke-opacity=".35"/>`;
+      det = `<path d="M-9 -247Q0 -240 9 -247" fill="none" stroke="${sombra(c, 0.8)}" stroke-width="2.4"/>` +
+        `<path d="M-20 -158H20" stroke="${sombra(c, 0.85)}" stroke-width="3"/>`;
       break;
   }
-  return base + det + sombra;
+  return `<path d="${sil}" fill="${c}"/>` + det + sombraLado;
 }
 
-// ── Cara ──
-function cara(p, mira, idClip) {
-  const fx = mira * 6;
-  const ojo = (x) => `<ellipse cx="${f(x)}" cy="-254" rx="7.2" ry="8.8" fill="#fff" stroke="${TINTA}" stroke-width="2.6"/>` +
-    `<circle cx="${f(x + mira * 1.8)}" cy="-252.5" r="4.4" fill="${TINTA}"/>` +
-    `<circle cx="${f(x + mira * 3.2)}" cy="-255.5" r="1.6" fill="#fff"/>`;
-  const ceja = (x) => `<path d="M${f(x - 7)} -268Q${f(x)} ${p.ceja === 'alta' ? -275 : -272} ${f(x + 7)} -268" fill="none" stroke="${p.peloColor}" stroke-width="3.6" stroke-linecap="round"/>`;
-  const boca = p.boca === 'abierta'
-    ? `<path d="M${f(fx - 10)} -230Q${f(fx)} -230 ${f(fx + 10)} -230Q${f(fx + 8)} -216 ${f(fx)} -216Q${f(fx - 8)} -216 ${f(fx - 10)} -230Z" fill="#8E2F2B" stroke="${TINTA}" stroke-width="2.6" stroke-linejoin="round"/>` +
-      `<path d="M${f(fx - 5)} -220Q${f(fx)} -224 ${f(fx + 5)} -220" fill="none" stroke="#E98A7E" stroke-width="3" stroke-linecap="round"/>`
-    : `<path d="M${f(fx - 9)} -229Q${f(fx)} -220 ${f(fx + 9)} -229" fill="none" stroke="${TINTA}" stroke-width="3" stroke-linecap="round"/>`;
-  const gafas = p.gafas
-    ? `<g fill="#fff" fill-opacity=".25" stroke="${TINTA}" stroke-width="3"><rect x="${f(fx - 24)}" y="-264" width="20" height="18" rx="6"/><rect x="${f(fx + 4)}" y="-264" width="20" height="18" rx="6"/></g>` +
-      `<path d="M${f(fx - 4)} -257h8" stroke="${TINTA}" stroke-width="3"/>`
-    : '';
+// ── Cabeza: sin rasgos; oreja, sombra del lado contrario y, si toca, barba y gafas ──
+function cabeza(p, m, idClip) {
+  const piel = p.piel, pielS = sombra(piel, 0.88);
+  const forma = `M${f(-m * 14)} -282Q${f(-m * 16)} -258 ${f(-m * 10)} -252Q${f(-m * 2)} -246 ${f(m * 8)} -250Q${f(m * 15)} -254 ${f(m * 15)} -264L${f(m * 18)} -268Q${f(m * 18)} -271 ${f(m * 15)} -273Q${f(m * 15)} -292 ${f(-m * 2)} -292Q${f(-m * 12)} -292 ${f(-m * 14)} -282Z`;
   const barba = p.barba
-    ? `<path d="M-41 -254Q-42 -204 0 -201Q42 -204 41 -254Q34 -234 18 -233Q0 -240 -18 -233Q-34 -234 -41 -254Z" fill="${p.peloColor}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>`
+    ? `<path d="M${f(-m * 13)} -268Q${f(-m * 13)} -250 ${f(-m * 4)} -246Q${f(m * 6)} -242 ${f(m * 14)} -252Q${f(m * 16)} -258 ${f(m * 14)} -262Q${f(m * 6)} -256 ${f(-m * 2)} -262Q${f(-m * 8)} -266 ${f(-m * 13)} -268Z" fill="${p.peloColor}"/>`
     : '';
-  // Sombra de la cara del lado contrario a la mirada, recortada a la cabeza.
-  const sombra = `<clipPath id="${idClip}"><ellipse cx="0" cy="-254" rx="41" ry="44"/></clipPath>` +
-    `<ellipse clip-path="url(#${idClip})" cx="${f(-mira * 46)}" cy="-250" rx="26" ry="52" fill="${TINTA}" opacity=".1"/>`;
-  return `<ellipse cx="0" cy="-254" rx="41" ry="44" fill="${p.piel}" stroke="${TINTA}" stroke-width="${TRAZO}"/>` +
-    sombra + barba +
-    `<circle cx="${f(fx - 23)}" cy="-236" r="6.5" fill="#F07C6A" opacity=".45"/><circle cx="${f(fx + 23)}" cy="-236" r="6.5" fill="#F07C6A" opacity=".45"/>` +
-    ojo(fx - 13) + ojo(fx + 13) + ceja(fx - 13) + ceja(fx + 13) +
-    `<path d="M${f(fx + mira * 1)} -248Q${f(fx + mira * 7)} -240 ${f(fx)} -238" fill="none" stroke="${TINTA}" stroke-width="2.6" stroke-linecap="round" stroke-opacity=".7"/>` +
-    boca + gafas;
+  const gafas = p.gafas
+    ? `<path d="M${f(m * 2)} -269h${f(m * 9)}v6h${f(-m * 9)}zM${f(m * 11)} -267h${f(m * 6)}M${f(m * 2)} -267h${f(-m * 12)}" fill="none" stroke="${TINTA}" stroke-width="1.8" stroke-linejoin="round"/>`
+    : '';
+  return `<path d="${forma}" fill="${piel}"/>` +
+    `<clipPath id="${idClip}"><path d="${forma}"/></clipPath>` +
+    `<ellipse clip-path="url(#${idClip})" cx="${f(-m * 14)}" cy="-270" rx="8" ry="26" fill="${pielS}"/>` +
+    `<ellipse cx="${f(-m * 4)}" cy="-268" rx="3.4" ry="5" fill="${pielS}"/>` +
+    barba + gafas;
 }
 
 // ── Personaje completo ──
-// p: { piel, peloColor, pelo, ropa, pantalon, zapatos, gafas, barba, boca, ceja }
-// opts: { x, y, escala, mira, brazoDel, brazoTra, piernas, accesorio(mano)->svg, respira }
+// p: { piel, peloColor, pelo, ropa, pantalon | falda, zapatos, gafas, barba }
+// o: { x, y, escala, mira, brazoDel, brazoTra, piernas, accesorio, accesorioDetras, respira }
 export function personaje(p, o = {}) {
   const { x = 0, y = 0, escala = 1, mira = 1, brazoDel = 'reposo', brazoTra = 'reposo', piernas = 'pie', respira = 0 } = o;
   const m = mira;
   const idT = nuevoId('t'), idC = nuevoId('c');
-  const pel = pelo(p.pelo, p.peloColor, m, nuevoId('p'));
+  const pel = pelo(p.pelo, p.peloColor, m);
+  const manga = p.manga ?? p.ropa.color;
 
-  const caderas = { del: [m * 13, -114 + SUBIR], tra: [-m * 13, -114 + SUBIR] };
+  // Piernas: con pantalón, la tela cubre la pierna; con falda, se ve la piel.
   const pp = PIERNAS[piernas];
+  const colorPierna = p.falda ? p.piel : p.pantalon;
+  const anchos = p.falda ? [17, 12, 9] : p.pantalonAncho ? [24, 21, 20] : [21, 16, 13];
   const pierna = (lado) => {
-    const c = caderas[lado], d = pp[lado];
+    const c = [lado === 'del' ? m * 8 : -m * 8, CADERA_Y];
+    const d = pp[lado];
     const rod = [c[0] + m * d.rodilla[0], c[1] + d.rodilla[1]];
     const tob = [c[0] + m * d.tobillo[0], c[1] + d.tobillo[1]];
-    return { svg: extremidad(c, rod, tob, p.pantalon, 25), tob };
+    const col = lado === 'tra' ? sombra(colorPierna, 0.8) : colorPierna;
+    const raya = !p.falda && lado === 'del'
+      ? `<path d="M${f(c[0] + m * 3)} ${c[1] + 14}L${f(rod[0] + m * 3)} ${f(rod[1])}L${f(tob[0] + m * 2)} ${f(tob[1] - 8)}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.4"/>`
+      : '';
+    return { svg: miembro([c, rod, tob], anchos, col) + raya, tob };
   };
   const pt = pierna('tra'), pd = pierna('del');
 
-  const hombros = { del: [m * 34, -196], tra: [-m * 34, -196] };
+  // Brazos
+  const hombros = { del: [m * 19, HOMBRO_Y + 6], tra: [-m * 19, HOMBRO_Y + 6] };
   const brazo = (lado, pose) => {
     const h = hombros[lado], b = BRAZOS[pose];
-    // El brazo trasero apunta hacia atrás salvo en poses que van hacia delante.
-    const dirX = lado === 'del' ? m : (['sostiene', 'teclea', 'sostieneAlto'].includes(pose) ? m : -m);
+    const haciaDelante = ['sostiene', 'teclea', 'sostieneAlto', 'estrecha'].includes(pose);
+    const dirX = lado === 'del' ? m : (haciaDelante ? m : -m);
     const codo = [h[0] + dirX * b.codo[0], h[1] + b.codo[1]];
     const mn = [h[0] + dirX * b.mano[0], h[1] + b.mano[1]];
-    return { svg: extremidad(h, codo, mn, p.manga ?? p.ropa.color, 19) + mano(mn, p.piel), mano: mn };
+    const col = lado === 'tra' ? sombra(manga, 0.82) : manga;
+    const piel = lado === 'tra' ? sombra(p.piel, 0.9) : p.piel;
+    return {
+      svg: miembro([h, codo, mn], [20, 15, 11], col) +
+        `<ellipse cx="${f(mn[0])}" cy="${f(mn[1] + 3)}" rx="6.5" ry="8" fill="${piel}"/>`,
+      mano: mn,
+    };
   };
   const bt = brazo('tra', brazoTra), bd = brazo('del', brazoDel);
+  const ctx = { mano: bd.mano, manoTra: bt.mano, mira: m };
 
-  const acc = o.accesorio ? o.accesorio({ mano: bd.mano, manoTra: bt.mano, mira: m }) : '';
-  const accDetras = o.accesorioDetras ? o.accesorioDetras({ mano: bd.mano, manoTra: bt.mano, mira: m }) : '';
+  const falda = p.falda
+    ? `<path d="M-19 -166L19 -166L${m > 0 ? 34 : 30} -92Q0 -84 ${m > 0 ? -30 : -34} -92Z" fill="${p.falda}"/>` +
+      `<path d="M${f(m * 6)} -160L${f(m * 14)} -96" stroke="#fff" stroke-opacity=".3" stroke-width="1.4"/>`
+    : '';
 
   const cuerpo =
-    `<ellipse cx="0" cy="4" rx="${56}" ry="9" fill="${TINTA}" opacity=".12"/>` +
-    pt.svg + zapato(pt.tob, m, p.zapatos) + pd.svg + zapato(pd.tob, m, p.zapatos) +
-    `<g transform="translate(0 ${SUBIR})">` + bt.svg + accDetras +
-    `<path d="M-10 -222V-204H10V-222" fill="${p.piel}" stroke="${TINTA}" stroke-width="${TRAZO}" stroke-linejoin="round"/>` +
-    torso(p.ropa, m, idT) +
+    `<ellipse cx="0" cy="8" rx="46" ry="6" fill="${TINTA}" opacity=".08"/>` +
     pel.detras +
-    `<circle cx="${f(-m * 39)}" cy="-250" r="8.5" fill="${p.piel}" stroke="${TINTA}" stroke-width="${TRAZO}"/>` +
-    cara(p, m, idC) +
+    pt.svg + zapato(pt.tob, m, sombra(p.zapatos, 0.85)) +
+    pd.svg + zapato(pd.tob, m, p.zapatos) +
+    bt.svg + (o.accesorioDetras ? o.accesorioDetras(ctx) : '') +
+    `<path d="M-6 -256V-240H6V-256Z" fill="${sombra(p.piel, 0.9)}"/>` +
+    tronco(p.ropa, m, idT) + falda +
+    cabeza(p, m, idC) +
     pel.delante +
-    (p.corona ? corona() : '') +
-    bd.svg + acc + '</g>';
+    (p.corona ? corona(m) : '') +
+    bd.svg + (o.accesorio ? o.accesorio(ctx) : '');
 
   const anim = respira !== false ? ` class="esc-respira" style="--d:${respira}s"` : '';
   return `<g transform="translate(${f(x)} ${f(y)}) scale(${escala})"><g${anim}>${cuerpo}</g></g>`;
 }
 
-// Corona de laurel (para quien gana)
-export function corona() {
+// Corona de laurel sobre la cabeza.
+export function corona(m = 1) {
   const hojas = [];
-  for (let i = 0; i < 6; i++) {
-    const t = -2.6 + i * 0.36;
-    const x = Math.cos(t) * 44, y = -262 + Math.sin(t) * 44;
-    const xr = -x;
+  for (let i = 0; i < 5; i++) {
+    const t = -2.5 + i * 0.32;
+    const px = Math.cos(t) * 17, py = -272 + Math.sin(t) * 17;
     const rot = (t * 180) / Math.PI + 90;
-    hojas.push(`<ellipse cx="${f(x)}" cy="${f(y)}" rx="5" ry="10" transform="rotate(${f(rot + 30)} ${f(x)} ${f(y)})"/>`);
-    hojas.push(`<ellipse cx="${f(xr)}" cy="${f(y)}" rx="5" ry="10" transform="rotate(${f(-rot - 30)} ${f(xr)} ${f(y)})"/>`);
+    hojas.push(`<ellipse cx="${f(px)}" cy="${f(py)}" rx="2.6" ry="5.5" transform="rotate(${f(rot + 30)} ${f(px)} ${f(py)})"/>`);
+    hojas.push(`<ellipse cx="${f(-px)}" cy="${f(py)}" rx="2.6" ry="5.5" transform="rotate(${f(-rot - 30)} ${f(-px)} ${f(py)})"/>`);
   }
-  return `<g fill="#7F8F3E" stroke="${TINTA}" stroke-width="2.4">${hojas.join('')}</g>`;
+  return `<g fill="#8A9A4B">${hojas.join('')}</g>`;
 }
 
 // ── El reparto ──
 export const REPARTO = {
-  // La estratega: moño, blusa coral drapeada con cinturón dorado.
-  aurora: { piel: '#F3C9A6', peloColor: '#5A3324', pelo: 'mono', ropa: { tipo: 'quiton', color: '#E2683F', cinturon: '#E7A93A' }, pantalon: '#2B2F52', zapatos: '#3B2F45', boca: 'abierta' },
+  // La estratega: moño, blusa coral drapeada con cinturón dorado y falda azul.
+  aurora: { piel: '#F2B8A2', peloColor: '#3A2A4A', pelo: 'larga', ropa: { tipo: 'quiton', color: '#F07A45', cinturon: '#E7A93A' }, falda: '#2D3E8C', zapatos: '#4A2E4C' },
   // El analista: barba y camisa azul Egeo.
-  teo: { piel: '#DDA27C', peloColor: '#3A2620', pelo: 'corto', barba: true, boca: 'abierta', ropa: { tipo: 'camisa', color: '#3E7598', cuello: '#3E7598' }, pantalon: '#3A3A4C', zapatos: '#2A2440' },
+  teo: { piel: '#E3A88C', peloColor: '#2A2440', pelo: 'corto', barba: true, ropa: { tipo: 'camisa', color: '#3E6FA0' }, pantalon: '#1B2250', pantalonAncho: true, zapatos: '#4A2E4C' },
   // La empresaria: rizos y americana azafrán.
-  dafne: { piel: '#9C6548', peloColor: '#24202C', pelo: 'rizos', ropa: { tipo: 'americana', color: '#E7A93A', interior: '#FBF4E8', solapa: '#D69A2E' }, pantalon: '#5E6A34', zapatos: '#2A2440', boca: 'abierta' },
-  // El cliente: gafas, camisa clara y corbata.
-  leo: { piel: '#F1C3A0', peloColor: '#26232F', pelo: 'corto', gafas: true, ropa: { tipo: 'corbata', color: '#F4ECDD', corbata: '#2E5E7E' }, pantalon: '#4A4D66', zapatos: '#2A2440' },
+  dafne: { piel: '#A86A4E', peloColor: '#221C2C', pelo: 'rizos', ropa: { tipo: 'americana', color: '#E7A93A', interior: '#FBF4E8' }, pantalon: '#2D3E8C', zapatos: '#4A2E4C' },
+  // El cliente: gafas, camisa blanca y corbata.
+  leo: { piel: '#F3BFA6', peloColor: '#1F2347', pelo: 'corto', gafas: true, ropa: { tipo: 'corbata', color: '#FFFFFF', corbata: '#2D3E8C' }, manga: '#F4F2F8', pantalon: '#2D3E8C', pantalonAncho: true, zapatos: '#4A2E4C' },
   // La creadora: melena y jersey oliva.
-  nika: { piel: '#E8B48E', peloColor: '#B5652E', pelo: 'melena', ropa: { tipo: 'jersey', color: '#7F8F3E' }, pantalon: '#2B2F52', zapatos: '#3B2F45', ceja: 'alta' },
+  nika: { piel: '#EDB596', peloColor: '#B5652E', pelo: 'melena', ropa: { tipo: 'jersey', color: '#7F8F3E' }, pantalon: '#1B2250', zapatos: '#4A2E4C' },
 };
