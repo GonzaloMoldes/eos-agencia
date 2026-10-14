@@ -17,7 +17,7 @@ const { title, description, schema, noindex = false } = Astro.props;
 const canonical = `${BASE_URL}${Astro.url.pathname}`;
 const migasSchema = breadcrumbSchema(Astro.url.pathname);
 const schemas = [organizationSchema, migasSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])].filter(Boolean);
-const fuentes = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Instrument+Serif:ital@0;1&family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap';
+const fuentes = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Marcellus+SC&family=Instrument+Serif:ital@0;1&family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap';
 ---
 <!doctype html>
 <html lang="es">
@@ -50,6 +50,7 @@ const fuentes = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&fa
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <div class="dia" aria-hidden="true"></div>
   <Header />
   <Migas />
   <main id="contenido">

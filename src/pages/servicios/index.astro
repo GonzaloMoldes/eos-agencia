@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Escena from '../../components/Escena.astro';
+import Portal from '../../components/Portal.astro';
 import AuroraFondo from '../../components/AuroraFondo.astro';
 import TarjetasServicios from '../../components/TarjetasServicios.astro';
 import { SERVICIOS, CATEGORIAS, urlServicio, type Categoria } from '../../data/servicios';
@@ -24,14 +24,14 @@ const schema = {
   <section class="hero contenedor">
     <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra">✦</span>Servicios</span>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Servicios</span>
       <h1>Servicios de SEO, GEO y <em>marketing digital</em></h1>
       <p class="lead">Que te encuentren en Google, en Maps, en YouTube y en las respuestas de la IA. Que hablen de tu marca. Y que cada contacto llegue a cliente. Elige por dónde empezar.</p>
       <div class="hero-botones">
         <a class="btn btn--aurora" href={`mailto:${SITIO.email}?subject=${encodeURIComponent('¿Por dónde empiezo?')}`}>Ayúdame a elegir <span class="flecha">→</span></a>
       </div>
     </div>
-    <Escena nombre="servicios" class="hero-escena" />
+    <Portal escena="servicios" />
   </section>
 
   {grupos.map((g, i) => (

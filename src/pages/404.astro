@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Escena from '../components/Escena.astro';
+import Portal from '../components/Portal.astro';
 import AuroraFondo from '../components/AuroraFondo.astro';
 ---
 <BaseLayout title="Página no encontrada | EOS Studio" description="Esta página no existe." noindex>
@@ -15,6 +15,6 @@ import AuroraFondo from '../components/AuroraFondo.astro';
         <a class="btn btn--linea" href="/servicios/">Ver servicios</a>
       </div>
     </div>
-    <Escena nombre="404" class="hero-escena" />
+    <Portal escena="404" />
   </section>
 </BaseLayout>

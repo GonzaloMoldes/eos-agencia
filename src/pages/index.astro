@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Escena from '../components/Escena.astro';
+import Portal from '../components/Portal.astro';
 import AuroraFondo from '../components/AuroraFondo.astro';
 import Cinta from '../components/Cinta.astro';
 import Faq from '../components/Faq.astro';
@@ -41,7 +41,7 @@ const preguntas = [
   <section class="hero contenedor">
     <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra">✦</span>Agencia de marketing digital · Valencia</span>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Agencia de marketing digital · Valencia</span>
       <h1>Que tu marca <em>amanezca</em> en Google y en la IA</h1>
       <p class="lead">Somos EOS Studio, una agencia de marketing digital en Valencia. Posicionamos tu negocio en buscadores y en asistentes de IA, construimos su autoridad y conectamos marketing y ventas para que cada visita tenga un siguiente paso.</p>
       <div class="hero-botones">
@@ -49,7 +49,7 @@ const preguntas = [
         <a class="btn btn--linea" href="/servicios/">Ver servicios</a>
       </div>
     </div>
-    <Escena nombre="hero" class="hero-escena" />
+    <Portal escena="hero" />
   </section>
 
   <Cinta items={['SEO local', 'GEO', 'SEO para YouTube', 'Autoridad digital', 'Digital PR', 'Marketing automation', 'Consultoría CRM', 'Marketing de contenidos']} />
@@ -57,7 +57,7 @@ const preguntas = [
   <section class="mito seccion--noche">
     <div class="mito-horizonte" aria-hidden="true"></div>
     <div class="contenedor mito-in aparece">
-      <span class="eyebrow"><span class="letra">✦</span>El mito</span>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>El mito</span>
       <p class="mito-cita">«Cada mañana, Eos, la de dedos rosados, abría las puertas del cielo para que entrara <em>la luz</em>.»</p>
       <p class="mito-texto">Nuestro oficio se le parece: que tu marca sea lo primero que ve quien busca. En Google, en Maps, en YouTube y en las respuestas de la inteligencia artificial. La historia nos da el nombre; lo digital, las herramientas.</p>
     </div>

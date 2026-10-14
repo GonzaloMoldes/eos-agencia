@@ -2,7 +2,7 @@
 // Plantilla de las páginas de servicio. Pinta los bloques de src/data/paginas/<slug>.ts
 // en su orden, numerando cada sección con una letra griega (Α, Β, Γ...).
 import BaseLayout from './BaseLayout.astro';
-import Escena from '../components/Escena.astro';
+import Portal from '../components/Portal.astro';
 import AuroraFondo from '../components/AuroraFondo.astro';
 import Faq from '../components/Faq.astro';
 import TarjetasServicios from '../components/TarjetasServicios.astro';
@@ -51,7 +51,7 @@ const letra = () => LETRAS[n++ % LETRAS.length];
         {tienePlanes && <a class="btn btn--linea" href="#planes">Ver planes y precios</a>}
       </div>
     </div>
-    <Escena nombre={pagina.escena} class="hero-escena" />
+    <Portal escena={pagina.escena} />
   </section>
 
   {pagina.bloques.map((b) => {

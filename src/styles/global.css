@@ -1,8 +1,14 @@
 /* ══════════════════════════════════════════
-   EOS STUDIO — Sistema de diseño v2 «aurora moderna»
-   Historia: serif editorial en los titulares, letras griegas, mármol.
-   Modernidad: degradados de aurora difuminados, grano, retícula fina,
-   sans contemporánea y etiquetas en monoespaciada.
+   EOS STUDIO — Sistema de diseño v3 «Erigéneia» (la nacida de la mañana)
+   Cada detalle sale del mito de Eos:
+   - «de dedos rosados»: rayos rosas que nacen del horizonte;
+   - «de peplo azafrán»: el azafrán como color de acción;
+   - abre las puertas del cielo: la escena de portada va en un arco;
+   - el rocío (las lágrimas por Memnón): viñetas en forma de gota;
+   - los vasos de figuras rojas donde se la pinta: bandas en negro de vaso
+     con grecas de terracota;
+   - Eósforo, la estrella de la mañana: el acento de las etiquetas.
+   Lo moderno: tipografía editorial grande, cristal, grano y movimiento suave.
    ══════════════════════════════════════════ */
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -20,24 +26,28 @@
   --tinta-2: #474B66;   /* texto secundario (8:1) */
   --tinta-3: #66687C;   /* notas y etiquetas (5,1:1) */
 
-  /* Aurora: los colores del amanecer (los mismos que las ilustraciones) */
+  /* Aurora: los colores del mito (coral y azafrán, los de las ilustraciones) */
   --aurora:      #F07A45;
-  --aurora-ink:  #B0451A;  /* texto coral sobre mármol (5,3:1) */
-  --azafran:     #E7A93A;
+  --aurora-ink:  #A8431C;  /* texto coral/terracota sobre mármol (5,6:1) */
+  --azafran:     #E8A33D;  /* el peplo de azafrán */
+  --rosa:        #E98C83;  /* los dedos rosados */
+  --rocio:       #CFE0EC;  /* el rocío */
+  --terracota:   #C8643B;  /* figuras rojas */
+  --vaso:        #1B1412;  /* el negro de los vasos áticos */
   --lila:        #B9A7EC;
-  --rosa:        #F2A6A0;
   --oro:         #B8862B;
   --egeo:        #2D3E8C;
   --olivo:       #6F7B3F;
-  --noche:       #0E1230;  /* bandas oscuras */
-  --noche-2:     #1B2150;
-  --degradado:   linear-gradient(100deg,#F07A45 0%,#F2A06A 45%,#E7A93A 100%);
+  --noche:       #1B1412;  /* bandas oscuras: el mismo negro de vaso */
+  --noche-2:     #33231D;
+  --degradado:   linear-gradient(100deg,#E98C83 0%,#F07A45 45%,#E8A33D 100%);  /* de los dedos rosados al azafrán */
 
   --serif: 'Instrument Serif', Georgia, serif;
   --inscripcion: 'Cinzel', 'Trajan Pro', Georgia, serif;
   --sans: 'Inter Tight', system-ui, sans-serif;
   --mono: 'DM Mono', ui-monospace, monospace;
-  --etiqueta: var(--mono);
+  --inscripcion-sc: 'Marcellus SC', 'Cinzel', Georgia, serif;
+  --etiqueta: var(--inscripcion-sc);
 
   --ancho: 1180px;
   --radio: 20px;
@@ -47,7 +57,7 @@
 }
 
 html{overflow-x:clip;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-body{background:var(--marmol);color:var(--tinta);font-family:var(--sans);font-size:17px;line-height:1.65;overflow-x:hidden;position:relative;}
+body{background:linear-gradient(180deg,#F8E6DE 0,#F6EDE4 520px,var(--marmol) 1100px) no-repeat,var(--marmol);color:var(--tinta);font-family:var(--sans);font-size:17px;line-height:1.65;overflow-x:hidden;position:relative;}
 img,svg{max-width:100%;display:block;}
 a{color:var(--aurora-ink);text-underline-offset:3px;}
 a:hover{color:var(--tinta);}
@@ -55,7 +65,7 @@ a:hover{color:var(--tinta);}
 a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--aurora);outline-offset:3px;border-radius:6px;}
 
 /* Retícula de fondo: cuatro columnas finas alineadas con el contenedor. */
-body::before{content:"";position:fixed;top:0;bottom:0;left:max(16px,calc(50vw - 566px));right:max(16px,calc(50vw - 566px));background-image:linear-gradient(90deg,var(--linea) 1px,transparent 1px);background-size:25% 100%;border-right:1px solid var(--linea);opacity:.55;pointer-events:none;z-index:-1;}
+body::before{content:"";position:fixed;top:0;bottom:0;left:max(16px,calc(50vw - 566px));right:max(16px,calc(50vw - 566px));background-image:linear-gradient(90deg,var(--linea) 1px,transparent 1px);background-size:25% 100%;border-right:1px solid var(--linea);opacity:.35;pointer-events:none;z-index:-1;}
 /* Grano: textura de papel/piedra muy suave por encima de todo. */
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.07;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");}
 
@@ -69,36 +79,38 @@ p{max-width:66ch;}
 .lead{font-size:1.16rem;color:var(--tinta-2);line-height:1.6;}
 .nota{font-size:.86rem;color:var(--tinta-3);}
 
-/* Etiqueta de sección: letra griega en un círculo + texto en monoespaciada */
-.eyebrow{font-family:var(--etiqueta);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);display:inline-flex;align-items:center;gap:.8em;}
-.eyebrow .letra{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--linea-2);font-family:var(--serif);font-size:1.05rem;letter-spacing:0;color:var(--aurora-ink);text-transform:none;background:rgba(255,255,255,.6);}
+/* Etiqueta de sección: numeral griego con su keraia (Αʹ = 1), un filete y
+   el texto en versalitas de inscripción. */
+.eyebrow{font-family:var(--etiqueta);font-size:.92rem;letter-spacing:.12em;color:var(--tinta-2);display:inline-flex;align-items:center;gap:.9em;}
+.eyebrow .letra{display:inline-flex;align-items:center;font-family:var(--serif);font-size:1.35rem;letter-spacing:0;line-height:1;color:var(--terracota);padding-right:44px;background:linear-gradient(currentColor,currentColor) no-repeat right center/32px 1px;}
+.eyebrow .letra::after{content:"ʹ";font-size:.8em;margin-left:1px;}
 
 /* ── Estructura ── */
 .contenedor{width:100%;max-width:var(--ancho);margin:0 auto;padding:0 24px;}
 .seccion{padding:clamp(72px,10vw,128px) 0;position:relative;}
 .seccion--piedra{background:linear-gradient(180deg,rgba(236,231,222,.85),rgba(236,231,222,.6));}
-.seccion--noche{background:radial-gradient(90% 60% at 50% 115%,rgba(240,122,69,.35),rgba(185,167,236,.12) 45%,transparent 70%),var(--noche);color:#E7E3F0;overflow:hidden;}
+.seccion--noche{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13h6V1h12v8h-6V5M12 5v4M18 9v4h10' fill='none' stroke='%23C8643B' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x left 0 top 28px/28px 14px,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13h6V1h12v8h-6V5M12 5v4M18 9v4h10' fill='none' stroke='%23C8643B' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x left 0 bottom 28px/28px 14px,radial-gradient(90% 60% at 50% 115%,rgba(200,100,59,.38),rgba(233,140,131,.1) 45%,transparent 70%),var(--vaso);color:#EDE3DA;overflow:hidden;}
 .seccion--noche h2,.seccion--noche h3{color:#FFFFFF;}
-.seccion--noche .lead,.seccion--noche p{color:#C3BFD6;}
-.seccion--noche .eyebrow{color:#C3BFD6;}
-.seccion--noche .eyebrow .letra{border-color:rgba(255,255,255,.25);color:var(--azafran);background:rgba(255,255,255,.04);}
+.seccion--noche .lead,.seccion--noche p{color:#CDBFB4;}
+.seccion--noche .eyebrow{color:#CDBFB4;}
+.seccion--noche .eyebrow .letra{color:#E07B4F;}
 .cabecera-seccion{max-width:780px;margin-bottom:56px;display:grid;gap:18px;}
 .cabecera-seccion--centro{margin-inline:auto;text-align:center;justify-items:center;}
 
 /* Greca: hoy solo como filete fino (pie de página) */
-.greca{height:12px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 11h5V1h10v7h-5V4M10 4v4M15 8v3h9' fill='none' stroke='%23F07A45' stroke-opacity='.55' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:repeat-x;background-position:center;}
+.greca{height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13h6V1h12v8h-6V5M12 5v4M18 9v4h10' fill='none' stroke='%23C8643B' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x center/28px 14px;}
 
 /* ── Botones ── */
 .btn{display:inline-flex;align-items:center;gap:.7em;font-family:var(--sans);font-weight:500;font-size:.98rem;padding:14px 16px 14px 24px;border-radius:999px;text-decoration:none;border:1px solid transparent;transition:transform .25s,background .25s,color .25s,box-shadow .25s,border-color .25s;cursor:pointer;}
 .btn:hover{transform:translateY(-2px);}
 .btn .flecha{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-size:.95rem;transition:transform .25s;}
 .btn:hover .flecha{transform:translateX(3px) rotate(-45deg);}
-.btn--aurora{background:var(--degradado);color:var(--tinta);box-shadow:0 14px 30px -14px rgba(240,122,69,.9);}
-.btn--aurora .flecha{background:var(--tinta);color:#fff;}
+.btn--aurora{background:var(--degradado);color:var(--tinta);box-shadow:0 14px 30px -14px rgba(233,140,131,.95);}
+.btn--aurora .flecha{background:var(--vaso);color:#fff;}
 .btn--aurora:hover{color:var(--tinta);box-shadow:0 18px 36px -12px rgba(240,122,69,.95);}
-.btn--tinta{background:var(--tinta);color:#fff;}
+.btn--tinta{background:var(--vaso);color:#fff;}
 .btn--tinta .flecha{background:var(--degradado);color:var(--tinta);}
-.btn--tinta:hover{background:var(--noche-2);color:#fff;}
+.btn--tinta:hover{background:#33231D;color:#fff;}
 .btn--linea{border-color:var(--linea-2);color:var(--tinta);background:rgba(255,255,255,.55);backdrop-filter:blur(8px);padding:14px 24px;}
 .btn--linea:hover{border-color:var(--tinta);color:var(--tinta);}
 
@@ -109,18 +121,18 @@ p{max-width:66ch;}
 .rejilla--3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));}
 .rejilla--4{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));}
 
-/* Lista con destello de cuatro puntas */
+/* Lista con gotas de rocío (las lágrimas de Eos por Memnón) */
 .lista-sol{list-style:none;display:grid;gap:14px;}
 .lista-sol li{position:relative;padding-left:30px;color:var(--tinta-2);}
-.lista-sol li::before{content:"";position:absolute;left:0;top:.3em;width:15px;height:15px;background:var(--degradado);clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);}
+.lista-sol li::before{content:"";position:absolute;left:3px;top:.5em;width:11px;height:11px;border-radius:0 50% 50% 50%;transform:rotate(45deg);background:radial-gradient(circle at 70% 70%,#FFFFFF 0 18%,transparent 22%),linear-gradient(135deg,#9EC0D8,var(--rocio));box-shadow:0 2px 4px rgba(46,94,126,.25);}
 .lista-sol li strong{color:var(--tinta);font-weight:600;}
 
 /* ── Fondo de aurora: orbes difuminados que se mueven despacio ── */
 .aurora-fondo{position:absolute;inset:-12% 0 auto;height:118%;pointer-events:none;z-index:-1;filter:blur(70px);opacity:.75;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 52%,transparent 88%);mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 52%,transparent 88%);}
 .aurora-fondo span{position:absolute;border-radius:50%;}
-.aurora-fondo span:nth-child(1){width:42vw;height:42vw;max-width:620px;max-height:620px;right:2%;top:8%;background:radial-gradient(circle,#F6B48A,transparent 68%);}
-.aurora-fondo span:nth-child(2){width:34vw;height:34vw;max-width:500px;max-height:500px;right:24%;top:30%;background:radial-gradient(circle,#F3D19A,transparent 68%);}
-.aurora-fondo span:nth-child(3){width:36vw;height:36vw;max-width:540px;max-height:540px;left:-6%;top:-10%;background:radial-gradient(circle,#D9CEF6,transparent 68%);}
+.aurora-fondo span:nth-child(1){width:42vw;height:42vw;max-width:620px;max-height:620px;right:2%;top:8%;background:radial-gradient(circle,#F3B2A6,transparent 68%);}
+.aurora-fondo span:nth-child(2){width:34vw;height:34vw;max-width:500px;max-height:500px;right:24%;top:30%;background:radial-gradient(circle,#F4D29C,transparent 68%);}
+.aurora-fondo span:nth-child(3){width:36vw;height:36vw;max-width:540px;max-height:540px;left:-6%;top:-10%;background:radial-gradient(circle,#D6E5F0,transparent 68%);}
 @media (prefers-reduced-motion: no-preference){
   .aurora-fondo span{animation:orbe 18s ease-in-out infinite alternate;}
   .aurora-fondo span:nth-child(2){animation-duration:23s;animation-delay:-6s;}
@@ -146,18 +158,45 @@ p{max-width:66ch;}
 @media (max-width:900px){ .hero{grid-template-columns:1fr;} .hero .hero-escena{order:-1;max-width:540px;margin-inline:auto;} }
 
 .pasos{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:20px;}
-.pasos li{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);border-radius:var(--radio);padding:26px;display:grid;gap:10px;align-content:start;}
-.paso-num{font-family:var(--serif);font-size:2.8rem;line-height:1;background:var(--degradado);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.pasos li{border:1px solid rgba(200,100,59,.45);background:linear-gradient(180deg,rgba(200,100,59,.12),rgba(255,255,255,.02) 55%);border-radius:220px 220px 18px 18px;padding:64px 26px 30px;display:grid;gap:10px;align-content:start;text-align:center;justify-items:center;}
+.paso-num{font-family:var(--serif);font-size:3.2rem;line-height:1;background:var(--degradado);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .pasos h3{font-size:1.5rem;}
 
-.banda-cta{position:relative;isolation:isolate;overflow:hidden;padding:clamp(88px,12vw,150px) 0;text-align:center;background:var(--noche);color:#E7E3F0;}
+.banda-cta{position:relative;isolation:isolate;overflow:hidden;padding:clamp(88px,12vw,150px) 0;text-align:center;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13h6V1h12v8h-6V5M12 5v4M18 9v4h10' fill='none' stroke='%23C8643B' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x left 0 top 28px/28px 14px,var(--vaso);color:#EDE3DA;}
 /* El sol asoma por debajo de la banda: el texto queda siempre sobre la noche. */
-.banda-cta::before{content:"";position:absolute;left:50%;top:calc(80% - min(450px,90vw));width:min(900px,180vw);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;clip-path:inset(0 0 50% 0);background:radial-gradient(circle,#F07A45 0%,#F2A06A 12%,rgba(231,169,58,.45) 24%,rgba(185,167,236,.14) 42%,transparent 62%);z-index:-1;}
+.banda-cta::before{content:"";position:absolute;left:50%;top:calc(80% - min(450px,90vw));width:min(900px,180vw);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;clip-path:inset(0 0 50% 0);background:radial-gradient(circle,#F07A45 0%,#F2A06A 12%,rgba(232,163,61,.45) 24%,rgba(233,140,131,.16) 42%,transparent 62%);z-index:-1;}
 .banda-cta::after{content:"";position:absolute;left:10%;right:10%;top:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);z-index:-1;}
 .banda-cta h2{color:#fff;}
-.banda-cta .lead{color:#D8D3E6;}
-.banda-cta .eyebrow{color:#C3BFD6;}
-.banda-cta .eyebrow .letra{border-color:rgba(255,255,255,.25);color:var(--azafran);background:rgba(255,255,255,.04);}
+.banda-cta .lead{color:#DCCFC5;}
+.banda-cta .eyebrow{color:#CDBFB4;}
+.banda-cta .eyebrow .letra{color:#E07B4F;}
 .banda-cta .nota{color:#A9A4C0;}
 .banda-in{display:grid;gap:20px;justify-items:center;}
 .banda-in .lead{margin-inline:auto;}
+
+/* ── Las puertas del cielo: el arco que enmarca la escena de portada ──
+   Dentro, el cielo del alba; desde el horizonte, los «dedos rosados»
+   (rayos) y el sol que sube al cargar la página. La escena va por encima
+   y puede salirse del arco (los bocadillos lo desbordan a propósito). */
+.hero-visual{position:relative;isolation:isolate;}
+.portal{position:absolute;left:9%;right:9%;top:2%;bottom:5%;z-index:-1;border-radius:999px 999px 26px 26px;overflow:hidden;background:linear-gradient(180deg,#F5CFC6 0%,#F8DCC2 42%,#FBEBDD 72%,#FBF4EA 100%);border:1px solid rgba(200,100,59,.28);box-shadow:inset 0 0 0 10px rgba(255,255,255,.35),0 40px 80px -50px rgba(200,100,59,.6);}
+.portal::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from -90deg at 50% 92%,rgba(233,140,131,.32) 0deg 5deg,transparent 5deg 15deg);-webkit-mask-image:radial-gradient(120% 90% at 50% 92%,#000 20%,transparent 70%);mask-image:radial-gradient(120% 90% at 50% 92%,#000 20%,transparent 70%);}
+.portal-sol{position:absolute;left:50%;bottom:8%;width:44%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,50%);background:radial-gradient(circle,#F07A45 0 34%,#F3A06C 35% 52%,rgba(232,163,61,.35) 53% 70%,transparent 71%);}
+.portal::after{content:"";position:absolute;left:0;right:0;bottom:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,100,59,.55),transparent);}
+@media (prefers-reduced-motion: no-preference){
+  .portal-sol{animation:solSale 2.6s cubic-bezier(.2,.7,.2,1) both;}
+  .portal::before{animation:dedos 14s ease-in-out infinite alternate;}
+}
+@keyframes solSale{from{transform:translate(-50%,95%)}to{transform:translate(-50%,50%)}}
+@keyframes dedos{from{opacity:.65;transform:scale(1)}to{opacity:1;transform:scale(1.04)}}
+
+/* El día avanza: barra fina de progreso de lectura con los colores del alba. */
+.dia{position:fixed;top:0;left:0;right:0;height:3px;z-index:150;pointer-events:none;background:var(--degradado);transform-origin:0 50%;transform:scaleX(0);}
+@supports (animation-timeline: scroll()){
+  .dia{animation:dia linear both;animation-timeline:scroll(root);}
+}
+@supports not (animation-timeline: scroll()){ .dia{display:none;} }
+@keyframes dia{to{transform:scaleX(1)}}
+/* Dentro del arco el cielo ya hace de fondo: sobra la mancha de la escena. */
+.hero-visual .esc-mancha{display:none;}
+.eyebrow .letra--sin::after{content:none;}

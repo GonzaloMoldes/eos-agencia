@@ -1,0 +1,11 @@
+---
+// Las puertas del cielo que Eos abre cada mañana: un arco con el cielo del
+// alba detrás de la escena de portada. Estilos en global.css (.portal).
+import Escena from './Escena.astro';
+export interface Props { escena: string }
+const { escena } = Astro.props;
+---
+<div class="hero-visual hero-escena">
+  <div class="portal" aria-hidden="true"><span class="portal-sol"></span></div>
+  <Escena nombre={escena} />
+</div>

@@ -19,7 +19,7 @@ export const suelo = (cx = 360, y = 486, ancho = 640) => {
 // Mancha suave de fondo detrás de la escena (no toca los bordes del dibujo,
 // para que no se vea el corte del encuadre sobre la página).
 export const mancha = (espejo = false) =>
-  `<path transform="${espejo ? 'translate(720 0) scale(-1 1)' : ''}" d="M110 190Q130 70 300 70Q470 40 590 120Q700 200 650 330Q610 430 360 440Q130 452 96 340Q74 262 110 190Z" fill="${SUELO}" opacity=".55"/>`;
+  `<path transform="${espejo ? 'translate(720 0) scale(-1 1)' : ''}" class="esc-mancha" d="M110 190Q130 70 300 70Q470 40 590 120Q700 200 650 330Q610 430 360 440Q130 452 96 340Q74 262 110 190Z" fill="${SUELO}" opacity=".55"/>`;
 
 // Sol de la aurora asomando por el horizonte, con halo y rayos que giran.
 export function aurora(cx, cy, r = 110) {

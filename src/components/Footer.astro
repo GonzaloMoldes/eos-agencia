@@ -5,6 +5,7 @@ import { SERVICIOS, urlServicio } from '../data/servicios';
 const publicados = SERVICIOS.filter((s) => s.publicado);
 ---
 <footer class="pie" id="contacto">
+  <div class="greca pie-greca"></div>
   <div class="contenedor pie-in">
     <div class="pie-marca">
       <Logo claro />
@@ -35,7 +36,8 @@ const publicados = SERVICIOS.filter((s) => s.publicado);
 </footer>
 
 <style>
-  .pie{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(70% 50% at 50% 100%,rgba(240,122,69,.28),rgba(185,167,236,.08) 50%,transparent 75%),var(--noche);color:#C3BFD6;padding-top:88px;}
+  .pie{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(70% 50% at 50% 100%,rgba(200,100,59,.32),rgba(233,140,131,.08) 50%,transparent 75%),var(--vaso);color:#CDBFB4;padding-top:0;}
+  .pie-greca{margin:28px 0 72px;}
   .pie-gigante{font-family:var(--inscripcion);font-weight:700;font-size:clamp(7rem,26vw,22rem);line-height:.78;letter-spacing:.08em;text-align:center;margin:40px auto -0.06em;max-width:none;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(240,122,69,.22),transparent 70%);-webkit-background-clip:text;background-clip:text;user-select:none;}
   .pie-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:48px;}
   .pie-marca{display:grid;gap:20px;align-content:start;}
