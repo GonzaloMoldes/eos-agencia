@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Firmas de correo · EOS Studio</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=Marcellus+SC&display=swap">
+<!--
+  Generador de firmas de correo de EOS Studio.
+
+  La firma se monta con tablas y estilos en línea, que es lo único que
+  respetan Gmail, Outlook y Apple Mail. Nada de CSS animado ni SVG: el sol
+  animado es un GIF (sol-eos.gif) y la greca un PNG, los dos servidos desde
+  www.eosstudio.es/firmas/. Gmail no muestra imágenes incrustadas en base64,
+  por eso tienen que estar publicadas en la web.
+
+  Para añadir a alguien del equipo a la lista: añadir una entrada a EQUIPO.
+  La página no se indexa (noindex) y no está enlazada desde la web.
+-->
+<style>
+  :root{--marmol:#F4F1EB;--tinta:#141833;--tinta-2:#474B66;--linea:rgba(20,24,51,.12);--terracota:#C8643B;--vaso:#1B1412;--degradado:linear-gradient(100deg,#E98C83,#F07A45 45%,#E8A33D);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter Tight',system-ui,sans-serif;color:var(--tinta);background:linear-gradient(180deg,#F8E6DE 0,var(--marmol) 600px) no-repeat,var(--marmol);min-height:100vh;padding:48px 20px 80px;}
+  .envoltura{max-width:1100px;margin:0 auto;display:grid;gap:36px;}
+  header{display:grid;gap:12px;}
+  .etiqueta{font-family:'Marcellus SC',serif;letter-spacing:.12em;color:var(--tinta-2);font-size:.95rem;}
+  .etiqueta span{font-family:'Instrument Serif',serif;color:var(--terracota);font-size:1.3rem;margin-right:10px;}
+  h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(2.4rem,5vw,3.8rem);line-height:1;letter-spacing:-.02em;}
+  h1 em{background:var(--degradado);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  header p{color:var(--tinta-2);max-width:62ch;}
+  .rejilla{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;align-items:start;}
+  @media (max-width:880px){.rejilla{grid-template-columns:1fr;}}
+  .panel{background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:20px;padding:26px;display:grid;gap:16px;}
+  label{display:grid;gap:6px;font-size:.85rem;font-weight:500;color:var(--tinta-2);}
+  input,select{font:inherit;font-size:.98rem;color:var(--tinta);padding:11px 13px;border:1px solid var(--linea);border-radius:12px;background:#fff;}
+  input:focus,select:focus{outline:2px solid #F07A45;outline-offset:1px;}
+  .ayuda{font-size:.78rem;color:#66687C;font-weight:400;}
+  .vista{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:34px 30px;overflow-x:auto;}
+  /* Aproximación al modo oscuro de Gmail y Outlook: invierten los colores
+     del texto y dejan las imágenes como están. */
+  .vista-oscura{background:#fff;filter:invert(1) hue-rotate(180deg);}
+  .vista-oscura img{filter:invert(1) hue-rotate(180deg);}
+  .acciones{display:flex;flex-wrap:wrap;gap:10px;}
+  button{font:inherit;font-weight:500;font-size:.95rem;padding:12px 20px;border-radius:999px;border:1px solid var(--linea);background:#fff;color:var(--tinta);cursor:pointer;transition:transform .2s;}
+  button:hover{transform:translateY(-2px);}
+  button.principal{background:var(--degradado);border-color:transparent;box-shadow:0 12px 26px -14px rgba(233,140,131,.95);}
+  .aviso{font-size:.88rem;color:#3E6B2E;min-height:1.3em;}
+  details{background:rgba(255,255,255,.6);border:1px solid var(--linea);border-radius:16px;padding:16px 20px;}
+  summary{cursor:pointer;font-weight:600;}
+  details ol{margin:12px 0 0 20px;display:grid;gap:6px;color:var(--tinta-2);font-size:.95rem;}
+  .titulo-vista{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;font-size:.85rem;color:var(--tinta-2);}
+  .titulo-vista label{display:flex;align-items:center;gap:8px;font-weight:400;}
+</style>
+</head>
+<body>
+<div class="envoltura">
+  <header>
+    <p class="etiqueta"><span>✦</span>Uso interno</p>
+    <h1>Firmas de correo <em>con el sol de Eos</em></h1>
+    <p>Elige a una persona del equipo o rellena los datos, revisa la firma y cópiala. Se pega tal cual en Gmail, Outlook o Apple Mail.</p>
+  </header>
+
+  <div class="rejilla">
+    <form class="panel" id="datos" autocomplete="off">
+      <label>Persona
+        <select id="persona"></select>
+      </label>
+      <label>Nombre <input id="nombre" required></label>
+      <label>Cargo <input id="cargo"></label>
+      <label>Especialidades <span class="ayuda">Separadas por comas</span><input id="especialidades"></label>
+      <label>Correo <input id="email" type="email"></label>
+      <label>Teléfono <span class="ayuda">Opcional</span><input id="telefono" type="tel"></label>
+      <label>LinkedIn <span class="ayuda">Opcional, la URL completa</span><input id="linkedin" type="url"></label>
+      <label>Frase <span class="ayuda">Opcional</span><input id="frase"></label>
+    </form>
+
+    <div style="display:grid;gap:16px;">
+      <div>
+        <div class="titulo-vista">
+          <span>Vista previa</span>
+          <label><input type="checkbox" id="oscuro"> Ver en modo oscuro</label>
+        </div>
+        <div class="vista" id="vista"></div>
+      </div>
+      <div class="acciones">
+        <button type="button" class="principal" id="copiar">Copiar firma</button>
+        <button type="button" id="copiarCodigo">Copiar código HTML</button>
+        <button type="button" id="descargar">Descargar .html</button>
+      </div>
+      <p class="aviso" id="aviso" role="status"></p>
+      <details>
+        <summary>Cómo instalarla en Gmail</summary>
+        <ol>
+          <li>Pulsa «Copiar firma».</li>
+          <li>Gmail → ⚙ Configuración → Ver todos los ajustes → General → Firma → Crear nueva.</li>
+          <li>Pega (Ctrl/Cmd + V) en el cuadro de la firma y guarda los cambios al final de la página.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Cómo instalarla en Outlook</summary>
+        <ol>
+          <li>Pulsa «Copiar firma».</li>
+          <li>Outlook web o nuevo Outlook: Configuración → Cuentas → Firmas → Nueva firma. Outlook clásico: Archivo → Opciones → Correo → Firmas.</li>
+          <li>Pega y guarda. Outlook de escritorio muestra el sol quieto (el primer fotograma del GIF); en el resto se ve animado.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Cómo instalarla en Apple Mail</summary>
+        <ol>
+          <li>Pulsa «Descargar .html» y abre el archivo en Safari.</li>
+          <li>Selecciona toda la firma (Cmd + A) y cópiala (Cmd + C).</li>
+          <li>Mail → Ajustes → Firmas → + y pega. Desmarca «Usar siempre la fuente por omisión del mensaje».</li>
+        </ol>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Equipo: para añadir a alguien, una entrada más ──
+  const EQUIPO = [
+    {
+      nombre: 'AnaMaria Vaduva',
+      cargo: 'Adquisición y generación de leads',
+      especialidades: 'SEO, GEO, Paid Media, Lead Generation',
+      email: 'anamaria@eosstudio.es',
+      telefono: '',
+      linkedin: '',
+      frase: 'Que tu marca amanezca en Google y en la IA.',
+    },
+    {
+      nombre: '', cargo: '', especialidades: 'SEO, GEO, Marketing automation, CRM',
+      email: '', telefono: '', linkedin: '', frase: 'Que tu marca amanezca en Google y en la IA.',
+    },
+  ];
+
+  const WEB = 'https://www.eosstudio.es';
+  const IMG = WEB + '/firmas/';
+  const C = { tinta: '#1B1412', texto: '#4A4155', suave: '#7A6E78', terracota: '#C8643B', rosa: '#E98C83', coral: '#F07A45', azafran: '#E8A33D' };
+  const SERIF = "Georgia,'Times New Roman',serif";
+  const SANS = 'Arial,Helvetica,sans-serif';
+
+  const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const telHref = (t) => 'tel:' + t.replace(/[^\d+]/g, '');
+
+  // La firma. Solo tablas y estilos en línea: es lo que sobrevive en todos
+  // los clientes de correo. Colores planos (Outlook no pinta degradados).
+  function firma(d) {
+    const esp = d.especialidades.split(',').map((x) => x.trim()).filter(Boolean)
+      .map(esc).join(`&nbsp;<span style="color:${C.azafran};">✦</span>&nbsp;`);
+    const fila = (etiqueta, html) => `
+              <tr>
+                <td style="padding:2px 10px 2px 0;font-family:${SERIF};font-style:italic;font-size:13px;line-height:20px;color:${C.terracota};white-space:nowrap;vertical-align:top;">${etiqueta}</td>
+                <td style="padding:2px 0;font-family:${SANS};font-size:13px;line-height:20px;color:${C.texto};">${html}</td>
+              </tr>`;
+    const enlace = (href, texto) => `<a href="${esc(href)}" style="color:${C.texto};text-decoration:none;">${esc(texto)}</a>`;
+
+    let contacto = '';
+    if (d.email) contacto += fila('correo', enlace('mailto:' + d.email, d.email));
+    if (d.telefono) contacto += fila('teléfono', enlace(telHref(d.telefono), d.telefono));
+    contacto += fila('web', enlace(WEB + '/', 'eosstudio.es'));
+    if (d.linkedin) contacto += fila('linkedin', enlace(d.linkedin, d.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')));
+
+    return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;max-width:520px;font-family:${SANS};color:${C.tinta};">
+  <tr>
+    <td style="padding:0 20px 0 0;vertical-align:top;width:96px;">
+      <a href="${WEB}/" style="text-decoration:none;"><img src="${IMG}sol-eos.gif" width="96" height="120" alt="EOS Studio" style="display:block;width:96px;height:120px;border:0;"></a>
+    </td>
+    <td style="padding:0;vertical-align:top;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        <tr><td style="font-family:${SERIF};font-size:25px;line-height:30px;color:${C.tinta};padding:0;">${esc(d.nombre) || 'Nombre Apellido'}</td></tr>
+        ${d.cargo ? `<tr><td style="font-family:${SERIF};font-style:italic;font-size:15px;line-height:22px;color:${C.terracota};padding:2px 0 0;">${esc(d.cargo)}</td></tr>` : ''}
+        ${esp ? `<tr><td style="font-family:${SANS};font-size:10px;line-height:18px;letter-spacing:1.6px;text-transform:uppercase;color:${C.suave};padding:6px 0 0;">${esp}</td></tr>` : ''}
+        <tr><td style="padding:12px 0 10px;">
+          <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;"><tr>
+            <td width="44" height="3" style="width:44px;height:3px;background-color:${C.rosa};font-size:0;line-height:0;">&nbsp;</td>
+            <td width="44" height="3" style="width:44px;height:3px;background-color:${C.coral};font-size:0;line-height:0;">&nbsp;</td>
+            <td width="44" height="3" style="width:44px;height:3px;background-color:${C.azafran};font-size:0;line-height:0;">&nbsp;</td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="padding:0;">
+          <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">${contacto}
+          </table>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:16px 0 0;">
+      <img src="${IMG}greca.png" width="520" height="12" alt="" style="display:block;width:100%;max-width:520px;height:auto;border:0;">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:10px 0 0;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%" style="border-collapse:collapse;"><tr>
+        <td style="font-family:${SERIF};font-size:16px;line-height:22px;letter-spacing:3px;color:${C.tinta};padding:0;white-space:nowrap;"><a href="${WEB}/" style="color:${C.tinta};text-decoration:none;"><b>EOS</b> <i style="letter-spacing:0;color:${C.terracota};">Studio</i></a></td>
+        ${d.frase ? `<td align="right" style="font-family:${SERIF};font-style:italic;font-size:13px;line-height:22px;color:${C.suave};padding:0 0 0 12px;">${esc(d.frase)}</td>` : ''}
+      </tr></table>
+    </td>
+  </tr>
+</table>`;
+  }
+
+  // ── Formulario ──
+  const campos = ['nombre', 'cargo', 'especialidades', 'email', 'telefono', 'linkedin', 'frase'];
+  const $ = (id) => document.getElementById(id);
+  const sel = $('persona');
+  EQUIPO.forEach((p, i) => sel.add(new Option(p.nombre || 'Nueva persona', i)));
+  const cargar = (i) => campos.forEach((c) => ($(c).value = EQUIPO[i][c] ?? ''));
+  const datos = () => Object.fromEntries(campos.map((c) => [c, $(c).value.trim()]));
+  const pintar = () => ($('vista').innerHTML = firma(datos()));
+  const aviso = (t) => { $('aviso').textContent = t; setTimeout(() => ($('aviso').textContent = ''), 4000); };
+
+  sel.addEventListener('change', () => { cargar(sel.value); pintar(); });
+  $('datos').addEventListener('input', pintar);
+  $('oscuro').addEventListener('change', (e) => $('vista').classList.toggle('vista-oscura', e.target.checked));
+
+  $('copiar').addEventListener('click', async () => {
+    const html = firma(datos());
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }), 'text/plain': new Blob([$('vista').innerText], { type: 'text/plain' }) })]);
+      aviso('Firma copiada. Pégala en la configuración de firmas de tu correo.');
+    } catch {
+      // Navegadores sin ClipboardItem: se copia seleccionando la vista previa.
+      const r = document.createRange(); r.selectNodeContents($('vista'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      document.execCommand('copy'); s.removeAllRanges();
+      aviso('Firma copiada.');
+    }
+  });
+  $('copiarCodigo').addEventListener('click', async () => {
+    await navigator.clipboard.writeText(firma(datos()));
+    aviso('Código HTML copiado.');
+  });
+  $('descargar').addEventListener('click', () => {
+    const d = datos();
+    const doc = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Firma ${esc(d.nombre)}</title></head><body style="margin:24px;">${firma(d)}</body></html>`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([doc], { type: 'text/html' }));
+    a.download = 'firma-' + (d.nombre || 'eos').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-') + '.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  cargar(0); pintar();
+</script>
+</body>
+</html>

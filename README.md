@@ -39,3 +39,13 @@ Los SVG de `src/assets/ilustraciones/` se generan: no se editan a mano. Los pers
 ## Despliegue
 
 Proyecto de Vercel conectado a este repositorio, framework Astro, sin variables de entorno de momento.
+
+## Firmas de correo
+
+Generador interno en `/firmas/` (`public/firmas/index.html`, no indexado y sin enlazar desde la web): se elige a la persona o se rellenan sus datos, y se copia la firma para pegarla en Gmail, Outlook o Apple Mail.
+
+- La firma es HTML con tablas y estilos en línea: es lo único que respetan todos los clientes de correo.
+- El sol animado es un GIF (`public/firmas/sol-eos.gif`) y la greca un PNG (`public/firmas/greca.png`). Las firmas los cargan desde `https://www.eosstudio.es/firmas/`, así que tienen que estar publicados en producción.
+- Se regeneran con `python3 scripts/firmas/sol.py` y `python3 scripts/firmas/greca.py` (necesitan Pillow).
+- Para añadir a alguien del equipo a la lista: una entrada más en `EQUIPO`, dentro de `public/firmas/index.html`.
+- Outlook de escritorio muestra el GIF quieto (su primer fotograma); el resto lo anima.
