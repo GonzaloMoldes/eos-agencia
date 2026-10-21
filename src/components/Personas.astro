@@ -21,6 +21,16 @@ const { compacto = false } = Astro.props;
         <p class="persona-cargo">{p.cargo}</p>
         {!compacto && p.especialidades.length > 0 && <ul class="chips">{p.especialidades.map((e) => <li>{e}</li>)}</ul>}
         {!compacto && p.bio && <p class="persona-bio">{p.bio}</p>}
+        {!compacto && p.certificaciones.length > 0 && (
+          <details class="persona-certs">
+            <summary>{p.certificaciones.length} certificaciones</summary>
+            <ul>
+              {p.certificaciones.map((c) => (
+                <li><strong>{c.nombre}</strong><span>{c.emisor} · {c.fecha}{c.vence ? `–${c.vence}` : ''}</span></li>
+              ))}
+            </ul>
+          </details>
+        )}
         <p class="persona-enlaces">
           <a href={p.linkedin} target="_blank" rel="noopener" aria-label={`LinkedIn de ${p.nombre}`}><Iconos nombre="linkedin" tam={16} /> LinkedIn</a>
           {!compacto && <a href={`mailto:${p.email}`}>{p.email}</a>}
@@ -31,7 +41,7 @@ const { compacto = false } = Astro.props;
 </ul>
 <style>
   .personas{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:22px;}
-  .persona{display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:var(--radio);padding:26px;}
+  .persona{display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:start;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:var(--radio);padding:26px;}
   .personas--compacto .persona{grid-template-columns:96px 1fr;gap:18px;padding:18px;}
   @media (max-width:520px){ .persona{grid-template-columns:1fr;} }
   .retrato{position:relative;overflow:hidden;aspect-ratio:4/5;border-radius:999px 999px 18px 18px;background:linear-gradient(180deg,#F5CFC6,#F8DCC2 55%,#FBEBDD);border:1px solid rgba(200,100,59,.3);display:grid;place-items:center;max-width:150px;}
@@ -47,6 +57,13 @@ const { compacto = false } = Astro.props;
   .chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
   .chips li{font-size:.8rem;padding:4px 10px;border-radius:999px;border:1px solid var(--linea-2);color:var(--tinta-2);background:rgba(255,255,255,.6);}
   .persona-bio{color:var(--tinta-2);font-size:.96rem;margin-top:4px;}
+  .persona-certs{margin-top:8px;border-top:1px solid var(--linea);padding-top:10px;}
+  .persona-certs summary{cursor:pointer;font-weight:500;font-size:.92rem;color:var(--tinta);}
+  .persona-certs summary::marker{color:var(--terracota);}
+  .persona-certs ul{list-style:none;display:grid;gap:8px;margin-top:10px;}
+  .persona-certs li{display:grid;font-size:.9rem;line-height:1.35;}
+  .persona-certs strong{font-weight:600;color:var(--tinta);}
+  .persona-certs span{color:var(--tinta-3);font-size:.84rem;}
   .persona-enlaces{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font-size:.92rem;}
   .persona-enlaces a{display:inline-flex;align-items:center;gap:6px;color:var(--tinta);text-decoration:none;border-bottom:1px solid var(--linea-2);}
   .persona-enlaces a:hover{color:var(--aurora-ink);border-color:var(--aurora);}

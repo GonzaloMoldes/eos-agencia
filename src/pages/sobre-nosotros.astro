@@ -24,6 +24,7 @@ const schema = {
   mainEntity: EQUIPO.map((p) => ({
     '@type': 'Person', name: p.nombre, jobTitle: p.cargo, email: p.email, url: p.linkedin, sameAs: [p.linkedin],
     worksFor: { '@id': `${BASE_URL}/#organization` },
+    hasCredential: p.certificaciones.map((c) => ({ '@type': 'EducationalOccupationalCredential', name: c.nombre, recognizedBy: { '@type': 'Organization', name: c.emisor } })),
     address: { '@type': 'PostalAddress', addressLocality: p.sede, addressCountry: 'ES' },
   })),
 };
