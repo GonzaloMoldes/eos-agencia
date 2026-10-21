@@ -43,6 +43,7 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
       <a href="/legal/aviso-legal/">Aviso legal</a>
       <a href="/legal/privacidad/">Privacidad</a>
       <a href="/legal/cookies/">Cookies</a>
+      <a href="/legal/cookies/" data-abrir-cookies>Configurar cookies</a>
     </nav>
     <span>Ἠώς · la que trae la luz</span>
   </div>
@@ -52,7 +53,7 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
 <style>
   .pie{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(70% 50% at 50% 100%,rgba(200,100,59,.32),rgba(233,140,131,.08) 50%,transparent 75%),var(--vaso);color:#CDBFB4;padding-top:0;}
   .pie-greca{margin:28px 0 72px;}
-  .pie-gigante{font-family:var(--inscripcion);font-weight:700;font-size:clamp(7rem,26vw,22rem);line-height:.78;letter-spacing:.08em;text-align:center;margin:40px auto -0.06em;max-width:none;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(240,122,69,.22),transparent 70%);-webkit-background-clip:text;background-clip:text;user-select:none;}
+  .pie-gigante{pointer-events:none;position:relative;z-index:-1;font-family:var(--inscripcion);font-weight:700;font-size:clamp(7rem,26vw,22rem);line-height:.78;letter-spacing:.08em;text-align:center;margin:40px auto -0.06em;max-width:none;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(240,122,69,.22),transparent 70%);-webkit-background-clip:text;background-clip:text;user-select:none;}
   .pie-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:48px;}
   .pie-marca{display:grid;gap:20px;align-content:start;}
   .pie-marca p{max-width:44ch;}
@@ -68,7 +69,7 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
   .pie-col ul{list-style:none;display:grid;gap:8px;}
   .pie-col a{color:#E8E1D5;text-decoration:none;}
   .pie-col a:hover{color:var(--azafran);}
-  .pie-legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:22px;font-size:.85rem;color:#A9A3B5;}
+  .pie-legal{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:22px;font-size:.85rem;color:#A9A3B5;}
   .pie-legal span:last-child{font-family:var(--serif);font-style:italic;font-size:1rem;}
   @media (max-width:760px){ .pie-in{grid-template-columns:1fr;} }
 </style>

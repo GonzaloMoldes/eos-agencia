@@ -1,0 +1,117 @@
+---
+// Consentimiento de cookies y Google Analytics 4.
+//
+// Modo estricto: el script de Google (gtag.js) NO se descarga hasta que la
+// persona pulsa «Aceptar». Si rechaza, no se carga nada de Google Analytics.
+// La decisión se guarda 12 meses en localStorage («eos-cookies») y se puede
+// cambiar desde el enlace «Cookies» del pie (data-abrir-cookies).
+//
+// Además se usa Consent Mode v2 de Google: las señales de publicidad van
+// siempre denegadas y la de analítica solo se concede al aceptar.
+//
+// window.eosEvento(nombre, parametros) envía un evento a GA4 si hay
+// consentimiento; si no, no hace nada. Lo usan el formulario y los clics de
+// WhatsApp, correo, planes y agenda (ver el script de abajo).
+import { SITIO } from '../data/sitio';
+const ga4 = SITIO.ga4;
+---
+{ga4 && (
+  <>
+    <script is:inline define:vars={{ ga4 }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      gtag('consent', 'default', {
+        ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+        analytics_storage: 'denied', functionality_storage: 'denied', personalization_storage: 'denied',
+        security_storage: 'granted',
+      });
+      var CLAVE = 'eos-cookies', DOCE_MESES = 365 * 24 * 3600 * 1000;
+      function leer() {
+        try {
+          var v = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+          return v && Date.now() - v.t < DOCE_MESES ? v.d : null;
+        } catch (e) { return null; }
+      }
+      function cargarGA() {
+        if (window.__eosGA) return;
+        window.__eosGA = true;
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+        gtag('js', new Date());
+        gtag('config', ga4, { allow_google_signals: false });
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
+        document.head.appendChild(s);
+      }
+      window.eosCookies = {
+        decision: leer,
+        guardar: function (d) {
+          try { localStorage.setItem(CLAVE, JSON.stringify({ d: d, t: Date.now() })); } catch (e) {}
+          if (d === 'aceptadas') cargarGA();
+        },
+        cargarGA: cargarGA,
+      };
+      window.eosEvento = function (nombre, params) {
+        if (window.__eosGA) gtag('event', nombre, params || {});
+      };
+      if (leer() === 'aceptadas') cargarGA();
+    </script>
+
+    <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-t" hidden>
+      <p class="cookies-t" id="cookies-t">¿Nos dejas medir las visitas?</p>
+      <p>Usamos Google Analytics para saber qué páginas son útiles y mejorar la web. Solo se activa si aceptas. Más información en la <a href="/legal/cookies/">política de cookies</a>.</p>
+      <div class="cookies-botones">
+        <button type="button" class="btn btn--linea" data-cookies="rechazadas">Rechazar</button>
+        <button type="button" class="btn btn--tinta" data-cookies="aceptadas">Aceptar</button>
+      </div>
+    </div>
+
+    <script>
+      const caja = document.getElementById('cookies');
+      if (caja && window.eosCookies) {
+        const abrir = () => { caja.hidden = false; };
+        if (!window.eosCookies.decision()) abrir();
+        caja.addEventListener('click', (e) => {
+          const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-cookies]');
+          if (!b) return;
+          window.eosCookies.guardar(b.dataset.cookies);
+          caja.hidden = true;
+        });
+        // Enlaces para volver a decidir (pie de página, política de cookies).
+        document.addEventListener('click', (e) => {
+          const a = (e.target as HTMLElement).closest('[data-abrir-cookies]');
+          if (!a) return;
+          e.preventDefault();
+          abrir();
+          caja.querySelector('button')?.focus();
+        });
+      }
+
+      // ── Eventos de conversión ──
+      const ev = (n: string, p: Record<string, unknown> = {}) => window.eosEvento?.(n, { pagina: location.pathname, ...p });
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        if (href.includes('wa.me/')) ev('contacto_whatsapp');
+        else if (href.startsWith('mailto:')) ev('contacto_email', { correo: href.slice(7).split('?')[0] });
+        else if (href.startsWith('tel:')) ev('contacto_telefono');
+        else if (href.includes('calendar.app.google') || href.includes('calendar.google.com')) ev('reserva_llamada');
+        else if (href.startsWith('/contacto/?') && href.includes('plan=')) {
+          const q = new URLSearchParams(href.split('?')[1]);
+          ev('ver_plan', { servicio: q.get('servicio'), plan: q.get('plan') });
+        } else if (href.startsWith('/diagnostico/')) ev('clic_diagnostico');
+      });
+    </script>
+
+    <style>
+      .cookies{position:fixed;left:16px;bottom:16px;z-index:130;width:min(440px,calc(100vw - 32px));background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border:1px solid var(--linea);border-radius:22px;box-shadow:var(--sombra);padding:22px;display:grid;gap:10px;font-size:.92rem;color:var(--tinta-2);}
+      .cookies[hidden]{display:none;}
+      .cookies-t{font-family:var(--serif);font-size:1.5rem;line-height:1.1;color:var(--tinta);}
+      .cookies-botones{display:flex;gap:10px;margin-top:4px;}
+      .cookies-botones .btn{flex:1;justify-content:center;padding:12px 18px;}
+      @media (max-width:600px){ .cookies{left:10px;right:10px;bottom:84px;width:auto;} }
+      @media print{ .cookies{display:none;} }
+    </style>
+  </>
+)}

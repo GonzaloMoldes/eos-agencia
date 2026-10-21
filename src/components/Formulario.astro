@@ -150,6 +150,7 @@ const id = `form-${tipo}`;
       try {
         const r = await fetch('/api/contacto/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
         if (!r.ok) throw new Error(String(r.status));
+        window.eosEvento?.('generate_lead', { form_tipo: form.dataset.tipo, servicio: String(datos.servicio || ''), pagina: location.pathname });
         form.reset();
         estado.textContent = form.dataset.tipo === 'diagnostico'
           ? '¡Recibido! Revisaremos tu web y te enviaremos el diagnóstico por correo.'

@@ -2,21 +2,29 @@
 import LegalLayout from '../../layouts/LegalLayout.astro';
 import { SITIO } from '../../data/sitio';
 ---
-<LegalLayout title="Política de cookies | EOS Studio" description="Qué cookies usa el sitio web de EOS Studio." h1="Política de cookies" actualizado="octubre de 2026">
+<LegalLayout title="Política de cookies | EOS Studio" description="Qué cookies usa el sitio web de EOS Studio y cómo gestionarlas." h1="Política de cookies" actualizado="octubre de 2026">
   <h2>Qué es una cookie</h2>
   <p>Una cookie es un pequeño archivo que un sitio web guarda en tu navegador para recordar información sobre tu visita.</p>
 
-  <h2>Cookies que usa este sitio</h2>
-  <p><strong>Este sitio no instala cookies propias ni cookies de analítica o publicidad.</strong> Por eso no te mostramos un aviso de cookies al entrar.</p>
-  <p>Hay dos recursos externos que conviene que conozcas:</p>
+  <h2>Qué usamos y para qué</h2>
+  <p><strong>Solo usamos cookies de analítica, y únicamente si las aceptas</strong> en el aviso que aparece al entrar. Si las rechazas o no decides, no se carga ninguna herramienta de analítica.</p>
+  <table>
+    <thead><tr><th>Cookie</th><th>Proveedor</th><th>Para qué</th><th>Duración</th></tr></thead>
+    <tbody>
+      <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Distinguir visitantes de forma anónima para contar visitas</td><td>2 años</td></tr>
+      <tr><td><code>_ga_*</code></td><td>Google Analytics</td><td>Mantener el estado de la sesión</td><td>2 años</td></tr>
+    </tbody>
+  </table>
+  <p>Con estos datos sabemos qué páginas se visitan, desde dónde llegan las visitas y qué contactos se generan (formularios, WhatsApp, correo), siempre de forma agregada. Hemos desactivado las señales de Google para publicidad.</p>
+  <p>Además, guardamos tu decisión sobre las cookies en el almacenamiento local de tu navegador (<code>eos-cookies</code>) durante 12 meses, para no volver a preguntarte en cada visita. No es una cookie ni se envía a ningún servidor.</p>
+
+  <h2>Otros recursos externos</h2>
   <ul>
     <li><strong>Google Fonts:</strong> las tipografías se cargan desde servidores de Google. No instalan cookies, pero tu navegador se conecta a Google y le envía tu dirección IP.</li>
-    <li><strong>Agenda de Google Calendar:</strong> si reservas una llamada desde la página de contacto, la reserva se hace en Google Calendar, que tiene su propia política de privacidad y de cookies.</li>
+    <li><strong>Agenda de Google Calendar:</strong> si reservas una llamada, la reserva se hace en Google Calendar, que tiene su propia política de privacidad y de cookies.</li>
   </ul>
 
-  <h2>Si esto cambia</h2>
-  <p>Si en el futuro añadimos herramientas de analítica o de publicidad que usen cookies, actualizaremos esta política y te pediremos el consentimiento antes de instalarlas.</p>
-
-  <h2>Cómo gestionar las cookies</h2>
-  <p>Puedes ver y borrar las cookies desde la configuración de tu navegador. Para cualquier duda, escríbenos a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>.</p>
+  <h2>Cambiar tu decisión</h2>
+  <p>Puedes cambiarla cuando quieras desde <a href="/legal/cookies/" data-abrir-cookies>configurar cookies</a> (también en el pie de cada página). Para borrar las cookies que ya estén guardadas, usa la configuración de tu navegador.</p>
+  <p>Google Analytics es un servicio de Google Ireland Limited. Más información en la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad de Google</a>. Para cualquier duda, escríbenos a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>.</p>
 </LegalLayout>

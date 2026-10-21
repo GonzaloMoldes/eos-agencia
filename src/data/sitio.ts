@@ -18,6 +18,10 @@ export const SITIO = {
   // Compartir → enlace de la página de reservas). Vacío = no se muestra.
   agenda: '',
 
+  // Google Analytics 4. Solo se carga si la persona acepta las cookies de
+  // analítica (banner en src/components/Cookies.astro). Vacío = sin analítica.
+  ga4: 'G-B5NKN1BHDN',
+
   // Redes de la agencia. Vacío = el icono se muestra como «próximamente».
   redes: {
     linkedin: '',

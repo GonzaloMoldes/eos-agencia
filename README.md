@@ -92,3 +92,11 @@ servicio: seo-local          # opcional: enlaza al servicio al final
 borrador: false              # true = solo se ve en local
 ---
 ```
+
+## Google Analytics 4
+
+- ID en `src/data/sitio.ts` (`ga4: 'G-B5NKN1BHDN'`). Vacío = sin analítica.
+- Solo se carga si la persona acepta en el banner de cookies (`src/components/Cookies.astro`): sin consentimiento no se descarga nada de Google. La decisión se guarda 12 meses y se cambia desde «Configurar cookies» en el pie.
+- Consent Mode v2: publicidad siempre denegada; analítica concedida solo al aceptar. Google Signals desactivado.
+- Eventos: `generate_lead` (formulario enviado: `form_tipo`, `servicio`), `contacto_whatsapp`, `contacto_email`, `contacto_telefono`, `ver_plan` (`servicio`, `plan`), `clic_diagnostico` y `reserva_llamada`. Todos llevan `pagina`.
+- En GA4 → Administrar → Eventos, marcar `generate_lead` y `contacto_whatsapp` como eventos clave.
