@@ -1,15 +1,19 @@
 ---
-// Franja de experiencia (marcas en cuyos equipos de marketing hemos trabajado,
-// antes de EOS) y certificaciones. Las marcas van como texto, no como logos:
-// fueron empleadores, no clientes de la agencia, y así no lo parece.
-import { EXPERIENCIA, CERTIFICACIONES } from '../data/equipo';
+// Franja de experiencia: de dónde venimos (equipos de marketing de grandes
+// marcas) y a quién se lo traemos (pymes), más las certificaciones del equipo.
+// Sin nombrar marcas: fueron empleadores, no clientes de la agencia.
+import { CERTIFICACIONES } from '../data/equipo';
 export interface Props { certificaciones?: boolean }
 const { certificaciones = true } = Astro.props;
 ---
 <div class="experiencia">
-  <p class="exp-titulo">Antes de fundar EOS, trabajamos dentro de los equipos de marketing de</p>
-  <ul class="marcas">
-    {EXPERIENCIA.map((m) => <li>{m}</li>)}
+  <p class="exp-titulo">De las grandes marcas a tu negocio</p>
+  <p class="exp-frase">Hemos trabajado dentro de los equipos de marketing de <em>grandes marcas</em>. Ahora llevamos ese camino a las pymes.</p>
+  <ul class="exp-valores">
+    <li><span aria-hidden="true">✦</span>Sencillo</li>
+    <li><span aria-hidden="true">✦</span>Claro</li>
+    <li><span aria-hidden="true">✦</span>Sin letra pequeña</li>
+    <li><span aria-hidden="true">✦</span>Con la calidad de los grandes</li>
   </ul>
   {certificaciones && (
     <div class="certs">
@@ -30,9 +34,11 @@ const { certificaciones = true } = Astro.props;
 <style>
   .experiencia{display:grid;gap:22px;}
   .exp-titulo{font-family:var(--etiqueta);letter-spacing:.1em;color:var(--tinta-2);font-size:.95rem;text-align:center;margin-inline:auto;}
-  .marcas{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 34px;}
-  .marcas li{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.2;color:var(--tinta);opacity:.78;transition:opacity .2s,color .2s;}
-  .marcas li:hover{opacity:1;color:var(--aurora-ink);}
+  .exp-frase{font-family:var(--serif);font-size:clamp(2rem,4vw,3.3rem);line-height:1.08;letter-spacing:-.01em;color:var(--tinta);text-align:center;max-width:24ch;margin-inline:auto;}
+  .exp-frase em{font-style:italic;background:var(--degradado);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .exp-valores{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 28px;color:var(--tinta-2);font-size:1.05rem;}
+  .exp-valores li{display:inline-flex;align-items:center;gap:8px;}
+  .exp-valores span{color:var(--terracota);font-size:.85em;}
   .certs{display:grid;gap:16px;margin-top:18px;}
   .certs ul{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
   .certs li{display:flex;align-items:center;gap:12px;padding:12px 18px 12px 12px;border-radius:999px;border:1px solid var(--linea);background:rgba(255,255,255,.75);}

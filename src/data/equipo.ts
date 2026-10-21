@@ -64,11 +64,6 @@ export const EQUIPO: Persona[] = [
   },
 ];
 
-// Marcas en las que hemos trabajado, como parte de sus equipos (antes de EOS).
-export const EXPERIENCIA = [
-  'Onlygal', 'Cueros Vélez', 'Telepizza', 'D-Link', 'Donpiso', 'Honda', 'Universitat de Barcelona', 'Worten',
-];
-
 // Resumen de certificaciones por emisor, para la franja de la home y de
 // Sobre nosotros. El detalle completo sale de EQUIPO. Para mostrar el sello
 // oficial: dejar la imagen en public/certificaciones/ y poner el archivo en `logo`.
