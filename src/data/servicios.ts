@@ -1,9 +1,10 @@
 // Catálogo de servicios. Es la fuente de verdad del menú, del hub /servicios/,
 // del sitemap y del enlazado interno entre servicios.
 //
-// `publicado: false` = todavía no hay copy aprobado. Esos servicios aparecen en
-// el hub como «próximamente», SIN enlace: publicar páginas vacías o finas resta
-// más de lo que suma. Al tener el copy, se crea la página y se pasa a true.
+// `publicado: false` = todavía no hay copy aprobado. Esos servicios NO aparecen
+// en ninguna parte de la web (menú, hub, home, sitemap, llms.txt): publicar
+// páginas vacías o finas resta más de lo que suma. Al tener el copy, se crea la
+// página y se pasa a true.
 
 export type Categoria = 'posicionamiento' | 'autoridad' | 'ventas';
 
@@ -53,3 +54,5 @@ export const servicio = (slug: string) => {
   if (!s) throw new Error(`Servicio desconocido: ${slug}`);
   return s;
 };
+
+export const PUBLICADOS = SERVICIOS.filter((s) => s.publicado);

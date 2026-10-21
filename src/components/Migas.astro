@@ -1,6 +1,7 @@
 ---
 import { migas } from '../lib/seo';
-const items = migas(Astro.url.pathname);
+const { final } = Astro.props as { final?: string };
+const items = migas(Astro.url.pathname, final);
 ---
 {items.length > 1 && (
   <nav class="migas contenedor" aria-label="Migas de pan">

@@ -1,0 +1,44 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+import DatoLegal from '../../components/DatoLegal.astro';
+import { SITIO } from '../../data/sitio';
+const L = SITIO.legal;
+---
+<LegalLayout title="Política de privacidad | EOS Studio" description="Cómo trata EOS Studio los datos personales que recibe a través de su web." h1="Política de privacidad" actualizado="octubre de 2026">
+  <h2>Responsable del tratamiento</h2>
+  <ul>
+    <li><strong>Responsable:</strong> <DatoLegal valor={L.titular} falta="razón social" /> ({SITIO.nombre})</li>
+    <li><strong>NIF:</strong> <DatoLegal valor={L.nif} falta="NIF" /></li>
+    <li><strong>Domicilio:</strong> <DatoLegal valor={L.domicilio} falta="domicilio" /></li>
+    <li><strong>Contacto:</strong> <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a></li>
+  </ul>
+
+  <h2>Qué datos tratamos</h2>
+  <p>Solo los que nos facilitas en los formularios de contacto y de diagnóstico: nombre, correo electrónico y, si los indicas, teléfono, empresa, web y el contenido de tu mensaje. También los que nos envíes por correo electrónico o por WhatsApp.</p>
+
+  <h2>Para qué los usamos</h2>
+  <ul>
+    <li>Responder a tu consulta o a tu petición de diagnóstico.</li>
+    <li>Preparar y enviarte una propuesta, si nos la pides.</li>
+  </ul>
+  <p>No los usamos para enviarte publicidad ni tomamos decisiones automatizadas con ellos.</p>
+
+  <h2>Base legal</h2>
+  <p>Tu consentimiento, que nos das al marcar la casilla del formulario (artículo 6.1.a del RGPD), y, si llegamos a trabajar juntos, la aplicación de medidas precontractuales a petición tuya (artículo 6.1.b).</p>
+
+  <h2>Cuánto tiempo los conservamos</h2>
+  <p>El tiempo necesario para atender tu solicitud y, si no se convierte en un encargo, un máximo de doce meses. Si trabajamos juntos, durante la relación comercial y los plazos que exija la ley.</p>
+
+  <h2>Quién más accede a ellos</h2>
+  <p>No cedemos tus datos a terceros salvo obligación legal. Para que la web funcione usamos proveedores que actúan como encargados del tratamiento:</p>
+  <ul>
+    <li><strong>Vercel Inc.</strong>: alojamiento de la web.</li>
+    <li><strong>Resend</strong>: envío por correo de los mensajes de los formularios.</li>
+    <li><strong>Google</strong>: correo electrónico y, si reservas una llamada, Google Calendar.</li>
+    <li><strong>WhatsApp (Meta)</strong>: si eliges escribirnos por WhatsApp.</li>
+  </ul>
+  <p>Algunos de estos proveedores pueden tratar datos fuera del Espacio Económico Europeo, con las garantías previstas en el RGPD (decisiones de adecuación o cláusulas contractuales tipo).</p>
+
+  <h2>Tus derechos</h2>
+  <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad, y retirar tu consentimiento en cualquier momento, escribiendo a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>. Si consideras que no hemos atendido bien tu solicitud, puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">aepd.es</a>).</p>
+</LegalLayout>

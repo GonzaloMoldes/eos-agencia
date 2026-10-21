@@ -1,0 +1,16 @@
+---
+// Botón fijo de WhatsApp, abajo a la derecha, en todas las páginas.
+import Iconos from './Iconos.astro';
+import { whatsappUrl } from '../data/sitio';
+---
+<a class="wa" href={whatsappUrl()} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <Iconos nombre="whatsapp" tam={28} />
+  <span class="wa-texto">¿Hablamos?</span>
+</a>
+<style>
+  .wa{position:fixed;right:18px;bottom:18px;z-index:120;display:inline-flex;align-items:center;gap:10px;height:58px;padding:0 15px;border-radius:999px;background:#25D366;color:#fff;text-decoration:none;font-weight:600;box-shadow:0 14px 30px -12px rgba(18,140,74,.75);transition:transform .25s,box-shadow .25s;}
+  .wa:hover{color:#fff;transform:translateY(-3px);box-shadow:0 18px 36px -12px rgba(18,140,74,.85);}
+  .wa-texto{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .35s ease;}
+  .wa:hover .wa-texto,.wa:focus-visible .wa-texto{max-width:120px;}
+  @media print{ .wa{display:none;} }
+</style>

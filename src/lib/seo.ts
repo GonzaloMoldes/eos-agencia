@@ -2,6 +2,7 @@
 // BreadcrumbList generado desde la URL. Lo emite BaseLayout.
 import { SITIO } from '../data/sitio';
 import { SERVICIOS } from '../data/servicios';
+import { EQUIPO } from '../data/equipo';
 
 export const BASE_URL = SITIO.url;
 
@@ -14,18 +15,31 @@ export const organizationSchema = {
   logo: `${BASE_URL}/favicon.svg`,
   description: SITIO.descripcion,
   email: SITIO.email,
-  address: { '@type': 'PostalAddress', addressLocality: 'Valencia', addressRegion: 'Comunidad Valenciana', addressCountry: 'ES' },
-  areaServed: [{ '@type': 'City', name: 'Valencia' }, { '@type': 'Country', name: 'España' }],
+  address: [
+    { '@type': 'PostalAddress', addressLocality: 'A Coruña', addressRegion: 'Galicia', addressCountry: 'ES' },
+    { '@type': 'PostalAddress', addressLocality: 'Valencia', addressRegion: 'Comunidad Valenciana', addressCountry: 'ES' },
+  ],
+  telephone: '+34671887372',
+  areaServed: [{ '@type': 'City', name: 'A Coruña' }, { '@type': 'City', name: 'Valencia' }, { '@type': 'Country', name: 'España' }],
+  founder: EQUIPO.map((p) => ({ '@type': 'Person', name: p.nombre, url: p.linkedin, sameAs: [p.linkedin] })),
   knowsAbout: ['SEO', 'GEO (Generative Engine Optimization)', 'SEO local', 'SEO para YouTube', 'Digital PR', 'Link building', 'Marketing automation', 'Consultoría CRM'],
 };
 
 // Nombres legibles de cada tramo de URL para las migas de pan.
 const NOMBRES: Record<string, string> = {
   servicios: 'Servicios',
+  'sobre-nosotros': 'Sobre nosotros',
+  contacto: 'Contacto',
+  diagnostico: 'Diagnóstico gratuito',
+  blog: 'Blog y guías',
+  legal: 'Legal',
+  'aviso-legal': 'Aviso legal',
+  privacidad: 'Privacidad',
+  cookies: 'Cookies',
   ...Object.fromEntries(SERVICIOS.map((s) => [s.slug, s.nombre])),
 };
 
-export function migas(pathname: string) {
+export function migas(pathname: string, final?: string) {
   const tramos = pathname.split('/').filter(Boolean);
   const items = [{ nombre: 'Inicio', url: '/' }];
   let acumulado = '';
@@ -33,11 +47,13 @@ export function migas(pathname: string) {
     acumulado += `/${t}`;
     items.push({ nombre: NOMBRES[t] ?? t.replace(/-/g, ' '), url: `${acumulado}/` });
   }
+  // La última miga puede llevar un nombre propio (el título de un artículo).
+  if (final && items.length > 1) items[items.length - 1].nombre = final;
   return items;
 }
 
-export function breadcrumbSchema(pathname: string) {
-  const items = migas(pathname);
+export function breadcrumbSchema(pathname: string, final?: string) {
+  const items = migas(pathname, final);
   if (items.length < 2) return null;
   return {
     '@context': 'https://schema.org',

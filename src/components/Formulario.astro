@@ -1,0 +1,166 @@
+---
+// Formulario de contacto o de diagnóstico gratuito. Envía a /api/contacto,
+// que reenvía el mensaje por correo al equipo. Si el envío falla, ofrece
+// WhatsApp y correo para que nadie se quede sin respuesta.
+//
+// Rellena «Me interesa» si la URL trae ?servicio=<slug> o ?plan=<nombre>
+// (los botones de las páginas de servicio enlazan así).
+import { PUBLICADOS } from '../data/servicios';
+import { SITIO, whatsappUrl } from '../data/sitio';
+
+export interface Props { tipo?: 'contacto' | 'diagnostico' }
+const { tipo = 'contacto' } = Astro.props;
+const diag = tipo === 'diagnostico';
+const id = `form-${tipo}`;
+---
+<form class="formulario" id={id} data-tipo={tipo} novalidate>
+  <div class="f-fila">
+    <label><span>Nombre <b aria-hidden="true">*</b></span>
+      <input name="nombre" autocomplete="name" required>
+    </label>
+    <label><span>Correo <b aria-hidden="true">*</b></span>
+      <input name="email" type="email" autocomplete="email" required>
+    </label>
+  </div>
+
+  {diag ? (
+    <>
+      <label><span>Web que quieres que revisemos <b aria-hidden="true">*</b></span>
+        <input name="web" type="url" inputmode="url" placeholder="https://" required>
+      </label>
+      <label>¿Qué te gustaría mejorar?
+        <select name="servicio">
+          <option value="">Aún no lo sé, decidme vosotros</option>
+          <option>Aparecer más en Google</option>
+          <option>Aparecer en Google Maps (SEO local)</option>
+          <option>Que la IA recomiende mi marca (GEO)</option>
+          <option>Captar más contactos o ventas</option>
+          <option>Ordenar mi CRM o automatizar</option>
+        </select>
+      </label>
+      <label>Cuéntanos tu objetivo en una frase
+        <textarea name="objetivo" rows="3"></textarea>
+      </label>
+    </>
+  ) : (
+    <>
+      <div class="f-fila">
+        <label>Empresa
+          <input name="empresa" autocomplete="organization">
+        </label>
+        <label>Teléfono
+          <input name="telefono" type="tel" autocomplete="tel">
+        </label>
+      </div>
+      <label>Me interesa
+        <select name="servicio">
+          <option value="">Elige un servicio (opcional)</option>
+          {PUBLICADOS.map((s) => <option value={s.nombre} data-slug={s.slug}>{s.nombre}</option>)}
+          <option>Otro / no lo tengo claro</option>
+        </select>
+      </label>
+      <label><span>Mensaje <b aria-hidden="true">*</b></span>
+        <textarea name="mensaje" rows="5" required placeholder="Qué haces, qué quieres conseguir y qué herramientas usas."></textarea>
+      </label>
+    </>
+  )}
+
+  <!-- Trampa para bots: oculto para las personas -->
+  <label class="f-trampa" aria-hidden="true">No rellenar <input name="website" tabindex="-1" autocomplete="off"></label>
+
+  <label class="f-consent">
+    <input type="checkbox" name="consent" required>
+    <span>He leído la <a href="/legal/privacidad/">política de privacidad</a> y acepto que EOS Studio use mis datos para responder a mi solicitud.</span>
+  </label>
+
+  <button class="btn btn--aurora" type="submit">{diag ? 'Pedir mi diagnóstico' : 'Enviar mensaje'} <span class="flecha">→</span></button>
+
+  <div class="f-estado" role="status" aria-live="polite"></div>
+  <div class="f-error" hidden>
+    <p>No hemos podido enviar el formulario. Escríbenos directamente y te respondemos igual:</p>
+    <p><a class="btn btn--tinta" href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp <span class="flecha">→</span></a> <a class="btn btn--linea" href={`mailto:${SITIO.email}`}>{SITIO.email}</a></p>
+  </div>
+</form>
+
+<style>
+  .formulario{display:grid;gap:16px;}
+  .f-fila{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:600px){ .f-fila{grid-template-columns:1fr;} }
+  .formulario label{display:grid;gap:7px;font-size:.9rem;font-weight:500;color:var(--tinta-2);}
+  .formulario label b{color:var(--terracota);font-weight:600;}
+  .formulario input:not([type=checkbox]),.formulario select,.formulario textarea{font:inherit;font-size:1rem;color:var(--tinta);padding:13px 15px;border:1px solid var(--linea-2);border-radius:14px;background:rgba(255,255,255,.85);width:100%;}
+  .formulario textarea{resize:vertical;}
+  .formulario input:focus,.formulario select:focus,.formulario textarea:focus{outline:2px solid var(--aurora);outline-offset:1px;border-color:transparent;}
+  .formulario [aria-invalid="true"]{border-color:#B3261E;}
+  .f-trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .f-consent{display:flex !important;grid-template-columns:none;align-items:flex-start;gap:10px !important;font-weight:400 !important;font-size:.86rem !important;}
+  .f-consent input{margin-top:3px;accent-color:var(--aurora);width:18px;height:18px;flex:none;}
+  .formulario button{justify-self:start;}
+  .formulario button[disabled]{opacity:.6;cursor:wait;}
+  .f-estado{font-size:.95rem;min-height:1.4em;}
+  .f-estado.ok{color:#2F6B2A;font-weight:500;}
+  .f-estado.mal{color:#B3261E;}
+  .f-error[hidden]{display:none;}
+  .f-error{background:rgba(255,255,255,.7);border:1px solid var(--linea);border-radius:14px;padding:16px;display:grid;gap:10px;}
+  .f-error p:last-child{display:flex;flex-wrap:wrap;gap:10px;}
+</style>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('form.formulario')) {
+    const estado = form.querySelector<HTMLElement>('.f-estado')!;
+    const error = form.querySelector<HTMLElement>('.f-error')!;
+    const boton = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+
+    // Preselecciona el servicio o el plan que viene en la URL.
+    const q = new URLSearchParams(location.search);
+    const sel = form.querySelector<HTMLSelectElement>('select[name=servicio]');
+    const slug = q.get('servicio');
+    if (sel && slug) {
+      const op = [...sel.options].find((o) => o.dataset.slug === slug);
+      if (op) sel.value = op.value;
+    }
+    const plan = q.get('plan');
+    const msg = form.querySelector<HTMLTextAreaElement>('textarea[name=mensaje]');
+    if (msg && plan && !msg.value) msg.value = `Me interesa el plan ${plan}.\n\n`;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+      estado.className = 'f-estado';
+      // Validación propia, con mensajes en español.
+      let primero: HTMLElement | null = null;
+      for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]')) {
+        const vacio = el.type === 'checkbox' ? !(el as HTMLInputElement).checked : !el.value.trim();
+        const malo = vacio || (el.type === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value.trim()));
+        el.setAttribute('aria-invalid', String(malo));
+        if (malo && !primero) primero = el;
+      }
+      if (primero) {
+        estado.textContent = 'Revisa los campos marcados: faltan datos o el correo no es válido.';
+        estado.classList.add('mal');
+        primero.focus();
+        return;
+      }
+
+      const datos: Record<string, unknown> = Object.fromEntries(new FormData(form));
+      datos.consent = true;
+      datos.tipo = form.dataset.tipo;
+      boton.disabled = true;
+      estado.textContent = 'Enviando…';
+      try {
+        const r = await fetch('/api/contacto/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
+        if (!r.ok) throw new Error(String(r.status));
+        form.reset();
+        estado.textContent = form.dataset.tipo === 'diagnostico'
+          ? '¡Recibido! Revisaremos tu web y te enviaremos el diagnóstico por correo.'
+          : '¡Gracias! Hemos recibido tu mensaje y te responderemos muy pronto.';
+        estado.classList.add('ok');
+      } catch {
+        estado.textContent = '';
+        error.hidden = false;
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  }
+</script>

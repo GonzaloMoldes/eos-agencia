@@ -1,0 +1,43 @@
+---
+// Franja de experiencia (marcas en cuyos equipos de marketing hemos trabajado,
+// antes de EOS) y certificaciones. Las marcas van como texto, no como logos:
+// fueron empleadores, no clientes de la agencia, y así no lo parece.
+import { EXPERIENCIA, CERTIFICACIONES } from '../data/equipo';
+export interface Props { certificaciones?: boolean }
+const { certificaciones = true } = Astro.props;
+---
+<div class="experiencia">
+  <p class="exp-titulo">Antes de fundar EOS, trabajamos dentro de los equipos de marketing de</p>
+  <ul class="marcas">
+    {EXPERIENCIA.map((m) => <li>{m}</li>)}
+  </ul>
+  {certificaciones && (
+    <div class="certs">
+      <p class="exp-titulo">Certificaciones del equipo</p>
+      <ul>
+        {CERTIFICACIONES.map((c) => (
+          <li>
+            {c.logo
+              ? <img src={`/certificaciones/${c.logo}`} alt={`Certificación ${c.nombre}`} height="40" loading="lazy" />
+              : <span class="cert-sello" aria-hidden="true">✦</span>}
+            <span><strong>{c.nombre}</strong><small>{c.detalle || 'Certificación'}</small></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+<style>
+  .experiencia{display:grid;gap:22px;}
+  .exp-titulo{font-family:var(--etiqueta);letter-spacing:.1em;color:var(--tinta-2);font-size:.95rem;text-align:center;margin-inline:auto;}
+  .marcas{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 34px;}
+  .marcas li{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.2;color:var(--tinta);opacity:.78;transition:opacity .2s,color .2s;}
+  .marcas li:hover{opacity:1;color:var(--aurora-ink);}
+  .certs{display:grid;gap:16px;margin-top:18px;}
+  .certs ul{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+  .certs li{display:flex;align-items:center;gap:12px;padding:12px 18px 12px 12px;border-radius:999px;border:1px solid var(--linea);background:rgba(255,255,255,.75);}
+  .certs img{height:40px;width:auto;}
+  .cert-sello{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--degradado);color:var(--vaso);font-size:1rem;}
+  .certs strong{display:block;font-weight:600;font-size:.95rem;line-height:1.2;}
+  .certs small{display:block;color:var(--tinta-3);font-size:.8rem;}
+</style>

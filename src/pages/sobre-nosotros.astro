@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuroraFondo from '../components/AuroraFondo.astro';
+import Personas from '../components/Personas.astro';
+import Experiencia from '../components/Experiencia.astro';
+import { SITIO } from '../data/sitio';
+import { EQUIPO } from '../data/equipo';
+import { BASE_URL } from '../lib/seo';
+
+const principios = [
+  { t: 'Trato directo', d: 'Hablas siempre con quien trabaja en tu proyecto, sin intermediarios.' },
+  { t: 'Alcance definido', d: 'Tareas, entregables y condiciones económicas, por escrito antes de empezar.' },
+  { t: 'Costes separados', d: 'Nuestros honorarios, por un lado; licencias y costes de terceros, por otro.' },
+  { t: 'Informes que se entienden', d: 'Qué ha pasado, por qué y qué haremos a continuación.' },
+  { t: 'Honestidad', d: 'No prometemos posiciones imposibles. Trabajamos para crecer de forma sostenible.' },
+  { t: 'Tus sistemas, bajo tu control', d: 'Cuentas, datos y accesos a tu nombre, conforme a lo acordado.' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: `Sobre ${SITIO.nombre}`,
+  url: `${BASE_URL}/sobre-nosotros/`,
+  mainEntity: EQUIPO.map((p) => ({
+    '@type': 'Person', name: p.nombre, jobTitle: p.cargo, email: p.email, url: p.linkedin, sameAs: [p.linkedin],
+    worksFor: { '@id': `${BASE_URL}/#organization` },
+    address: { '@type': 'PostalAddress', addressLocality: p.sede, addressCountry: 'ES' },
+  })),
+};
+---
+<BaseLayout
+  title="Sobre nosotros: el equipo de EOS Studio | A Coruña y Valencia"
+  description="Somos EOS Studio, agencia de SEO, GEO y marketing con sede en A Coruña y Valencia. Conoce al equipo y la experiencia que traemos de marcas como Telepizza, Honda o Worten."
+  schema={schema}
+>
+  <section class="hero contenedor hero--simple">
+    <AuroraFondo />
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Sobre nosotros · {SITIO.sedes.join(' · ')}</span>
+      <h1>Un estudio pequeño, <em>a propósito</em></h1>
+      <p class="lead">Somos dos personas con un método. Sin cuentas que pasan de mano en mano ni informes que nadie entiende: quien te escucha el primer día es quien trabaja en tu proyecto.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--sin-arriba">
+    <div class="contenedor">
+      <Personas />
+    </div>
+  </section>
+
+  <section class="seccion seccion--piedra">
+    <div class="contenedor">
+      <Experiencia />
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <span class="eyebrow"><span class="letra">Α</span>Cómo trabajamos</span>
+        <h2>Lo que puedes <em>esperar de nosotros</em></h2>
+      </div>
+      <ul class="principios">
+        {principios.map((p) => <li class="aparece"><h3>{p.t}</h3><p>{p.d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="banda-cta">
+    <div class="contenedor banda-in aparece">
+      <span class="eyebrow"><span class="letra">Β</span>Hablemos</span>
+      <h2>¿Empezamos por <em>tu amanecer</em>?</h2>
+      <p class="lead">Cuéntanos qué haces y qué quieres conseguir. Te respondemos con un primer diagnóstico y una propuesta de por dónde empezar.</p>
+      <div class="hero-botones" style="justify-content:center">
+        <a class="btn btn--aurora" href="/contacto/">Contactar <span class="flecha">→</span></a>
+        <a class="btn btn--linea btn--claro" href="/diagnostico/">Pedir diagnóstico gratuito</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .principios{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;}
+  .principios li{border-top:1px solid var(--linea-2);padding:20px 0 26px;}
+  .principios h3{font-size:1.6rem;margin-bottom:6px;}
+  .principios p{color:var(--tinta-2);font-size:.98rem;}
+  @media (max-width:900px){ .principios{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .principios{grid-template-columns:1fr;} }
+</style>

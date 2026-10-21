@@ -5,11 +5,13 @@ import AuroraFondo from '../components/AuroraFondo.astro';
 import Cinta from '../components/Cinta.astro';
 import Faq from '../components/Faq.astro';
 import TarjetasServicios from '../components/TarjetasServicios.astro';
+import Personas from '../components/Personas.astro';
+import Experiencia from '../components/Experiencia.astro';
 import { SERVICIOS, CATEGORIAS, type Categoria } from '../data/servicios';
 import { SITIO } from '../data/sitio';
 
-const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({ ...CATEGORIAS[c], servicios: SERVICIOS.filter((s) => s.categoria === c) }));
-const mailto = `mailto:${SITIO.email}?subject=${encodeURIComponent('Quiero hablar de mi proyecto')}`;
+const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({ ...CATEGORIAS[c], servicios: SERVICIOS.filter((s) => s.categoria === c && s.publicado) })).filter((g) => g.servicios.length);
+const contacto = '/contacto/';
 
 const metodo = [
   { t: 'Entendemos tu negocio', d: 'Qué vendes, a quién, dónde y qué quieres conseguir. Sin ese punto de partida, cualquier acción es una apuesta.' },
@@ -30,23 +32,23 @@ const principios = [
 const preguntas = [
   { p: '¿Qué es el GEO?', r: 'GEO (Generative Engine Optimization) es el trabajo para que los asistentes y buscadores de IA, como ChatGPT, Gemini, Perplexity o las respuestas con IA de Google, entiendan tu marca, la citen y la recomienden. Se apoya en el SEO de siempre y le suma contenido experto, datos estructurados y menciones en fuentes de confianza.' },
   { p: '¿Qué diferencia hay entre SEO y GEO?', r: 'El SEO busca que tu web aparezca en los resultados de los buscadores. El GEO busca que tu marca aparezca dentro de las respuestas que redacta una IA. No compiten: una web bien posicionada y con autoridad es la base de las dos.' },
-  { p: '¿Trabajáis solo con empresas de Valencia?', r: 'Estamos en Valencia y el SEO local lo centramos en Valencia y alrededores. El resto de servicios se presta en remoto para empresas de toda España.' },
+  { p: '¿Dónde estáis? ¿Trabajáis solo con empresas de vuestra zona?', r: 'Tenemos sede en A Coruña y en Valencia. El SEO local lo centramos sobre todo en esas dos zonas y sus alrededores, y el resto de servicios lo prestamos en remoto para empresas de toda España.' },
   { p: '¿Por dónde empiezo?', r: 'Cuéntanos qué haces, qué quieres conseguir y qué herramientas usas. Revisamos tu punto de partida y te proponemos por dónde empezar, con alcance y precio cerrados antes de comprometerte a nada.' },
 ];
 ---
 <BaseLayout
-  title="EOS Studio · Agencia de SEO, GEO y marketing digital en Valencia"
+  title="EOS Studio · Agencia de SEO, GEO y marketing digital en A Coruña y Valencia"
   description={SITIO.descripcion}
 >
   <section class="hero contenedor">
     <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra letra--sin">✦</span>Agencia de marketing digital · Valencia</span>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Agencia de marketing digital · A Coruña · Valencia</span>
       <h1>Que tu marca <em>amanezca</em> en Google y en la IA</h1>
-      <p class="lead">Somos EOS Studio, una agencia de marketing digital en Valencia. Posicionamos tu negocio en buscadores y en asistentes de IA, construimos su autoridad y conectamos marketing y ventas para que cada visita tenga un siguiente paso.</p>
+      <p class="lead">Somos EOS Studio, una agencia de marketing digital con sede en A Coruña y Valencia. Posicionamos tu negocio en buscadores y en asistentes de IA, construimos su autoridad y conectamos marketing y ventas para que cada visita tenga un siguiente paso.</p>
       <div class="hero-botones">
-        <a class="btn btn--aurora" href={mailto}>Cuéntanos tu proyecto <span class="flecha">→</span></a>
-        <a class="btn btn--linea" href="/servicios/">Ver servicios</a>
+        <a class="btn btn--aurora" href={contacto}>Cuéntanos tu proyecto <span class="flecha">→</span></a>
+        <a class="btn btn--linea" href="/diagnostico/">Diagnóstico gratuito</a>
       </div>
     </div>
     <Portal escena="hero" />
@@ -94,17 +96,26 @@ const preguntas = [
     </div>
   </section>
 
+  <section class="seccion seccion--piedra seccion--experiencia">
+    <div class="contenedor">
+      <Experiencia />
+    </div>
+  </section>
+
   <section class="seccion" id="equipo">
     <div class="contenedor equipo">
       <div class="cabecera-seccion">
         <span class="eyebrow"><span class="letra">Γ</span>Equipo</span>
         <h2>Un estudio pequeño, <em>a propósito</em></h2>
         <p class="lead">Somos dos personas con un método. Sin cuentas que pasan de mano en mano ni informes que nadie entiende: quien te escucha el primer día es quien trabaja en tu proyecto.</p>
-        <a class="btn btn--tinta" href={mailto}>Conócenos <span class="flecha">→</span></a>
+        <a class="btn btn--tinta" href="/sobre-nosotros/">Conócenos <span class="flecha">→</span></a>
       </div>
-      <ul class="principios">
-        {principios.map((p) => <li class="aparece"><h3>{p.t}</h3><p>{p.d}</p></li>)}
-      </ul>
+      <div class="equipo-derecha">
+        <Personas compacto />
+        <ul class="principios">
+          {principios.map((p) => <li class="aparece"><h3>{p.t}</h3><p>{p.d}</p></li>)}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -115,7 +126,10 @@ const preguntas = [
       <span class="eyebrow"><span class="letra">Ε</span>Hablemos</span>
       <h2>¿Empezamos por <em>tu amanecer</em>?</h2>
       <p class="lead">Cuéntanos qué haces y qué quieres conseguir. Te respondemos con un primer diagnóstico y una propuesta de por dónde empezar.</p>
-      <a class="btn btn--aurora" href={mailto}>{SITIO.email} <span class="flecha">→</span></a>
+      <div class="hero-botones" style="justify-content:center">
+        <a class="btn btn--aurora" href={contacto}>Contactar <span class="flecha">→</span></a>
+        <a class="btn btn--linea btn--claro" href="/diagnostico/">Pedir diagnóstico gratuito</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -139,6 +153,7 @@ const preguntas = [
 
   .equipo{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start;}
   .equipo .cabecera-seccion{margin:0;justify-items:start;}
+  .equipo-derecha{display:grid;gap:28px;}
   .principios{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;}
   .principios li{border-top:1px solid var(--linea-2);padding:20px 0 24px;}
   .principios h3{font-size:1.6rem;margin-bottom:6px;}

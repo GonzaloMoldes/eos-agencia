@@ -1,0 +1,22 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+import { SITIO } from '../../data/sitio';
+---
+<LegalLayout title="Política de cookies | EOS Studio" description="Qué cookies usa el sitio web de EOS Studio." h1="Política de cookies" actualizado="octubre de 2026">
+  <h2>Qué es una cookie</h2>
+  <p>Una cookie es un pequeño archivo que un sitio web guarda en tu navegador para recordar información sobre tu visita.</p>
+
+  <h2>Cookies que usa este sitio</h2>
+  <p><strong>Este sitio no instala cookies propias ni cookies de analítica o publicidad.</strong> Por eso no te mostramos un aviso de cookies al entrar.</p>
+  <p>Hay dos recursos externos que conviene que conozcas:</p>
+  <ul>
+    <li><strong>Google Fonts:</strong> las tipografías se cargan desde servidores de Google. No instalan cookies, pero tu navegador se conecta a Google y le envía tu dirección IP.</li>
+    <li><strong>Agenda de Google Calendar:</strong> si reservas una llamada desde la página de contacto, la reserva se hace en Google Calendar, que tiene su propia política de privacidad y de cookies.</li>
+  </ul>
+
+  <h2>Si esto cambia</h2>
+  <p>Si en el futuro añadimos herramientas de analítica o de publicidad que usen cookies, actualizaremos esta política y te pediremos el consentimiento antes de instalarlas.</p>
+
+  <h2>Cómo gestionar las cookies</h2>
+  <p>Puedes ver y borrar las cookies desde la configuración de tu navegador. Para cualquier duda, escríbenos a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>.</p>
+</LegalLayout>

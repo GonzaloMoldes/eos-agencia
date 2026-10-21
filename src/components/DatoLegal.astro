@@ -1,0 +1,6 @@
+---
+// Muestra un dato del titular o, si aún está vacío, una marca visible de que falta.
+export interface Props { valor: string; falta: string }
+const { valor, falta } = Astro.props;
+---
+{valor ? <Fragment>{valor}</Fragment> : <span class="pendiente">[{falta}: pendiente]</span>}

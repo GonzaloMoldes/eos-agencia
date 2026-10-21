@@ -7,7 +7,7 @@ import { SERVICIOS, CATEGORIAS, urlServicio, type Categoria } from '../../data/s
 import { SITIO, } from '../../data/sitio';
 import { BASE_URL } from '../../lib/seo';
 
-const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({ ...CATEGORIAS[c], servicios: SERVICIOS.filter((s) => s.categoria === c) }));
+const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({ ...CATEGORIAS[c], servicios: SERVICIOS.filter((s) => s.categoria === c && s.publicado) })).filter((g) => g.servicios.length);
 const publicados = SERVICIOS.filter((s) => s.publicado);
 const schema = {
   '@context': 'https://schema.org',
@@ -28,7 +28,7 @@ const schema = {
       <h1>Servicios de SEO, GEO y <em>marketing digital</em></h1>
       <p class="lead">Que te encuentren en Google, en Maps, en YouTube y en las respuestas de la IA. Que hablen de tu marca. Y que cada contacto llegue a cliente. Elige por dónde empezar.</p>
       <div class="hero-botones">
-        <a class="btn btn--aurora" href={`mailto:${SITIO.email}?subject=${encodeURIComponent('¿Por dónde empiezo?')}`}>Ayúdame a elegir <span class="flecha">→</span></a>
+        <a class="btn btn--aurora" href="/diagnostico/">Ayúdame a elegir <span class="flecha">→</span></a>
       </div>
     </div>
     <Portal escena="servicios" />

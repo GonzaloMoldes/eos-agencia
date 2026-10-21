@@ -1,6 +1,8 @@
 ---
 import Logo from './Logo.astro';
+import Iconos from './Iconos.astro';
 import { SERVICIOS, CATEGORIAS, urlServicio, type Categoria } from '../data/servicios';
+import { whatsappUrl } from '../data/sitio';
 
 const ruta = Astro.url.pathname;
 const enServicios = ruta.startsWith('/servicios/');
@@ -8,6 +10,12 @@ const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({
   ...CATEGORIAS[c],
   servicios: SERVICIOS.filter((s) => s.categoria === c && s.publicado),
 })).filter((g) => g.servicios.length);
+const enlaces = [
+  { url: '/sobre-nosotros/', texto: 'Sobre nosotros' },
+  { url: '/blog/', texto: 'Blog y guías' },
+  { url: '/contacto/', texto: 'Contacto' },
+];
+const activo = (url: string) => ruta.startsWith(url);
 ---
 <header class="cabecera">
   <div class="contenedor cabecera-in">
@@ -28,9 +36,31 @@ const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({
           <a class="nav-todos" href="/servicios/">Ver todos los servicios →</a>
         </div>
       </details>
-      <a href="/#metodo">Método</a>
-      <a href="/#equipo">Equipo</a>
-      <a href="#contacto" class="btn btn--tinta nav-cta">Hablemos <span class="flecha">→</span></a>
+      {enlaces.map((e) => <a href={e.url} class:list={{ activo: activo(e.url) }} aria-current={activo(e.url) ? 'page' : undefined}>{e.texto}</a>)}
+      <a href="/diagnostico/" class="btn btn--tinta nav-cta">Diagnóstico gratis <span class="flecha">→</span></a>
+    </nav>
+
+    <button class="menu-boton" type="button" aria-expanded="false" aria-controls="menu-movil">
+      <span class="sr-only">Abrir el menú</span>
+      <span class="menu-lineas" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+
+  <!-- Menú móvil: panel a pantalla completa -->
+  <div class="menu-movil" id="menu-movil" hidden>
+    <nav aria-label="Menú móvil">
+      <p class="mm-titulo">Servicios</p>
+      <ul class="mm-servicios">
+        {grupos.flatMap((g) => g.servicios).map((s) => <li><a href={urlServicio(s.slug)}>{s.nombre}</a></li>)}
+        <li><a href="/servicios/">Todos los servicios</a></li>
+      </ul>
+      <ul class="mm-principal">
+        {enlaces.map((e) => <li><a href={e.url}>{e.texto}</a></li>)}
+      </ul>
+      <div class="mm-acciones">
+        <a href="/diagnostico/" class="btn btn--aurora">Diagnóstico gratis <span class="flecha">→</span></a>
+        <a href={whatsappUrl()} class="btn btn--linea" target="_blank" rel="noopener"><Iconos nombre="whatsapp" tam={18} /> WhatsApp</a>
+      </div>
     </nav>
   </div>
 </header>
@@ -39,9 +69,10 @@ const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({
   .cabecera{position:sticky;top:0;z-index:100;padding:12px 16px 0;}
   .cabecera-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px;max-width:calc(var(--ancho) - 32px);padding:0 8px 0 22px;background:rgba(255,255,255,.62);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--linea);border-radius:999px;box-shadow:0 16px 40px -28px rgba(20,24,51,.45);}
   .cabecera-logo{text-decoration:none;}
-  .nav{display:flex;align-items:center;gap:26px;font-size:.95rem;}
+  .nav{display:flex;align-items:center;gap:24px;font-size:.95rem;}
   .nav > a:not(.btn),.nav summary{color:var(--tinta-2);text-decoration:none;cursor:pointer;}
-  .nav > a:not(.btn):hover,.nav summary:hover,.nav summary.activo{color:var(--tinta);}
+  .nav > a:not(.btn):hover,.nav summary:hover,.nav summary.activo,.nav > a.activo{color:var(--tinta);}
+  .nav > a.activo{text-decoration:underline;text-decoration-color:var(--aurora);text-underline-offset:6px;}
   .nav summary{list-style:none;display:flex;gap:6px;align-items:center;}
   .nav summary::-webkit-details-marker{display:none;}
   .nav summary span{font-size:.7em;transition:transform .2s;}
@@ -56,24 +87,55 @@ const grupos = (Object.keys(CATEGORIAS) as Categoria[]).map((c) => ({
   .nav-todos{grid-column:1/-1;border-top:1px solid var(--linea);padding-top:14px;font-weight:500;text-decoration:none;}
   .nav-cta{padding:7px 8px 7px 18px;font-size:.92rem;}
   .nav-cta .flecha{width:26px;height:26px;}
-  @media (max-width:760px){
-    .nav > a:not(.btn){display:none;}
-    .nav{gap:12px;}
-    .nav-cta{padding:9px 14px;}
-    .nav-cta .flecha{display:none;}
+
+  .menu-boton{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--linea);background:var(--vaso);cursor:pointer;place-items:center;}
+  .menu-lineas{display:grid;gap:5px;width:20px;}
+  .menu-lineas i{display:block;height:2px;border-radius:2px;background:#fff;transition:transform .3s,opacity .3s;}
+  .menu-boton[aria-expanded="true"] .menu-lineas i:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .menu-boton[aria-expanded="true"] .menu-lineas i:nth-child(2){opacity:0;}
+  .menu-boton[aria-expanded="true"] .menu-lineas i:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .menu-movil{position:fixed;inset:84px 10px auto;max-height:calc(100dvh - 96px);overflow:auto;background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border:1px solid var(--linea);border-radius:26px;box-shadow:var(--sombra);padding:26px 24px 28px;}
+  .menu-movil nav{display:grid;gap:22px;}
+  .mm-titulo{font-family:var(--etiqueta);letter-spacing:.12em;color:var(--terracota);font-size:.9rem;}
+  .menu-movil ul{list-style:none;display:grid;gap:4px;}
+  .mm-servicios a{display:block;padding:7px 0;color:var(--tinta-2);text-decoration:none;font-size:1.05rem;}
+  .mm-principal{border-top:1px solid var(--linea);padding-top:14px;}
+  .mm-principal a{display:block;padding:8px 0;font-family:var(--serif);font-size:2rem;line-height:1.1;color:var(--tinta);text-decoration:none;}
+  .mm-acciones{display:flex;flex-wrap:wrap;gap:10px;}
+  .mm-acciones .btn--linea{display:inline-flex;gap:8px;}
+
+  @media (max-width:980px){
+    .nav{display:none;}
+    .menu-boton{display:grid;}
     .cabecera{padding:10px 10px 0;}
-    .cabecera-in{padding:0 6px 0 14px;}
-    .nav-panel{position:fixed;top:84px;left:12px;right:12px;width:auto;transform:none;grid-template-columns:1fr;max-height:calc(100vh - 90px);overflow:auto;}
+    .cabecera-in{padding:0 7px 0 16px;}
   }
+  @media (min-width:981px){ .menu-movil{display:none !important;} }
 </style>
 
 <script>
-  // Cierra el menú de servicios al hacer clic fuera o al pulsar Escape.
+  // Menú de servicios (escritorio): se cierra al hacer clic fuera o con Escape.
   const det = document.querySelector<HTMLDetailsElement>('.nav-servicios');
   document.addEventListener('click', (e) => {
     if (det?.open && !det.contains(e.target as Node)) det.open = false;
   });
+
+  // Menú móvil
+  const boton = document.querySelector<HTMLButtonElement>('.menu-boton')!;
+  const panel = document.getElementById('menu-movil')!;
+  const abrir = (si: boolean) => {
+    boton.setAttribute('aria-expanded', String(si));
+    boton.querySelector('.sr-only')!.textContent = si ? 'Cerrar el menú' : 'Abrir el menú';
+    panel.hidden = !si;
+    document.documentElement.style.overflow = si ? 'hidden' : '';
+  };
+  boton.addEventListener('click', () => abrir(panel.hidden));
+  panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) abrir(false); });
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && det?.open) { det.open = false; det.querySelector('summary')?.focus(); }
+    if (e.key !== 'Escape') return;
+    if (det?.open) { det.open = false; det.querySelector('summary')?.focus(); }
+    if (!panel.hidden) { abrir(false); boton.focus(); }
   });
 </script>

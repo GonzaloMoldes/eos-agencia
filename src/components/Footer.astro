@@ -1,8 +1,9 @@
 ---
 import Logo from './Logo.astro';
-import { SITIO } from '../data/sitio';
-import { SERVICIOS, urlServicio } from '../data/servicios';
-const publicados = SERVICIOS.filter((s) => s.publicado);
+import Redes from './Redes.astro';
+import Iconos from './Iconos.astro';
+import { SITIO, whatsappUrl } from '../data/sitio';
+import { PUBLICADOS, urlServicio } from '../data/servicios';
 ---
 <footer class="pie" id="contacto">
   <div class="greca pie-greca"></div>
@@ -10,26 +11,39 @@ const publicados = SERVICIOS.filter((s) => s.publicado);
     <div class="pie-marca">
       <Logo claro />
       <p>Agencia de SEO, GEO y marketing en {SITIO.ciudad}. Cada mañana, Eos abre las puertas del día. Nosotros abrimos las de tu marca en Google y en la IA.</p>
-      <a class="btn btn--aurora" href={`mailto:${SITIO.email}`}>{SITIO.email} <span class="flecha">→</span></a>
+      <div class="pie-botones">
+        <a class="btn btn--aurora" href="/contacto/">Hablemos <span class="flecha">→</span></a>
+        <a class="btn pie-wa" href={whatsappUrl()} target="_blank" rel="noopener"><Iconos nombre="whatsapp" tam={18} /> {SITIO.whatsappVisible}</a>
+      </div>
+      <Redes />
     </div>
     <nav class="pie-col" aria-label="Servicios">
       <p class="pie-titulo">Servicios</p>
       <ul>
-        {publicados.map((s) => <li><a href={urlServicio(s.slug)}>{s.nombre}</a></li>)}
+        {PUBLICADOS.map((s) => <li><a href={urlServicio(s.slug)}>{s.nombre}</a></li>)}
         <li><a href="/servicios/">Todos los servicios</a></li>
       </ul>
     </nav>
     <nav class="pie-col" aria-label="Agencia">
       <p class="pie-titulo">Agencia</p>
       <ul>
-        <li><a href="/#metodo">Método</a></li>
-        <li><a href="/#equipo">Equipo</a></li>
-        <li><a href={`mailto:${SITIO.email}`}>Contacto</a></li>
+        <li><a href="/sobre-nosotros/">Sobre nosotros</a></li>
+        <li><a href="/blog/">Blog y guías</a></li>
+        <li><a href="/diagnostico/">Diagnóstico gratuito</a></li>
+        <li><a href="/contacto/">Contacto</a></li>
+        <li><a href={`mailto:${SITIO.email}`}>{SITIO.email}</a></li>
       </ul>
+      <p class="pie-titulo pie-sedes-t">Sedes</p>
+      <p class="pie-sedes">{SITIO.sedes.join(' · ')}</p>
     </nav>
   </div>
   <div class="contenedor pie-legal">
-    <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.ciudad}</span>
+    <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.sedes.join(' · ')}</span>
+    <nav class="pie-legales" aria-label="Legal">
+      <a href="/legal/aviso-legal/">Aviso legal</a>
+      <a href="/legal/privacidad/">Privacidad</a>
+      <a href="/legal/cookies/">Cookies</a>
+    </nav>
     <span>Ἠώς · la que trae la luz</span>
   </div>
   <p class="pie-gigante" aria-hidden="true">EOS</p>
@@ -42,7 +56,14 @@ const publicados = SERVICIOS.filter((s) => s.publicado);
   .pie-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:48px;}
   .pie-marca{display:grid;gap:20px;align-content:start;}
   .pie-marca p{max-width:44ch;}
-  .pie-marca .btn{justify-self:start;}
+  .pie-botones{display:flex;flex-wrap:wrap;gap:10px;}
+  .pie-wa{display:inline-flex;gap:8px;border-color:rgba(255,255,255,.2);color:#EDE3DA;padding:14px 22px;}
+  .pie-wa:hover{border-color:#25D366;color:#fff;}
+  .pie-sedes-t{margin-top:26px;}
+  .pie-sedes{color:#EDE3DA;}
+  .pie-legales{display:flex;gap:18px;flex-wrap:wrap;}
+  .pie-legales a{color:#CDBFB4;text-decoration:none;}
+  .pie-legales a:hover{color:var(--azafran);}
   .pie-titulo{font-family:var(--etiqueta);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--azafran);margin-bottom:14px;}
   .pie-col ul{list-style:none;display:grid;gap:8px;}
   .pie-col a{color:#E8E1D5;text-decoration:none;}

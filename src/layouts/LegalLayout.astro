@@ -1,0 +1,23 @@
+---
+// Plantilla de las páginas legales. Son un punto de partida redactado sobre la
+// LSSI-CE y el RGPD: conviene que lo revise un profesional antes de publicar.
+// Los datos del titular salen de SITIO.legal; mientras falten, se marcan.
+import BaseLayout from './BaseLayout.astro';
+export interface Props { title: string; description: string; h1: string; actualizado: string }
+const { title, description, h1, actualizado } = Astro.props;
+---
+<BaseLayout title={title} description={description} noindex>
+  <section class="hero contenedor hero--simple">
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Legal</span>
+      <h1>{h1}</h1>
+      <p class="nota">Última actualización: {actualizado}</p>
+    </div>
+  </section>
+  <section class="seccion seccion--sin-arriba">
+    <div class="contenedor"><div class="prosa-larga"><slot /></div></div>
+  </section>
+</BaseLayout>
+<style>
+  :global(.pendiente){background:#FCE4D6;color:#8A2E0E;padding:1px 6px;border-radius:4px;font-weight:600;}
+</style>

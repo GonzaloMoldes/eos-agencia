@@ -1,0 +1,24 @@
+---
+// Redes de la agencia. Sin URL en sitio.ts, el icono se ve pero no enlaza
+// (con el aviso «Próximamente») hasta que exista el perfil.
+import Iconos from './Iconos.astro';
+import { SITIO } from '../data/sitio';
+const redes = [
+  { id: 'linkedin' as const, nombre: 'LinkedIn', url: SITIO.redes.linkedin },
+  { id: 'instagram' as const, nombre: 'Instagram', url: SITIO.redes.instagram },
+];
+---
+<ul class="redes">
+  {redes.map((r) => (
+    <li>{r.url
+      ? <a href={r.url} target="_blank" rel="noopener" aria-label={`${SITIO.nombre} en ${r.nombre}`}><Iconos nombre={r.id} /></a>
+      : <span title={`${r.nombre}: próximamente`}><Iconos nombre={r.id} /><span class="sr-only">{r.nombre}: próximamente</span></span>}
+    </li>
+  ))}
+</ul>
+<style>
+  .redes{list-style:none;display:flex;gap:10px;}
+  .redes a,.redes li > span{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.18);color:#EDE3DA;transition:background .2s,color .2s,border-color .2s;}
+  .redes a:hover{background:var(--degradado);color:var(--vaso);border-color:transparent;}
+  .redes li > span{opacity:.5;cursor:default;}
+</style>

@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuroraFondo from '../components/AuroraFondo.astro';
+import Formulario from '../components/Formulario.astro';
+import Experiencia from '../components/Experiencia.astro';
+import { SITIO } from '../data/sitio';
+
+const revisamos = [
+  '**Google:** si tu web aparece para lo que buscan tus clientes y qué lo está frenando.',
+  '**Google Maps:** el estado de tu ficha de empresa, si tienes negocio local.',
+  '**La IA:** si ChatGPT, Gemini o Perplexity entienden y mencionan tu marca.',
+  '**Conversión:** si tu web pone fácil pedir presupuesto, llamar o comprar.',
+];
+const md = (s: string) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+---
+<BaseLayout
+  title="Diagnóstico SEO y GEO gratuito | EOS Studio"
+  description="Pide un diagnóstico gratuito de tu web: revisamos tu visibilidad en Google, en Google Maps y en la IA, y te decimos qué mejorar primero."
+>
+  <section class="hero contenedor diagnostico">
+    <AuroraFondo />
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Diagnóstico gratuito</span>
+      <h1>¿Te encuentran? <em>Lo revisamos gratis</em></h1>
+      <p class="lead">Déjanos tu web y revisamos dónde estás hoy en Google, en Maps y en las respuestas de la IA. Te enviamos por correo los puntos de mejora más urgentes, sin compromiso.</p>
+      <ul class="lista-sol">
+        {revisamos.map((r) => <li set:html={md(r)} />)}
+      </ul>
+    </div>
+    <div class="tarjeta form-caja">
+      <p class="form-titulo">Pide tu diagnóstico</p>
+      <Formulario tipo="diagnostico" />
+    </div>
+  </section>
+
+  <section class="seccion seccion--piedra">
+    <div class="contenedor">
+      <Experiencia certificaciones={false} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .diagnostico{grid-template-columns:1fr 1fr;align-items:start;}
+  @media (max-width:900px){ .diagnostico{grid-template-columns:1fr;} }
+  .form-caja{padding:34px;box-shadow:var(--sombra);display:grid;gap:18px;}
+  .form-titulo{font-family:var(--serif);font-size:2rem;line-height:1;}
+</style>

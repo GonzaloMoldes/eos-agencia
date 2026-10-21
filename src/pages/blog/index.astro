@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuroraFondo from '../../components/AuroraFondo.astro';
+import { entradas, TIPOS, minutosLectura, fechaLarga } from '../../lib/blog';
+import { BASE_URL } from '../../lib/seo';
+
+const lista = await entradas();
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Blog y guías de EOS Studio',
+  url: `${BASE_URL}/blog/`,
+  blogPost: lista.map((e) => ({ '@type': 'BlogPosting', headline: e.data.titulo, url: `${BASE_URL}/blog/${e.id}/`, datePublished: e.data.fecha.toISOString() })),
+};
+---
+<BaseLayout
+  title="Blog y guías de SEO, GEO y marketing | EOS Studio"
+  description="Guías prácticas y artículos sobre SEO, GEO, SEO local, autoridad digital, marketing automation y CRM, escritos por el equipo de EOS Studio."
+  schema={schema}
+>
+  <section class="hero contenedor hero--simple">
+    <AuroraFondo />
+    <div class="hero-texto">
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Blog y guías</span>
+      <h1>Lo que aprendemos, <em>por escrito</em></h1>
+      <p class="lead">Guías prácticas y artículos sobre SEO, GEO, marketing y ventas. Sin humo: lo que funciona y cómo aplicarlo.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--sin-arriba">
+    <div class="contenedor">
+      <div class="filtros" role="group" aria-label="Filtrar por tipo">
+        <button type="button" aria-pressed="true" data-filtro="todo">Todo</button>
+        <button type="button" aria-pressed="false" data-filtro="guia">Guías</button>
+        <button type="button" aria-pressed="false" data-filtro="articulo">Artículos</button>
+      </div>
+      {lista.length === 0 && <p class="lead">Muy pronto, los primeros artículos.</p>}
+      <ul class="entradas">
+        {lista.map((e, i) => (
+          <li data-tipo={e.data.tipo} class:list={['entrada aparece', { 'entrada--destacada': i === 0 }]}>
+            <a href={`/blog/${e.id}/`}>
+              <span class="entrada-meta"><span class="entrada-tipo">{TIPOS[e.data.tipo]}</span> · {fechaLarga(e.data.fecha)} · {minutosLectura(e.body)} min</span>
+              <h2>{e.data.titulo}</h2>
+              <p>{e.data.descripcion}</p>
+              <span class="entrada-ir">Leer <span aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+  .filtros button{font:inherit;font-size:.92rem;padding:9px 18px;border-radius:999px;border:1px solid var(--linea-2);background:rgba(255,255,255,.6);color:var(--tinta-2);cursor:pointer;}
+  .filtros button[aria-pressed="true"]{background:var(--vaso);color:#fff;border-color:var(--vaso);}
+  .entradas{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:20px;}
+  .entrada a{position:relative;overflow:hidden;height:100%;display:flex;flex-direction:column;gap:12px;padding:30px;border-radius:var(--radio);border:1px solid var(--linea);background:rgba(255,255,255,.72);backdrop-filter:blur(10px);text-decoration:none;color:var(--tinta);transition:transform .3s,box-shadow .3s;}
+  .entrada a:hover{transform:translateY(-4px);box-shadow:var(--sombra);color:var(--tinta);}
+  .entrada--destacada{grid-column:1/-1;}
+  .entrada--destacada a{padding:44px;background:linear-gradient(120deg,rgba(245,207,198,.6),rgba(251,235,221,.7));}
+  .entrada--destacada h2{font-size:clamp(2.2rem,4vw,3.4rem);max-width:22ch;}
+  .entrada h2{font-size:1.9rem;}
+  .entrada p{color:var(--tinta-2);flex:1;}
+  .entrada-meta{font-size:.85rem;color:var(--tinta-3);}
+  .entrada-tipo{font-family:var(--etiqueta);letter-spacing:.1em;color:var(--terracota);}
+  .entrada-ir{font-weight:500;}
+  .entrada[hidden]{display:none;}
+</style>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('.filtros button');
+  botones.forEach((b) => b.addEventListener('click', () => {
+    botones.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const f = b.dataset.filtro;
+    document.querySelectorAll<HTMLElement>('.entrada').forEach((e) => { e.hidden = f !== 'todo' && e.dataset.tipo !== f; });
+  }));
+</script>

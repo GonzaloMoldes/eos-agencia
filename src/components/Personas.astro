@@ -1,0 +1,53 @@
+---
+// Tarjetas del equipo: retrato en arco (foto o iniciales), cargo, sede,
+// especialidades, trayectoria y enlaces. Datos en src/data/equipo.ts.
+import Iconos from './Iconos.astro';
+import { EQUIPO } from '../data/equipo';
+export interface Props { compacto?: boolean }
+const { compacto = false } = Astro.props;
+---
+<ul class:list={['personas', { 'personas--compacto': compacto }]}>
+  {EQUIPO.map((p) => (
+    <li class="persona aparece">
+      <div class="retrato" aria-hidden={p.foto ? undefined : 'true'}>
+        {p.foto
+          ? <img src={`/equipo/${p.foto}`} alt={`Retrato de ${p.nombre}`} width="400" height="400" loading="lazy" />
+          : <span class="iniciales">{p.iniciales}</span>}
+        <span class="retrato-sol"></span>
+      </div>
+      <div class="persona-texto">
+        <p class="persona-sede">{p.sede}</p>
+        <h3>{p.nombre}</h3>
+        <p class="persona-cargo">{p.cargo}</p>
+        {!compacto && p.especialidades.length > 0 && <ul class="chips">{p.especialidades.map((e) => <li>{e}</li>)}</ul>}
+        {!compacto && p.bio && <p class="persona-bio">{p.bio}</p>}
+        <p class="persona-enlaces">
+          <a href={p.linkedin} target="_blank" rel="noopener" aria-label={`LinkedIn de ${p.nombre}`}><Iconos nombre="linkedin" tam={16} /> LinkedIn</a>
+          {!compacto && <a href={`mailto:${p.email}`}>{p.email}</a>}
+        </p>
+      </div>
+    </li>
+  ))}
+</ul>
+<style>
+  .personas{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:22px;}
+  .persona{display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:var(--radio);padding:26px;}
+  .personas--compacto .persona{grid-template-columns:96px 1fr;gap:18px;padding:18px;}
+  @media (max-width:520px){ .persona{grid-template-columns:1fr;} }
+  .retrato{position:relative;overflow:hidden;aspect-ratio:4/5;border-radius:999px 999px 18px 18px;background:linear-gradient(180deg,#F5CFC6,#F8DCC2 55%,#FBEBDD);border:1px solid rgba(200,100,59,.3);display:grid;place-items:center;max-width:150px;}
+  .retrato img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1;}
+  .iniciales{position:relative;z-index:1;font-family:var(--serif);font-size:3rem;color:var(--vaso);margin-top:-18%;}
+  .personas--compacto .iniciales{font-size:2rem;}
+  .retrato-sol{position:absolute;left:50%;bottom:-22%;width:70%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,#F07A45 0 40%,rgba(232,163,61,.5) 41% 62%,transparent 63%);}
+  .persona-texto{display:grid;gap:6px;align-content:start;}
+  .persona-sede{font-family:var(--etiqueta);letter-spacing:.12em;color:var(--terracota);font-size:.85rem;}
+  .persona h3{font-size:2rem;}
+  .personas--compacto .persona h3{font-size:1.5rem;}
+  .persona-cargo{color:var(--tinta-2);}
+  .chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .chips li{font-size:.8rem;padding:4px 10px;border-radius:999px;border:1px solid var(--linea-2);color:var(--tinta-2);background:rgba(255,255,255,.6);}
+  .persona-bio{color:var(--tinta-2);font-size:.96rem;margin-top:4px;}
+  .persona-enlaces{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font-size:.92rem;}
+  .persona-enlaces a{display:inline-flex;align-items:center;gap:6px;color:var(--tinta);text-decoration:none;border-bottom:1px solid var(--linea-2);}
+  .persona-enlaces a:hover{color:var(--aurora-ink);border-color:var(--aurora);}
+</style>
