@@ -57,7 +57,6 @@ export const pagina: PaginaServicio = {
       planes: [
         {
           nombre: 'Plan SEO Esencial', precio: '690 €', periodo: '/mes',
-          oferta: '5 % de descuento · 3 meses',
           paraQuien: 'Para webs ya funcionando que quieren empezar a ganar visibilidad orgánica de forma ordenada. Ideal para negocios de servicios, despachos profesionales, clínicas pequeñas o tiendas online con catálogo reducido.',
           base: 'Objetivo a 3 meses:',
           incluye: [
@@ -72,7 +71,6 @@ export const pagina: PaginaServicio = {
         },
         {
           nombre: 'Plan SEO Crecimiento', precio: '990 €', periodo: '/mes', destacado: true, cinta: 'Lo más contratado',
-          oferta: '10 % de descuento · 3 meses',
           paraQuien: 'Empresas que ya tienen una base y quieren escalar: ecommerce medianos, empresas B2B, clínicas con varios servicios y negocios en sectores competitivos.',
           base: 'Todo lo del Plan Esencial, más:',
           incluye: [
@@ -124,7 +122,7 @@ export const pagina: PaginaServicio = {
             'Estrategia de reseñas: plantillas de respuesta y captación.',
             'Optimización de la web para búsquedas locales («fontanero en Valencia»).',
             'Seguimiento de posiciones en el mapa local.',
-            'Informe de resultados.',
+            'Informe mensual.',
           ],
           nota: 'Todo sobre Google Maps y la ficha de empresa, en [SEO local](/servicios/seo-local/).',
         },
