@@ -15,7 +15,9 @@ export async function GET() {
 
 EOS Studio es una agencia de marketing digital con sede en ${SITIO.ciudad} (España). Contacto: ${SITIO.email} · WhatsApp +${SITIO.whatsapp}
 
-## Equipo
+## Fundadores
+
+Equipo multidisciplinar de profesionales que coincidieron en los equipos de marketing de grandes marcas, fundado por:
 
 ${EQUIPO.map((p) => `- ${p.nombre} (${p.cargo}, ${p.sede}): ${p.linkedin}`).join('\n')}
 

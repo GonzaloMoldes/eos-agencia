@@ -8,7 +8,7 @@ import { EQUIPO } from '../data/equipo';
 import { BASE_URL } from '../lib/seo';
 
 const principios = [
-  { t: 'Trato directo', d: 'Hablas siempre con quien trabaja en tu proyecto, sin intermediarios.' },
+  { t: 'Trato directo', d: 'Una persona de referencia que conoce tu negocio y te acompaña en todo el proyecto, sin intermediarios.' },
   { t: 'Alcance definido', d: 'Tareas, entregables y condiciones económicas, por escrito antes de empezar.' },
   { t: 'Costes separados', d: 'Nuestros honorarios, por un lado; licencias y costes de terceros, por otro.' },
   { t: 'Informes que se entienden', d: 'Qué ha pasado, por qué y qué haremos a continuación.' },
@@ -38,13 +38,18 @@ const schema = {
     <AuroraFondo />
     <div class="hero-texto">
       <span class="eyebrow"><span class="letra letra--sin">✦</span>Sobre nosotros · {SITIO.sedes.join(' · ')}</span>
-      <h1>Un estudio pequeño, <em>a propósito</em></h1>
-      <p class="lead">Somos dos personas con un método. Sin cuentas que pasan de mano en mano ni informes que nadie entiende: quien te escucha el primer día es quien trabaja en tu proyecto.</p>
+      <h1>Antiguos colegas, <em>una misma forma de trabajar</em></h1>
+      <p class="lead">Somos un equipo multidisciplinar de profesionales que coincidimos en los equipos de marketing de grandes marcas: SEO, contenidos, datos, automatización y CRM. Compartimos una forma de trabajar y de hacer las cosas —ordenada, clara y sin letra pequeña— y la ponemos al servicio de cada proyecto.</p>
     </div>
   </section>
 
   <section class="seccion seccion--sin-arriba">
     <div class="contenedor">
+      <div class="cabecera-seccion">
+        <span class="eyebrow"><span class="letra letra--sin">✦</span>Fundadores</span>
+        <h2>Quienes pusieron <em>en marcha EOS</em></h2>
+        <p class="lead">Gonzalo y AnaMaria fundaron EOS Studio y coordinan cada proyecto. En cada caso reúnen a los especialistas del equipo que tu negocio necesita, para que tengas siempre a una persona de referencia y, detrás, a quien sabe hacer cada parte.</p>
+      </div>
       <Personas />
     </div>
   </section>
