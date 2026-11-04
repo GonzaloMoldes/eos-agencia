@@ -35,7 +35,7 @@ export const CATEGORIAS: Record<Categoria, { nombre: string; letra: string; desc
 };
 
 export const SERVICIOS: Servicio[] = [
-  { slug: 'seo-geo-valencia', nombre: 'SEO y GEO en Valencia', resumen: 'Posicionamiento en Google y en buscadores de IA para empresas de Valencia.', categoria: 'posicionamiento', publicado: false },
+  { slug: 'seo-geo-valencia', nombre: 'SEO y GEO en Valencia', resumen: 'Posicionamiento en Google y en buscadores de IA para empresas de Valencia.', categoria: 'posicionamiento', publicado: true },
   { slug: 'seo-local', nombre: 'SEO local', resumen: 'Google Business Profile, reseñas y búsquedas «cerca de mí» en tu zona.', categoria: 'posicionamiento', publicado: true },
   { slug: 'seo-ecommerce', nombre: 'SEO para ecommerce', resumen: 'Categorías, fichas de producto y arquitectura que venden.', categoria: 'posicionamiento', publicado: false },
   { slug: 'seo-youtube', nombre: 'SEO para YouTube', resumen: 'Canal y vídeos optimizados para el segundo buscador del mundo.', categoria: 'posicionamiento', publicado: true },

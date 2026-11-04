@@ -12,6 +12,8 @@ export interface Plan {
   precio: string;          // «desde 290 €», «240 €»
   periodo: string;         // «/mes», «pago único»
   destacado?: boolean;     // se pinta en oscuro con la cinta «Recomendado»
+  cinta?: string;          // texto de la cinta del destacado (por defecto «Recomendado»)
+  oferta?: string;         // «5 % de descuento · 3 meses», bajo el precio
   paraQuien?: string;
   objetivo?: string;
   base?: string;           // «Incluye todo lo del Plan Esencial, más:»

@@ -106,9 +106,10 @@ const letra = () => LETRAS[n++ % LETRAS.length];
           <div class:list={['planes', `planes--${b.planes.length}`]}>
             {b.planes.map((pl) => (
               <article class:list={['plan aparece', { 'plan--destacado': pl.destacado }]}>
-                {pl.destacado && <span class="plan-cinta">Recomendado</span>}
+                {pl.destacado && <span class="plan-cinta">{pl.cinta || 'Recomendado'}</span>}
                 <h3>{pl.nombre}</h3>
                 <p class="plan-precio"><span>{pl.precio}</span> <small>{pl.periodo}</small></p>
+                {pl.oferta && <p class="plan-oferta">{pl.oferta}</p>}
                 {pl.paraQuien && <p class="plan-para">{pl.paraQuien}</p>}
                 {pl.objetivo && <p class="plan-obj"><strong>Objetivo:</strong> {pl.objetivo}</p>}
                 {pl.base && <p class="plan-base">{pl.base}</p>}
@@ -270,6 +271,8 @@ const letra = () => LETRAS[n++ % LETRAS.length];
   .plan--destacado .plan-base{color:#FBF4E8;}
   .plan--destacado .plan-precio small,.plan--destacado .plan-cond{color:#A9A3B5;}
   .plan--destacado .plan-lista li::before{border-color:var(--azafran);}
+  .plan-oferta{align-self:flex-start;margin-top:-6px;font-family:var(--etiqueta);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--aurora-ink);background:color-mix(in srgb,var(--aurora) 14%,transparent);padding:4px 12px;border-radius:999px;}
+  .plan--destacado .plan-oferta{color:var(--azafran);background:rgba(231,169,58,.14);}
   .plan-cinta{position:absolute;top:-13px;left:30px;background:var(--azafran);color:var(--tinta);font-family:var(--etiqueta);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-weight:700;}
   .planes-nota{text-align:center;margin:28px auto 0;max-width:70ch;}
 

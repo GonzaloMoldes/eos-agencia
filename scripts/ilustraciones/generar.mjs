@@ -51,6 +51,21 @@ const ESCENAS = {
     A.bocadillo({ x: 410, y: 80, texto: ['Por lo que', 'más te urja'], i: 1, suave: true, cola: 'der' }),
   ),
 
+  // SEO y GEO en Valencia: la web sube entre columnas y la IA la cita.
+  'seo-geo-valencia': () => svg(
+    'Ilustración: una estratega señala columnas griegas que crecen con la aurora detrás, mientras un empresario con portátil ve su web citada por la inteligencia artificial',
+    fondo(1) +
+    A.aurora(330, 470, 100) +
+    A.suelo(360, 486, 660) +
+    A.columna(262, 470, 110, 38, 'esc-crece') + A.columna(330, 470, 160, 38, 'esc-crece esc-c2') + A.columna(398, 470, 215, 38, 'esc-crece esc-c3') +
+    A.destello(398, 220, 0.7, 0) + A.destello(200, 190, 0.55, 2) +
+    personaje(AU, { x: 120, y: 486, mira: 1, brazoDel: 'senala', brazoTra: 'cadera', respira: 0 }) +
+    personaje(leo, { x: 600, y: 486, mira: -1, brazoDel: 'teclea', brazoTra: 'teclea', respira: 0.7 }) +
+    A.mesaAlta(520, 486, 1) + A.portatil(514, 382, 0.9, 1) +
+    A.bocadillo({ x: 40, y: 60, texto: ['Arriba', 'en Google'], i: 0 }) +
+    A.bocadillo({ x: 450, y: 60, texto: ['Y citada', 'por la IA'], i: 1, icono: 'sol', suave: true, cola: 'der' }),
+  ),
+
   // SEO local: la tienda de barrio y el pin de Maps.
   'seo-local': () => svg(
     'Ilustración: la dueña de un comercio saluda en la puerta mientras un gran pin de mapa con una estrella marca su tienda y una consultora le enseña las reseñas en el móvil',
