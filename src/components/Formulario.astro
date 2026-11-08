@@ -21,9 +21,11 @@ export interface Props {
   necesidades?: string[]; // landing: opciones de «¿Qué necesitas?»
   inversiones?: string[]; // landing: opciones de «¿Qué inversión mensual manejas?»
   siguientes?: { t: string; d: string }[];  // landing: «¿Qué pasa ahora?» tras enviar
+  herramientas?: string[];  // landing: opciones de «¿Qué herramienta usas ahora?»
+  ayudaWeb?: string;        // landing: ayuda bajo «URL de tu web»
   boton?: string;         // texto del botón de envío
 }
-const { tipo = 'contacto', servicio = '', necesidades = [], inversiones = [], siguientes = [], boton } = Astro.props;
+const { tipo = 'contacto', servicio = '', necesidades = [], inversiones = [], siguientes = [], herramientas = [], ayudaWeb = 'Sin ella no podemos decirte nada útil.', boton } = Astro.props;
 const diag = tipo === 'diagnostico';
 const landing = tipo === 'landing';
 const textoBoton = boton || (diag ? 'Pedir mi diagnóstico' : landing ? 'Quiero mi diagnóstico' : 'Enviar mensaje');
@@ -50,7 +52,7 @@ const id = `form-${tipo}`;
             </select>
           </label>
         )}
-        <label><span>URL de tu web <b aria-hidden="true">*</b> <small class="f-ayuda">Sin ella no podemos decirte nada útil.</small></span>
+        <label><span>URL de tu web <b aria-hidden="true">*</b> <small class="f-ayuda">{ayudaWeb}</small></span>
           <input name="web" type="url" inputmode="url" placeholder="https://" required>
         </label>
       </div>
@@ -63,13 +65,29 @@ const id = `form-${tipo}`;
             </select>
           </label>
         )}
-        <label><span>Teléfono <small class="f-opc">(opcional)</small></span>
-          <input name="telefono" type="tel" autocomplete="tel">
+        {herramientas.length > 0 ? (
+          <label>¿Qué herramienta usas ahora?
+            <select name="herramienta">
+              <option value="">Elige una opción</option>
+              {herramientas.map((o) => <option>{o}</option>)}
+            </select>
+          </label>
+        ) : (
+          <label><span>Teléfono <small class="f-opc">(opcional)</small></span>
+            <input name="telefono" type="tel" autocomplete="tel">
+          </label>
+        )}
+      </div>
+      <div class="f-fila f-fila--abajo">
+        {herramientas.length > 0 && (
+          <label><span>Teléfono <small class="f-opc">(opcional)</small></span>
+            <input name="telefono" type="tel" autocomplete="tel">
+          </label>
+        )}
+        <label class:list={[{ 'f-ancho': herramientas.length === 0 }]}><span>Cuéntanos lo que quieras <small class="f-opc">(opcional)</small></span>
+          <textarea name="mensaje" rows={herramientas.length > 0 ? 1 : 2}></textarea>
         </label>
       </div>
-      <label><span>Cuéntanos lo que quieras <small class="f-opc">(opcional)</small></span>
-        <textarea name="mensaje" rows="2"></textarea>
-      </label>
       <input type="hidden" name="servicio" value={servicio}>
       <input type="hidden" name="plan" value="">
     </>
@@ -145,6 +163,7 @@ const id = `form-${tipo}`;
   .formulario{display:grid;gap:16px;}
   .f-fila{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .f-fila--abajo{align-items:end;}
+  .f-ancho{grid-column:1/-1;}
   @media (max-width:600px){ .f-fila{grid-template-columns:1fr;} }
   .formulario label{display:grid;gap:7px;font-size:.9rem;font-weight:500;color:var(--tinta-2);}
   .formulario label b{color:var(--terracota);font-weight:600;}

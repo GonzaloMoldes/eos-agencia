@@ -28,6 +28,7 @@ const extras: Extra[] = pagina.bloques.flatMap((b) => (b.tipo === 'extras' ? b.i
 const f = l.formulario;
 const enlaces = [
   { href: '#que-te-llevas', texto: 'Qué te llevas' },
+  ...(l.areas ? [{ href: '#que-hacemos', texto: 'Qué hacemos' }] : []),
   ...(planes.length ? [{ href: '#precios', texto: 'Precios' }] : []),
   { href: '#preguntas', texto: 'Preguntas' },
 ];
@@ -47,7 +48,7 @@ const enlaces = [
     <div class="tarjeta lp-form" id="formulario">
       <h2 class="lp-form-titulo">{f.titulo}</h2>
       <p class="lp-form-sub">{f.subtitulo}</p>
-      <Formulario tipo="landing" servicio={f.servicio} necesidades={f.necesidades} inversiones={f.inversiones} siguientes={f.siguientes} boton={f.boton} />
+      <Formulario tipo="landing" servicio={f.servicio} necesidades={f.necesidades} inversiones={f.inversiones} siguientes={f.siguientes} herramientas={f.herramientas} ayudaWeb={f.ayudaWeb} boton={f.boton} />
     </div>
   </section>
 
@@ -69,6 +70,45 @@ const enlaces = [
       </div>
     </div>
   </section>
+
+  {l.areas && (
+    <section class="seccion" id="que-hacemos">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <span class="eyebrow"><span class="letra letra--sin">✦</span>Qué hacemos</span>
+          <h2 set:html={l.areas.titulo} />
+          <p class="lead" set:html={md(l.areas.intro)} />
+        </div>
+        <div class="lp-areas">
+          {l.areas.items.map((a, i) => (
+            <article class="lp-area aparece">
+              <span class="lp-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{a.t}</h3>
+              <p set:html={md(a.d)} />
+              <ul class="lp-lista">{a.puntos.map((x) => <li set:html={md(x)} />)}</ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {l.modelo && (
+    <section class="seccion seccion--piedra">
+      <div class="contenedor">
+        <div class="cabecera-seccion cabecera-seccion--centro">
+          <span class="eyebrow"><span class="letra letra--sin">✦</span>Modelo de trabajo</span>
+          <h2 set:html={l.modelo.titulo} />
+          <p class="lead" set:html={md(l.modelo.intro)} />
+        </div>
+        <ol class="lp-modelo">
+          {l.modelo.items.map((m, i) => (
+            <li class="aparece"><span class="lp-modelo-n">{i + 1}</span><h3>{m.t}</h3><p set:html={md(m.d)} /></li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
 
   {planes.length > 0 && (
     <section class="seccion" id="precios">
@@ -179,9 +219,9 @@ const enlaces = [
   .lp-plan--destacado .lp-para,.lp-plan--destacado .lp-precio small,.lp-plan--destacado .lp-lista li{color:#CFC8BD;}
   .lp-plan--destacado .lp-lista li::before{border-color:var(--azafran);}
   .lp-cinta{position:absolute;top:-13px;left:28px;background:var(--azafran);color:var(--tinta);font-family:var(--etiqueta);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-weight:700;}
-  .lp-extras{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));margin-top:22px;}
+  .lp-extras{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin-top:22px;}
   .lp-extra{border:1px dashed var(--linea-2);border-radius:18px;padding:20px 22px;display:grid;gap:8px;font-size:.95rem;color:var(--tinta-2);}
-  .lp-extra-cab{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;}
+  .lp-extra-cab{display:grid;gap:4px;}
   .lp-extra-cab strong{font-family:var(--serif);font-weight:400;font-size:1.45rem;color:var(--tinta);}
   .lp-extra-cab span{font-family:var(--mono);font-size:.9rem;color:var(--aurora-ink);}
   .lp-extra a{font-weight:500;text-decoration:none;}
@@ -192,6 +232,20 @@ const enlaces = [
   .lp-garantia h3{font-size:1.6rem;color:#FBF4E8;}
   .lp-garantia p{color:#CFC8BD;font-size:.97rem;}
   .lp-garantia :global(a){color:var(--azafran);}
+
+  .lp-areas{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));}
+  .lp-area{border:1px solid var(--linea);border-radius:var(--radio);background:var(--papel);padding:30px;display:grid;gap:12px;align-content:start;}
+  .lp-area h3{font-size:1.8rem;}
+  .lp-area > p{color:var(--tinta-2);}
+
+  .lp-modelo{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:m;}
+  .lp-modelo li{position:relative;padding:0 22px;display:grid;gap:10px;align-content:start;text-align:center;justify-items:center;}
+  .lp-modelo li + li::before{content:"";position:absolute;top:26px;left:-50%;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--aurora),transparent);z-index:0;}
+  .lp-modelo-n{position:relative;z-index:1;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--papel);border:1px solid var(--aurora);font-family:var(--serif);font-size:1.5rem;color:var(--aurora-ink);}
+  .lp-modelo h3{font-size:1.5rem;}
+  .lp-modelo p{color:var(--tinta-2);font-size:.95rem;}
+  @media (max-width:900px){ .lp-modelo{grid-template-columns:1fr 1fr;row-gap:32px;} .lp-modelo li::before{display:none;} }
+  @media (max-width:520px){ .lp-modelo{grid-template-columns:1fr;} }
 
   .lp-cierre{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;}
   .lp-cierre > div{display:grid;gap:20px;}

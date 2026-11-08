@@ -32,9 +32,15 @@ export interface Landing {
     servicio: string;                    // cómo llega el lead en el correo
     necesidades: string[];               // «¿Qué necesitas?»
     inversiones: string[];               // «¿Qué inversión mensual manejas?»
+    herramientas?: string[];             // «¿Qué herramienta usas ahora?» (opcional)
+    ayudaWeb?: string;                   // texto de ayuda bajo «URL de tu web»
     siguientes: { t: string; d: string }[];  // «¿Qué pasa ahora?» tras enviar
   };
   llevas: { titulo: string; intro: string; items: Item[] };
+  // Opcional: áreas de trabajo con sus casos concretos («qué hacemos», en detalle).
+  areas?: { titulo: string; intro: string; items: (Item & { puntos: string[] })[] };
+  // Opcional: modelo de trabajo, de tu empresa al resultado.
+  modelo?: { titulo: string; intro: string; items: Item[] };
   cuesta: { titulo: string; intro: string; nota: string };
   garantias: { titulo: string; intro: string; items: Item[] };
   faq: { titulo: string; preguntas: { p: string; r: string }[] };
@@ -127,6 +133,160 @@ export const LANDINGS: Landing[] = [
     cierre: {
       titulo: 'Dinos tu web y <em>te decimos qué le pasa</em>',
       texto: 'Sin compromiso y sin llamada comercial de por medio. Si no hay nada que mejorar, también te lo decimos.',
+    },
+  },
+  {
+    slug: 'marketing-automation',
+    servicio: 'marketing-automation',
+    title: 'Agencia de marketing automation | Flujos que convierten · EOS Studio',
+    description: 'Automatizamos tus comunicaciones por email, SMS, push y WhatsApp para que ningún contacto se quede sin seguimiento. Precios publicados, alcance cerrado y licencias aparte. Cuéntanos qué quieres automatizar.',
+    hero: {
+      antetitulo: 'Marketing automation con método de gran marca',
+      h1: 'Agencia de marketing automation <em>para que ningún contacto se enfríe</em>',
+      entrada: 'Venimos de los equipos de marketing de grandes marcas y llevamos ese método a tu negocio: menos envíos a mano, seguimientos a tiempo y datos que te dicen qué funciona.',
+      datos: [
+        { t: 'Desde 249 €/mes', d: 'precio publicado, alcance por escrito' },
+        { t: 'Desde 490 €', d: 'para implementar tu primer flujo' },
+        { t: 'Licencias aparte', d: 'nuestros honorarios, sin costes escondidos' },
+      ],
+    },
+    formulario: {
+      titulo: 'Cuéntanos qué quieres automatizar',
+      subtitulo: 'Te respondemos con una primera lectura por escrito: qué automatizaríamos primero y con qué herramienta.',
+      boton: 'Quiero mi diagnóstico',
+      servicio: 'Marketing automation',
+      necesidades: [
+        'Hacer seguimiento automático de mis leads',
+        'Email marketing y newsletters',
+        'Flujos de ecommerce (bienvenida, carrito, recompra)',
+        'Conectar mi CRM con el marketing',
+        'Automatizar WhatsApp, SMS o chat',
+        'Otra cosa',
+      ],
+      inversiones: [
+        'Menos de 250 €/mes',
+        'Entre 250 y 600 €/mes',
+        'Entre 600 y 1.000 €/mes',
+        'Más de 1.000 €/mes',
+        'Prefiero un pago único (implementación)',
+      ],
+      herramientas: [
+        'Ninguna todavía',
+        'Klaviyo',
+        'HubSpot',
+        'Mailchimp o Brevo',
+        'ActiveCampaign',
+        'Salesforce',
+        'Otra',
+      ],
+      ayudaWeb: 'Para ver cómo captas contactos hoy.',
+      siguientes: [
+        { t: 'Revisamos lo que nos cuentas', d: 'Tu web, cómo captas contactos y la herramienta que usas.' },
+        { t: 'Te decimos qué automatizaríamos', d: 'Por escrito y por orden: el primer flujo, qué necesita y qué esperar de él.' },
+        { t: 'Decides tú', d: 'Si encaja, te pasamos una propuesta con alcance cerrado. Si no lo vemos, también te lo decimos.' },
+      ],
+    },
+    llevas: {
+      titulo: 'Lo que entra en el servicio, <em>escrito antes de empezar</em>',
+      intro: 'Alcance definido, costes separados y flujos que puedes entender.',
+      items: [
+        { t: 'Una persona de referencia', d: 'Alguien que conoce tu negocio y coordina a los especialistas del equipo. Sin intermediarios ni cuentas que pasan de mano en mano.' },
+        { t: 'Precio publicado', d: 'Desde 249 €, 599 € o 990 € al mes según el plan, e implementación desde 490 €. Está escrito más abajo, no detrás de una llamada.' },
+        { t: 'Alcance por escrito', d: 'Sabes qué flujos, campañas e integraciones entran antes de empezar. Lo que no está en la propuesta no aparece después en la factura.' },
+        { t: 'Probado antes de activar', d: 'Cada automatización se comprueba antes de ponerla en marcha, para que tus contactos no reciban un mensaje equivocado.' },
+        { t: 'Flujos documentados', d: 'Cada flujo queda documentado según su complejidad: qué lo dispara, qué envía y cuándo termina.' },
+        { t: 'Costes separados', d: 'Nuestros honorarios por un lado; licencias, créditos de mensajería y costes de envío, por otro.' },
+        { t: 'Revisión cada mes', d: 'Miramos cómo funcionan los flujos y te proponemos mejoras según los resultados.' },
+        { t: 'Consentimiento revisado', d: 'Antes de activar nada repasamos las autorizaciones, las bajas y las preferencias de tus contactos.' },
+      ],
+    },
+    areas: {
+      titulo: 'Las posibilidades dependen de tu negocio. <em>Partimos de tu objetivo</em>',
+      intro: 'Primero decidimos qué quieres conseguir; después, qué automatizar, con qué datos y en qué canal.',
+      items: [
+        {
+          t: 'Flujos y recorridos',
+          d: 'Comunicaciones que se envían solas cuando pasa algo: un registro, una compra, una respuesta o un silencio.',
+          puntos: [
+            'Bienvenida y lead nurturing para acompañar la decisión.',
+            'Seguimiento comercial con avisos a tu equipo de ventas.',
+            'Carrito abandonado, poscompra y recompra en ecommerce.',
+            'Reactivación de contactos inactivos.',
+            'Recorridos con email, SMS, push y WhatsApp coordinados.',
+          ],
+        },
+        {
+          t: 'Datos y segmentación',
+          d: 'Los datos son la materia prima: sin una base ordenada no hay automatización que funcione.',
+          puntos: [
+            'Revisión de tu base de contactos y de lo que sabes de ellos.',
+            'Segmentos por datos, intereses y comportamiento.',
+            'Altas, bajas y preferencias bien gestionadas.',
+            'Integración con tu CRM y otras herramientas cuando es viable.',
+          ],
+        },
+        {
+          t: 'Mensajes y materiales',
+          d: 'Cada flujo necesita mensajes que la gente quiera abrir y que lleven al siguiente paso.',
+          puntos: [
+            'Diseño y maquetación de emails y newsletters.',
+            'Contenidos de las secuencias a partir de tu información.',
+            'Mensajes para SMS, notificaciones push y WhatsApp.',
+            'Criterios de salida para no insistir a quien ya respondió.',
+          ],
+        },
+        {
+          t: 'Medición y mejora',
+          d: 'Una automatización no se deja en marcha y se olvida: se mide y se ajusta.',
+          puntos: [
+            'Métricas de cada flujo: entregas, clics, respuestas y conversiones.',
+            'Objetivos y conversiones configurados.',
+            'Pruebas y optimización de los flujos.',
+            'Cuadro de mando con los indicadores acordados.',
+          ],
+        },
+      ],
+    },
+    modelo: {
+      titulo: 'De tu objetivo al flujo en marcha, <em>con un solo interlocutor</em>',
+      intro: 'Un equipo multidisciplinar detrás y una persona delante.',
+      items: [
+        { t: 'Tu empresa', d: 'Nos cuentas tus objetivos, tus clientes y las herramientas que ya usas.' },
+        { t: 'Tu persona de referencia', d: 'Coordina el proyecto, te cuenta lo que se hace y por qué, y prioriza contigo.' },
+        { t: 'Especialistas del equipo', d: 'Estrategia, datos, contenidos y configuración técnica de cada flujo.' },
+        { t: 'Revisión mensual', d: 'Medimos, te explicamos los resultados y proponemos los siguientes pasos.' },
+      ],
+    },
+    cuesta: {
+      titulo: 'Tres planes para <em>cada fase de tu negocio</em>',
+      intro: 'Está publicado a propósito: si tu presupuesto está por debajo, te ahorramos la llamada.',
+      nota: 'Son precios de partida: el alcance final depende de la herramienta, el volumen de contactos, los canales y las integraciones, y se cierra por escrito en la propuesta. Licencias, créditos de mensajería y costes de envío, aparte.',
+    },
+    garantias: {
+      titulo: 'Transparencia en la automatización, <em>sin costes ocultos</em>',
+      intro: 'Definimos el alcance, las herramientas y las responsabilidades antes de implementar nada.',
+      items: [
+        { t: 'Alcance definido', d: 'Conoces los flujos, las campañas y las integraciones incluidos en el servicio.' },
+        { t: 'Tus sistemas, bajo tu control', d: 'Las cuentas, los datos y los accesos se gestionan conforme a lo acordado en la propuesta.' },
+        { t: 'Medición transparente', d: 'Recibes información de las acciones realizadas y de los indicadores disponibles, sin adornos.' },
+        { t: 'Equipo certificado', d: 'Certificaciones de Klaviyo (producto y entregabilidad) y de HubSpot en inbound marketing, entre otras. Están en [nuestros perfiles](/sobre-nosotros/).' },
+      ],
+    },
+    faq: {
+      titulo: 'Lo que nos preguntáis antes de contratar',
+      preguntas: [
+        { p: '¿Cuánto cuesta?', r: 'La gestión mensual va desde 249 € (Automation Esencial), 599 € (Crecimiento) o 990 € (Omnicanal). Implementar tu primera automatización va desde 490 € de pago único. Las licencias y los costes de envío se presupuestan aparte.' },
+        { p: '¿Puedo empezar con un solo flujo?', r: 'Sí. El plan Esencial está pensado para eso: un flujo acordado, bien configurado y medido. Cuando funciona, se añaden los siguientes.' },
+        { p: '¿Necesito un CRM?', r: 'No siempre. Muchas automatizaciones funcionan desde una plataforma de marketing. Un CRM resulta útil cuando quieres coordinar los mensajes con el estado comercial de cada contacto y con tu equipo de ventas.' },
+        { p: '¿Con qué herramientas trabajáis?', r: 'Con la que mejor encaje con tu negocio y tu volumen. Si ya usas una, partimos de ella; si no, te recomendamos una. El equipo está certificado en Klaviyo y HubSpot, entre otras.' },
+        { p: '¿Cuánto se tarda en tener un flujo en marcha?', r: 'Depende de la complejidad, de la calidad de los datos y de las integraciones. Una automatización sencilla lleva mucho menos que un sistema omnicanal conectado con un CRM. Tras revisar tu caso, te damos un calendario realista.' },
+        { p: '¿Qué necesitáis de mí para empezar?', r: 'Acceso a tu herramienta de email o CRM (o la decisión de cuál usar), saber cómo captas contactos hoy y el objetivo que quieres priorizar.' },
+        { p: '¿Y la protección de datos?', r: 'Antes de activar las automatizaciones revisamos las autorizaciones, la gestión de bajas y las preferencias de los contactos, para que cada comunicación se ajuste a la normativa y a las condiciones de cada canal.' },
+      ],
+    },
+    cierre: {
+      titulo: 'Cuéntanos qué haces a mano y <em>te decimos qué automatizar</em>',
+      texto: 'Sin compromiso. Si no vemos dónde aportar, también te lo decimos.',
     },
   },
 ];
