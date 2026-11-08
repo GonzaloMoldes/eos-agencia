@@ -28,8 +28,10 @@ const limpio = (v: unknown, max = 300) => (typeof v === 'string' ? v.trim().slic
 
 const CAMPOS: Record<string, string> = {
   nombre: 'Nombre', email: 'Correo', telefono: 'Teléfono', empresa: 'Empresa', web: 'Web',
-  servicio: 'Le interesa', objetivo: 'Objetivo', mensaje: 'Mensaje',
+  servicio: 'Le interesa', plan: 'Plan', objetivo: 'Objetivo', mensaje: 'Mensaje',
+  pagina: 'Página', origen: 'Origen de la visita',
 };
+const TITULOS = { contacto: 'Nuevo contacto desde eosstudio.es', diagnostico: 'Petición de diagnóstico gratuito', landing: 'Lead desde una landing page' };
 
 export const POST: APIRoute = async ({ request }) => {
   let body: Record<string, unknown>;
@@ -42,29 +44,31 @@ export const POST: APIRoute = async ({ request }) => {
   // Trampa para bots: un campo oculto que una persona nunca rellena.
   if (limpio(body.website)) return json({ ok: true });
 
-  const tipo = body.tipo === 'diagnostico' ? 'diagnostico' : 'contacto';
+  const tipo = body.tipo === 'diagnostico' || body.tipo === 'landing' ? body.tipo : 'contacto';
   const datos: Record<string, string> = {};
   for (const k of Object.keys(CAMPOS)) datos[k] = limpio(body[k], k === 'mensaje' || k === 'objetivo' ? MAX : 300);
   datos.email = datos.email.toLowerCase();
 
   if (!datos.nombre || !EMAIL_RE.test(datos.email)) return json({ ok: false, error: 'invalid_input' }, 422);
-  if (tipo === 'diagnostico' && !datos.web) return json({ ok: false, error: 'invalid_input' }, 422);
+  if (tipo !== 'contacto' && !datos.web) return json({ ok: false, error: 'invalid_input' }, 422);
   if (body.consent !== true) return json({ ok: false, error: 'consent_required' }, 422);
 
   const { RESEND_API_KEY, CONTACTO_DESTINO, CONTACTO_REMITENTE } = import.meta.env;
   if (!RESEND_API_KEY) return json({ ok: false, error: 'not_configured' }, 503);
 
   const destino = CONTACTO_DESTINO ? CONTACTO_DESTINO.split(',').map((x: string) => x.trim()).filter(Boolean) : DESTINO_POR_DEFECTO;
-  const asunto = tipo === 'diagnostico'
-    ? `Diagnóstico gratuito: ${datos.web} (${datos.nombre})`
-    : `Nuevo contacto desde la web: ${datos.nombre}${datos.empresa ? ` · ${datos.empresa}` : ''}`;
+  const asunto = tipo === 'landing'
+    ? `Lead landing${datos.servicio ? ` ${datos.servicio}` : ''}: ${datos.nombre} · ${datos.web}`
+    : tipo === 'diagnostico'
+      ? `Diagnóstico gratuito: ${datos.web} (${datos.nombre})`
+      : `Nuevo contacto desde la web: ${datos.nombre}${datos.empresa ? ` · ${datos.empresa}` : ''}`;
 
   const filas = Object.entries(CAMPOS)
     .filter(([k]) => datos[k])
     .map(([k, etiqueta]) => `<tr><td style="padding:6px 14px 6px 0;color:#7A6E78;vertical-align:top;white-space:nowrap;">${etiqueta}</td><td style="padding:6px 0;color:#1B1412;">${esc(datos[k]).replace(/\n/g, '<br>')}</td></tr>`)
     .join('');
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">
-<p style="margin:0 0 14px;color:#C8643B;font-family:Georgia,serif;font-style:italic;font-size:17px;">${tipo === 'diagnostico' ? 'Petición de diagnóstico gratuito' : 'Nuevo contacto desde eosstudio.es'}</p>
+<p style="margin:0 0 14px;color:#C8643B;font-family:Georgia,serif;font-style:italic;font-size:17px;">${TITULOS[tipo]}</p>
 <table cellpadding="0" cellspacing="0" border="0">${filas}</table>
 <p style="margin:18px 0 0;color:#7A6E78;font-size:13px;">Responde a este correo para contestar directamente a ${esc(datos.nombre)}.</p></div>`;
   const texto = Object.entries(CAMPOS).filter(([k]) => datos[k]).map(([k, e]) => `${e}: ${datos[k]}`).join('\n');

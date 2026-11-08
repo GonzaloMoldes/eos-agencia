@@ -5,12 +5,26 @@
 //
 // Rellena «Me interesa» si la URL trae ?servicio=<slug> o ?plan=<nombre>
 // (los botones de las páginas de servicio enlazan así).
+//
+// tipo «landing»: formulario corto de las landing pages (/lp/). El servicio va
+// fijo y los botones con data-plan rellenan el plan elegido.
+//
+// Todos los formularios envían la página y el origen de la visita (utm_*,
+// gclid, fbclid, msclkid), guardados al entrar para que lleguen aunque la
+// persona navegue antes de escribir.
 import { PUBLICADOS } from '../data/servicios';
 import { SITIO, whatsappUrl } from '../data/sitio';
 
-export interface Props { tipo?: 'contacto' | 'diagnostico' }
-const { tipo = 'contacto' } = Astro.props;
+export interface Props {
+  tipo?: 'contacto' | 'diagnostico' | 'landing';
+  servicio?: string;      // landing: servicio fijo
+  objetivos?: string[];   // landing: opciones de «¿Qué quieres conseguir?»
+  boton?: string;         // texto del botón de envío
+}
+const { tipo = 'contacto', servicio = '', objetivos = [], boton } = Astro.props;
 const diag = tipo === 'diagnostico';
+const landing = tipo === 'landing';
+const textoBoton = boton || (diag ? 'Pedir mi diagnóstico' : landing ? 'Quiero mi diagnóstico' : 'Enviar mensaje');
 const id = `form-${tipo}`;
 ---
 <form class="formulario" id={id} data-tipo={tipo} novalidate>
@@ -23,7 +37,28 @@ const id = `form-${tipo}`;
     </label>
   </div>
 
-  {diag ? (
+  {landing ? (
+    <>
+      <div class="f-fila">
+        <label><span>Web de tu empresa <b aria-hidden="true">*</b></span>
+          <input name="web" type="url" inputmode="url" placeholder="https://" required>
+        </label>
+        <label>Teléfono
+          <input name="telefono" type="tel" autocomplete="tel">
+        </label>
+      </div>
+      {objetivos.length > 0 && (
+        <label>¿Qué quieres conseguir?
+          <select name="objetivo">
+            <option value="">Elige una opción (opcional)</option>
+            {objetivos.map((o) => <option>{o}</option>)}
+          </select>
+        </label>
+      )}
+      <input type="hidden" name="servicio" value={servicio}>
+      <input type="hidden" name="plan" value="">
+    </>
+  ) : diag ? (
     <>
       <label><span>Web que quieres que revisemos <b aria-hidden="true">*</b></span>
         <input name="web" type="url" inputmode="url" placeholder="https://" required>
@@ -73,7 +108,10 @@ const id = `form-${tipo}`;
     <span>He leído la <a href="/legal/privacidad/">política de privacidad</a> y acepto que EOS Studio use mis datos para responder a mi solicitud.</span>
   </label>
 
-  <button class="btn btn--aurora" type="submit">{diag ? 'Pedir mi diagnóstico' : 'Enviar mensaje'} <span class="flecha">→</span></button>
+  <input type="hidden" name="pagina" value="">
+  <input type="hidden" name="origen" value="">
+
+  <button class="btn btn--aurora" type="submit">{textoBoton} <span class="flecha">→</span></button>
 
   <div class="f-estado" role="status" aria-live="polite"></div>
   <div class="f-error" hidden>
@@ -106,7 +144,29 @@ const id = `form-${tipo}`;
 </style>
 
 <script>
+  // Origen de la visita: se guarda en la primera página de la sesión que lo trae.
+  const CLAVES = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'msclkid'];
+  const url = new URLSearchParams(location.search);
+  const visto = CLAVES.filter((k) => url.get(k)).map((k) => `${k}=${url.get(k)!.slice(0, 120)}`).join(' · ');
+  let origen = '';
+  try {
+    if (visto) sessionStorage.setItem('eos_origen', `${visto} · entrada ${location.pathname}`);
+    origen = sessionStorage.getItem('eos_origen') || '';
+    if (!origen && document.referrer && !document.referrer.startsWith(location.origin)) origen = `referer=${new URL(document.referrer).hostname}`;
+  } catch { origen = visto; }
+
+  // Botones de plan en las landing pages: guardan el plan y bajan al formulario.
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-plan]');
+    if (!b) return;
+    const campo = document.querySelector<HTMLInputElement>('form.formulario input[name=plan]');
+    if (campo) campo.value = b.dataset.plan || '';
+    window.eosEvento?.('ver_plan', { plan: b.dataset.plan, pagina: location.pathname });
+  });
+
   for (const form of document.querySelectorAll<HTMLFormElement>('form.formulario')) {
+    form.querySelector<HTMLInputElement>('input[name=pagina]')!.value = location.pathname;
+    form.querySelector<HTMLInputElement>('input[name=origen]')!.value = origen;
     const estado = form.querySelector<HTMLElement>('.f-estado')!;
     const error = form.querySelector<HTMLElement>('.f-error')!;
     const boton = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
@@ -151,8 +211,14 @@ const id = `form-${tipo}`;
         const r = await fetch('/api/contacto/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
         if (!r.ok) throw new Error(String(r.status));
         window.eosEvento?.('generate_lead', { form_tipo: form.dataset.tipo, servicio: String(datos.servicio || ''), pagina: location.pathname });
+        const pagina = form.querySelector<HTMLInputElement>('input[name=pagina]')!.value;
+        const servicioFijo = form.querySelector<HTMLInputElement>('input[type=hidden][name=servicio]')?.value || '';
         form.reset();
-        estado.textContent = form.dataset.tipo === 'diagnostico'
+        form.querySelector<HTMLInputElement>('input[name=pagina]')!.value = pagina;
+        form.querySelector<HTMLInputElement>('input[name=origen]')!.value = origen;
+        const fijo = form.querySelector<HTMLInputElement>('input[type=hidden][name=servicio]');
+        if (fijo) fijo.value = servicioFijo;
+        estado.textContent = form.dataset.tipo !== 'contacto'
           ? '¡Recibido! Revisaremos tu web y te enviaremos el diagnóstico por correo.'
           : '¡Gracias! Hemos recibido tu mensaje y te responderemos muy pronto.';
         estado.classList.add('ok');

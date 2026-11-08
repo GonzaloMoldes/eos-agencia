@@ -1,0 +1,42 @@
+---
+// Cabecera de las landing pages (/lp/): sin menú para no sacar a nadie de la
+// página. Logo, WhatsApp y un botón que baja al formulario. Flotante y sólida,
+// como la cabecera general.
+import Logo from './Logo.astro';
+import Iconos from './Iconos.astro';
+import { SITIO, whatsappUrl } from '../data/sitio';
+export interface Props { cta: string }
+const { cta } = Astro.props;
+---
+<header class="lp-cabecera">
+  <div class="contenedor lp-cabecera-in">
+    <a href="/" class="lp-logo" aria-label="EOS Studio, inicio"><Logo /></a>
+    <div class="lp-acciones">
+      <a class="lp-wa" href={whatsappUrl()} target="_blank" rel="noopener">
+        <Iconos nombre="whatsapp" tam={18} /> <span>{SITIO.whatsappVisible}</span>
+      </a>
+      <a class="btn btn--tinta lp-cta" href="#formulario">{cta} <span class="flecha">→</span></a>
+    </div>
+  </div>
+</header>
+<div class="lp-hueco" aria-hidden="true"></div>
+
+<style>
+  .lp-cabecera{position:fixed;top:0;left:0;right:0;z-index:100;padding:12px 16px 0;pointer-events:none;}
+  .lp-cabecera-in{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px;max-width:calc(var(--ancho) - 32px);padding:0 8px 0 22px;background:var(--papel);border:1px solid var(--linea);border-radius:999px;box-shadow:0 16px 40px -28px rgba(20,24,51,.45);}
+  .lp-hueco{height:74px;}
+  :global(html){scroll-padding-top:96px;}
+  .lp-logo{text-decoration:none;}
+  .lp-acciones{display:flex;align-items:center;gap:18px;}
+  .lp-wa{display:inline-flex;align-items:center;gap:8px;color:var(--tinta-2);text-decoration:none;font-size:.95rem;}
+  .lp-wa:hover{color:#1C9E4C;}
+  .lp-cta{padding:7px 8px 7px 18px;font-size:.92rem;white-space:nowrap;}
+  .lp-cta .flecha{width:26px;height:26px;}
+  @media (max-width:640px){
+    .lp-cabecera{padding:10px 10px 0;}
+    .lp-hueco{height:72px;}
+    .lp-cabecera-in{padding:0 7px 0 16px;}
+    .lp-wa{display:none;}
+    .lp-cta{font-size:.85rem;padding:6px 6px 6px 14px;}
+  }
+</style>

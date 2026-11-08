@@ -1,0 +1,23 @@
+---
+// Pie de las landing pages: solo lo legal, sin menú de servicios.
+import { SITIO } from '../data/sitio';
+---
+<footer class="lp-pie">
+  <div class="contenedor lp-pie-in">
+    <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.sedes.join(' · ')}</span>
+    <nav aria-label="Legal">
+      <a href="/legal/aviso-legal/">Aviso legal</a>
+      <a href="/legal/privacidad/">Privacidad</a>
+      <a href="/legal/cookies/">Cookies</a>
+      <a href="/legal/cookies/" data-abrir-cookies>Configurar cookies</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .lp-pie{background:var(--vaso);color:#A9A3B5;font-size:.85rem;padding:26px 0;}
+  .lp-pie-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .lp-pie nav{display:flex;gap:18px;flex-wrap:wrap;}
+  .lp-pie a{color:#CDBFB4;text-decoration:none;}
+  .lp-pie a:hover{color:var(--azafran);}
+</style>
