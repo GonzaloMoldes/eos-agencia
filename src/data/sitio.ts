@@ -22,6 +22,11 @@ export const SITIO = {
   // analítica (banner en src/components/Cookies.astro). Vacío = sin analítica.
   ga4: 'G-B5NKN1BHDN',
 
+  // Google Ads: ID de conversión («AW-XXXXXXXXX», en Google Ads → Herramientas →
+  // Conversiones). Vacío = no se carga. Las conversiones pueden importarse
+  // también desde GA4 (evento generate_lead) sin rellenar esto.
+  googleAds: '',
+
   // Redes de la agencia. Vacío = el icono se muestra como «próximamente».
   redes: {
     linkedin: '',

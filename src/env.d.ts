@@ -3,6 +3,9 @@ interface Window {
   dataLayer: unknown[];
   gtag: (...args: unknown[]) => void;
   eosEvento?: (nombre: string, params?: Record<string, unknown>) => void;
-  eosCookies?: { decision: () => string | null; guardar: (d?: string) => void; cargarGA: () => void };
-  __eosGA?: boolean;
+  eosCookies?: {
+    decision: () => { analitica?: boolean; publicidad?: boolean } | null;
+    completa: () => boolean;
+    guardar: (d: { analitica: boolean; publicidad: boolean }) => void;
+  };
 }

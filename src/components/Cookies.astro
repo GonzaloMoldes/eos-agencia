@@ -1,80 +1,118 @@
 ---
-// Consentimiento de cookies y Google Analytics 4.
+// Consentimiento de cookies, Google Analytics 4 y medición de Google Ads.
 //
-// Modo estricto: el script de Google (gtag.js) NO se descarga hasta que la
-// persona pulsa «Aceptar». Si rechaza, no se carga nada de Google Analytics.
-// La decisión se guarda 12 meses en localStorage («eos-cookies») y se puede
-// cambiar desde el enlace «Cookies» del pie (data-abrir-cookies).
+// Consent Mode v2 en modo avanzado: gtag.js se carga siempre, pero con todas
+// las señales denegadas hasta que la persona decide. Sin permiso, Google solo
+// recibe avisos sin cookies (los usa para estimar visitas y conversiones que
+// faltan); con permiso, se activan las cookies de cada finalidad:
+//   · Analítica  → analytics_storage (cookies _ga de GA4).
+//   · Publicidad → ad_storage y ad_user_data (medir campañas de Google Ads).
+//     ad_personalization queda siempre denegado: no hacemos remarketing.
 //
-// Además se usa Consent Mode v2 de Google: las señales de publicidad van
-// siempre denegadas y la de analítica solo se concede al aceptar.
+// La decisión se guarda 12 meses en localStorage («eos-cookies») como
+// { analitica, publicidad } y se puede cambiar desde «Configurar cookies» del pie
+// (data-abrir-cookies). Las decisiones antiguas («aceptadas»/«rechazadas», solo
+// analítica) se respetan, pero se vuelve a preguntar por la publicidad.
 //
-// window.eosEvento(nombre, parametros) envía un evento a GA4 si hay
-// consentimiento; si no, no hace nada. Lo usan el formulario y los clics de
-// WhatsApp, correo, planes y agenda (ver el script de abajo).
+// window.eosEvento(nombre, parametros) envía un evento a GA4 (con o sin cookies,
+// según el consentimiento). Lo usan el formulario y los clics de WhatsApp,
+// correo, planes y agenda (ver el script de abajo).
 import { SITIO } from '../data/sitio';
 const ga4 = SITIO.ga4;
+const ads = SITIO.googleAds;
 ---
 {ga4 && (
   <>
-    <script is:inline define:vars={{ ga4 }}>
+    <script is:inline define:vars={{ ga4, ads }}>
       window.dataLayer = window.dataLayer || [];
       window.gtag = function () { window.dataLayer.push(arguments); };
       gtag('consent', 'default', {
         ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
         analytics_storage: 'denied', functionality_storage: 'denied', personalization_storage: 'denied',
-        security_storage: 'granted',
+        security_storage: 'granted', wait_for_update: 500,
       });
+      // Sin cookies de publicidad: se redactan los datos de anuncios y el gclid viaja en la URL.
+      gtag('set', 'ads_data_redaction', true);
+      gtag('set', 'url_passthrough', true);
+
       var CLAVE = 'eos-cookies', DOCE_MESES = 365 * 24 * 3600 * 1000;
       function leer() {
         try {
           var v = JSON.parse(localStorage.getItem(CLAVE) || 'null');
-          return v && Date.now() - v.t < DOCE_MESES ? v.d : null;
+          if (!v || Date.now() - v.t > DOCE_MESES) return null;
+          if (v.d === 'aceptadas') return { analitica: true };
+          if (v.d === 'rechazadas') return { analitica: false };
+          return v.d && typeof v.d === 'object' ? v.d : null;
         } catch (e) { return null; }
       }
-      function cargarGA() {
-        if (window.__eosGA) return;
-        window.__eosGA = true;
-        gtag('consent', 'update', { analytics_storage: 'granted' });
-        gtag('js', new Date());
-        gtag('config', ga4, { allow_google_signals: false });
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
-        document.head.appendChild(s);
+      function aplicar(d) {
+        gtag('consent', 'update', {
+          analytics_storage: d.analitica ? 'granted' : 'denied',
+          ad_storage: d.publicidad ? 'granted' : 'denied',
+          ad_user_data: d.publicidad ? 'granted' : 'denied',
+        });
       }
       window.eosCookies = {
         decision: leer,
+        // Completa = ya ha decidido sobre las dos finalidades.
+        completa: function () { var d = leer(); return !!d && typeof d.publicidad === 'boolean'; },
         guardar: function (d) {
           try { localStorage.setItem(CLAVE, JSON.stringify({ d: d, t: Date.now() })); } catch (e) {}
-          if (d === 'aceptadas') cargarGA();
+          aplicar(d);
         },
-        cargarGA: cargarGA,
       };
-      window.eosEvento = function (nombre, params) {
-        if (window.__eosGA) gtag('event', nombre, params || {});
-      };
-      if (leer() === 'aceptadas') cargarGA();
+      window.eosEvento = function (nombre, params) { gtag('event', nombre, params || {}); };
+
+      var previa = leer();
+      if (previa) aplicar(previa);
+      gtag('js', new Date());
+      gtag('config', ga4, { allow_google_signals: false });
+      if (ads) gtag('config', ads);
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
+      document.head.appendChild(s);
     </script>
 
     <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-t" hidden>
-      <p class="cookies-t" id="cookies-t">¿Nos dejas medir las visitas?</p>
-      <p>Usamos Google Analytics para saber qué páginas son útiles y mejorar la web. Solo se activa si aceptas. Más información en la <a href="/legal/cookies/">política de cookies</a>.</p>
+      <p class="cookies-t" id="cookies-t">¿Nos dejas medir?</p>
+      <p>Usamos cookies de Google Analytics para saber qué páginas son útiles y, si nos dejas, de Google Ads para saber qué campañas funcionan. No hacemos publicidad personalizada. Sin tu permiso, Google solo recibe avisos sin cookies. Más información en la <a href="/legal/cookies/">política de cookies</a>.</p>
+      <div class="cookies-opciones" hidden>
+        <label><input type="checkbox" checked disabled> <span><strong>Necesarias</strong> Guardar tu decisión. Siempre activas.</span></label>
+        <label><input type="checkbox" name="analitica"> <span><strong>Analítica</strong> Contar visitas y contactos con Google Analytics.</span></label>
+        <label><input type="checkbox" name="publicidad"> <span><strong>Publicidad</strong> Medir qué campañas de Google Ads traen contactos.</span></label>
+      </div>
       <div class="cookies-botones">
-        <button type="button" class="btn btn--linea" data-cookies="rechazadas">Rechazar</button>
-        <button type="button" class="btn btn--tinta" data-cookies="aceptadas">Aceptar</button>
+        <button type="button" class="btn btn--linea" data-cookies="rechazar">Rechazar</button>
+        <button type="button" class="btn btn--linea" data-cookies="configurar">Configurar</button>
+        <button type="button" class="btn btn--tinta" data-cookies="aceptar">Aceptar todo</button>
       </div>
     </div>
 
     <script>
       const caja = document.getElementById('cookies');
       if (caja && window.eosCookies) {
-        const abrir = () => { caja.hidden = false; };
-        if (!window.eosCookies.decision()) abrir();
+        const opciones = caja.querySelector<HTMLElement>('.cookies-opciones')!;
+        const casilla = (n: string) => caja.querySelector<HTMLInputElement>(`input[name=${n}]`)!;
+        const botonConfig = caja.querySelector<HTMLButtonElement>('[data-cookies=configurar]')!;
+        const abrir = (config = false) => {
+          const d = window.eosCookies!.decision() || {};
+          casilla('analitica').checked = !!d.analitica;
+          casilla('publicidad').checked = !!d.publicidad;
+          opciones.hidden = !config;
+          botonConfig.textContent = config ? 'Guardar selección' : 'Configurar';
+          caja.hidden = false;
+        };
+        if (!window.eosCookies.completa()) abrir();
         caja.addEventListener('click', (e) => {
           const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-cookies]');
           if (!b) return;
-          window.eosCookies.guardar(b.dataset.cookies);
+          const accion = b.dataset.cookies;
+          if (accion === 'configurar' && opciones.hidden) { abrir(true); return; }
+          const d = accion === 'aceptar' ? { analitica: true, publicidad: true }
+            : accion === 'rechazar' ? { analitica: false, publicidad: false }
+            : { analitica: casilla('analitica').checked, publicidad: casilla('publicidad').checked };
+          window.eosCookies!.guardar(d);
           caja.hidden = true;
         });
         // Enlaces para volver a decidir (pie de página, política de cookies).
@@ -82,8 +120,8 @@ const ga4 = SITIO.ga4;
           const a = (e.target as HTMLElement).closest('[data-abrir-cookies]');
           if (!a) return;
           e.preventDefault();
-          abrir();
-          caja.querySelector('button')?.focus();
+          abrir(true);
+          caja.querySelector<HTMLElement>('input[name=analitica]')?.focus();
         });
       }
 
@@ -108,8 +146,13 @@ const ga4 = SITIO.ga4;
       .cookies{position:fixed;left:16px;bottom:16px;z-index:130;width:min(440px,calc(100vw - 32px));background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border:1px solid var(--linea);border-radius:22px;box-shadow:var(--sombra);padding:22px;display:grid;gap:10px;font-size:.92rem;color:var(--tinta-2);}
       .cookies[hidden]{display:none;}
       .cookies-t{font-family:var(--serif);font-size:1.5rem;line-height:1.1;color:var(--tinta);}
-      .cookies-botones{display:flex;gap:10px;margin-top:4px;}
-      .cookies-botones .btn{flex:1;justify-content:center;padding:12px 18px;}
+      .cookies-botones{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
+      .cookies-opciones{display:grid;gap:8px;border-top:1px solid var(--linea);padding-top:10px;}
+      .cookies-opciones[hidden]{display:none;}
+      .cookies-opciones label{display:flex;gap:10px;align-items:flex-start;font-size:.86rem;cursor:pointer;}
+      .cookies-opciones input{margin-top:3px;width:17px;height:17px;accent-color:var(--aurora);flex:none;}
+      .cookies-opciones strong{display:block;color:var(--tinta);}
+      .cookies-botones .btn{flex:1 1 auto;justify-content:center;padding:11px 14px;font-size:.9rem;}
       @media (max-width:600px){ .cookies{left:10px;right:10px;bottom:84px;width:auto;} }
       @media print{ .cookies{display:none;} }
     </style>

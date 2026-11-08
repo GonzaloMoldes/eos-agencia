@@ -2,20 +2,27 @@
 import LegalLayout from '../../layouts/LegalLayout.astro';
 import { SITIO } from '../../data/sitio';
 ---
-<LegalLayout title="Política de cookies | EOS Studio" description="Qué cookies usa el sitio web de EOS Studio y cómo gestionarlas." h1="Política de cookies" actualizado="octubre de 2026">
+<LegalLayout title="Política de cookies | EOS Studio" description="Qué cookies usa el sitio web de EOS Studio y cómo gestionarlas." h1="Política de cookies" actualizado="noviembre de 2026">
   <h2>Qué es una cookie</h2>
   <p>Una cookie es un pequeño archivo que un sitio web guarda en tu navegador para recordar información sobre tu visita.</p>
 
   <h2>Qué usamos y para qué</h2>
-  <p><strong>Solo usamos cookies de analítica, y únicamente si las aceptas</strong> en el aviso que aparece al entrar. Si las rechazas o no decides, no se carga ninguna herramienta de analítica.</p>
+  <p>Usamos dos tipos de cookies opcionales, <strong>y solo si las aceptas</strong> en el aviso que aparece al entrar. Puedes aceptar una, las dos o ninguna:</p>
+  <ul>
+    <li><strong>Analítica (Google Analytics):</strong> saber qué páginas se visitan, desde dónde llegan las visitas y qué contactos se generan (formularios, WhatsApp, correo), siempre de forma agregada.</li>
+    <li><strong>Publicidad (Google Ads):</strong> medir qué campañas de anuncios traen contactos. <strong>No hacemos publicidad personalizada ni remarketing</strong>: la personalización de anuncios está siempre desactivada, igual que las señales de Google.</li>
+  </ul>
   <table>
-    <thead><tr><th>Cookie</th><th>Proveedor</th><th>Para qué</th><th>Duración</th></tr></thead>
+    <thead><tr><th>Cookie</th><th>Proveedor</th><th>Finalidad</th><th>Duración</th></tr></thead>
     <tbody>
-      <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Distinguir visitantes de forma anónima para contar visitas</td><td>2 años</td></tr>
-      <tr><td><code>_ga_*</code></td><td>Google Analytics</td><td>Mantener el estado de la sesión</td><td>2 años</td></tr>
+      <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Analítica: distinguir visitantes de forma anónima para contar visitas</td><td>2 años</td></tr>
+      <tr><td><code>_ga_*</code></td><td>Google Analytics</td><td>Analítica: mantener el estado de la sesión</td><td>2 años</td></tr>
+      <tr><td><code>_gcl_au</code></td><td>Google Ads</td><td>Publicidad: saber si una visita o un contacto llega desde un anuncio</td><td>90 días</td></tr>
     </tbody>
   </table>
-  <p>Con estos datos sabemos qué páginas se visitan, desde dónde llegan las visitas y qué contactos se generan (formularios, WhatsApp, correo), siempre de forma agregada. Hemos desactivado las señales de Google para publicidad.</p>
+
+  <h2>Si no aceptas</h2>
+  <p>Usamos el modo de consentimiento de Google. La etiqueta de Google se carga en todas las páginas, pero mientras no aceptes <strong>no guarda ni lee cookies</strong>: solo envía avisos sin cookies (por ejemplo, que se ha visto una página o enviado un formulario), que Google usa de forma agregada para estimar visitas y conversiones. Si llegas desde un anuncio, el identificador del clic puede viajar en la dirección de la página en lugar de en una cookie.</p>
   <p>Además, guardamos tu decisión sobre las cookies en el almacenamiento local de tu navegador (<code>eos-cookies</code>) durante 12 meses, para no volver a preguntarte en cada visita. No es una cookie ni se envía a ningún servidor.</p>
 
   <h2>Otros recursos externos</h2>
@@ -26,5 +33,5 @@ import { SITIO } from '../../data/sitio';
 
   <h2>Cambiar tu decisión</h2>
   <p>Puedes cambiarla cuando quieras desde <a href="/legal/cookies/" data-abrir-cookies>configurar cookies</a> (también en el pie de cada página). Para borrar las cookies que ya estén guardadas, usa la configuración de tu navegador.</p>
-  <p>Google Analytics es un servicio de Google Ireland Limited. Más información en la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad de Google</a>. Para cualquier duda, escríbenos a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>.</p>
+  <p>Google Analytics y Google Ads son servicios de Google Ireland Limited. Más información en la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad de Google</a>. Para cualquier duda, escríbenos a <a href={`mailto:${SITIO.email}`}>{SITIO.email}</a>.</p>
 </LegalLayout>
