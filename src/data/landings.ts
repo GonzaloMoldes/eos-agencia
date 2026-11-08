@@ -3,8 +3,12 @@
 // del índice de Google (noindex, sin sitemap) para no competir con las páginas
 // de servicio, que son las que posicionan.
 //
-// Los planes no se copian aquí: se leen de la página del servicio (`servicio`),
-// así un cambio de precio se hace en un solo sitio.
+// Estructura (la de una landing que vende «somos la ayuda»): promesa y tres
+// datos concretos junto al formulario → qué te llevas → lo que cuesta →
+// garantías → preguntas antes de contratar → cierre con el formulario.
+//
+// Los planes y los servicios sueltos no se copian aquí: se leen de la página
+// del servicio (`servicio`), así un cambio de precio se hace en un solo sitio.
 //
 // Para crear una landing nueva: añadir un objeto a LANDINGS. En los textos se
 // admite **negrita**, [enlaces](/ruta/) y, en los títulos, <em>cursiva</em>.
@@ -12,16 +16,27 @@ import type { Item } from './tipos';
 
 export interface Landing {
   slug: string;
-  servicio: string;            // slug del servicio en servicios.ts (planes y enlace)
+  servicio: string;            // slug del servicio en servicios.ts (planes y extras)
   title: string;
   description: string;
-  hero: { eyebrow: string; h1: string; intro: string; puntos: string[]; cta: string };
-  formulario: { titulo: string; subtitulo: string; boton: string; objetivos: string[] };
-  problema: { titulo: string; puntos: string[] };
-  trabajo: { titulo: string; intro: string; items: Item[] };
-  pasos: { titulo: string; items: Item[] };
-  planes: { titulo: string; intro: string };
-  garantias: { titulo: string; items: Item[] };
+  hero: {
+    antetitulo: string;
+    h1: string;
+    entrada: string;
+    datos: { t: string; d: string }[];   // tres condiciones bajo el titular
+  };
+  formulario: {
+    titulo: string;
+    subtitulo: string;
+    boton: string;
+    servicio: string;                    // cómo llega el lead en el correo
+    necesidades: string[];               // «¿Qué necesitas?»
+    inversiones: string[];               // «¿Qué inversión mensual manejas?»
+    siguientes: { t: string; d: string }[];  // «¿Qué pasa ahora?» tras enviar
+  };
+  llevas: { titulo: string; intro: string; items: Item[] };
+  cuesta: { titulo: string; intro: string; nota: string };
+  garantias: { titulo: string; intro: string; items: Item[] };
   faq: { titulo: string; preguntas: { p: string; r: string }[] };
   cierre: { titulo: string; texto: string };
 }
@@ -30,85 +45,88 @@ export const LANDINGS: Landing[] = [
   {
     slug: 'posicionamiento-seo-geo',
     servicio: 'seo-geo-valencia',
-    title: 'Posicionamiento SEO y GEO | Diagnóstico de visibilidad gratis · EOS Studio',
-    description: 'Más clientes desde Google y desde las respuestas de la IA. Pide un diagnóstico de visibilidad gratuito: te decimos qué frena tu web y por dónde empezar. Sin permanencia.',
+    title: 'Agencia SEO y GEO | Te decimos qué le pasa a tu web · EOS Studio',
+    description: 'Posicionamiento en Google y en las respuestas de la IA con método de gran marca. Precios publicados, informe mensual y sin permanencia. Dinos tu web y te decimos qué le pasa.',
     hero: {
-      eyebrow: 'Posicionamiento SEO y GEO',
-      h1: 'Que tus clientes te encuentren en Google <em>y en las respuestas de la IA</em>',
-      intro: 'Revisamos gratis tu web y tu visibilidad en buscadores y en asistentes como ChatGPT, Gemini o Perplexity. Te decimos qué está frenando la llegada de clientes y por dónde conviene empezar.',
-      puntos: [
-        '**Diagnóstico gratuito** y sin compromiso.',
-        '**Sin permanencia:** nos ganamos tu confianza mes a mes.',
-        '**Alcance y precio cerrados** antes de empezar.',
+      antetitulo: 'SEO y GEO con método de gran marca',
+      h1: 'Agencia SEO y GEO <em>para que te encuentren y te elijan</em>',
+      entrada: 'Somos antiguos colegas de los equipos de marketing de grandes marcas. Trabajamos desde A Coruña y Valencia para toda España. Lo que cambia entre una agencia y otra no son las promesas: es qué hacen cada mes con tu web y si te lo cuentan.',
+      datos: [
+        { t: 'Desde 690 €/mes', d: 'precio publicado y sin permanencia' },
+        { t: 'Informe y reunión', d: 'cada mes, con lo hecho y lo que viene' },
+        { t: 'Diagnóstico gratis', d: 'por escrito, sin llamada previa' },
       ],
-      cta: 'Diagnóstico gratis',
     },
     formulario: {
-      titulo: 'Pide tu diagnóstico de visibilidad',
-      subtitulo: 'Gratis. Te respondemos por correo con los puntos de mejora más urgentes.',
+      titulo: 'Cuéntanos qué pasa con tu web',
+      subtitulo: 'Te respondemos con una primera lectura por escrito, no con un folleto.',
       boton: 'Quiero mi diagnóstico',
-      objetivos: [
-        'Conseguir más clientes desde Google',
+      servicio: 'Posicionamiento SEO y GEO',
+      necesidades: [
+        'Posicionar mi web en Google',
         'Aparecer en las respuestas de la IA',
-        'Recuperar visitas que he perdido',
-        'Preparar un rediseño o una migración',
-        'Aún no lo sé, decidme vosotros',
+        'He perdido tráfico y no sé por qué',
+        'Una auditoría SEO puntual',
+        'Aparecer en Google Maps (SEO local)',
+        'Otra cosa',
+      ],
+      inversiones: [
+        'Menos de 300 €/mes',
+        'Entre 300 y 700 €/mes',
+        'Entre 700 y 1.000 €/mes',
+        'Más de 1.000 €/mes',
+        'Prefiero un pago único (auditoría)',
+      ],
+      siguientes: [
+        { t: 'Revisamos lo que nos cuentas', d: 'Miramos tu web y tu visibilidad antes de contestarte.' },
+        { t: 'Te decimos qué le pasa', d: 'Por escrito y por orden, con por dónde empezaríamos.' },
+        { t: 'Decides tú', d: 'Si encaja, te pasamos una propuesta cerrada. Si no lo vemos, también te lo decimos.' },
       ],
     },
-    problema: {
-      titulo: '¿Te suena alguna de <em>estas situaciones</em>?',
-      puntos: [
-        'Tu negocio apenas aparece en las búsquedas importantes de tu sector.',
-        'Recibes visitas, pero no se traducen en consultas o ventas.',
-        'No sabes qué páginas o acciones te están trayendo clientes.',
-        'Ves que la gente pregunta a la IA y no sabes si tu marca aparece.',
-      ],
-    },
-    trabajo: {
-      titulo: 'SEO y GEO en una sola estrategia, <em>pensada para vender</em>',
-      intro: 'Priorizamos las búsquedas y las páginas que tienen que ver con tus objetivos comerciales, no solo el volumen de visitas.',
+    llevas: {
+      titulo: 'Lo que entra en el plan, <em>escrito antes de empezar</em>',
+      intro: 'Sin letra pequeña y sin extras que aparecen por el camino.',
       items: [
-        { t: 'SEO técnico', d: 'Rastreo, indexación, velocidad y Core Web Vitals: que Google pueda leer y entender bien tu web.' },
-        { t: 'Contenidos e intención de búsqueda', d: 'Páginas que responden a lo que busca tu cliente en cada fase, con un enlazado interno que las refuerza.' },
-        { t: 'GEO: visibilidad en la IA', d: 'Información clara, coherente y citable para que los asistentes de IA entiendan y puedan mencionar tu marca.' },
-        { t: 'Medición que se entiende', d: 'GA4, Search Console y un panel con lo que importa: contactos, ventas y siguientes pasos.' },
+        { t: 'Una persona de referencia', d: 'Alguien que conoce tu negocio y coordina a los especialistas del equipo. Sin intermediarios ni cuentas que pasan de mano en mano.' },
+        { t: 'Precio publicado', d: '690 € o 990 € al mes según el plan, y desde 1.490 € en proyectos grandes. Está escrito más abajo, no detrás de una llamada.' },
+        { t: 'Sabes en qué se va tu inversión', d: 'Cada mes, un informe detallado y una reunión: lo que se ha hecho, por qué y lo que viene después.' },
+        { t: 'SEO y GEO a la vez', d: 'Una sola estrategia para que te encuentren en Google y para que los asistentes de IA entiendan y puedan citar tu marca.' },
+        { t: 'Medición montada', d: 'Configuramos GA4 y Search Console y te dejamos un panel con lo que importa: visitas que acaban en contacto o en venta.' },
+        { t: 'Contenidos que trabajan', d: 'Proponemos y redactamos los contenidos, y ordenamos el enlazado interno para que las páginas clave ganen fuerza.' },
+        { t: 'Tus cuentas, a tu nombre', d: 'Datos, accesos y herramientas siempre bajo tu control. Nuestros honorarios por un lado; licencias de terceros, por otro.' },
+        { t: 'Para toda España', d: 'Desde A Coruña y Valencia, con reuniones por videollamada y todo lo importante por escrito.' },
       ],
     },
-    pasos: {
-      titulo: 'Así empezamos',
-      items: [
-        { t: 'Nos cuentas tu objetivo', d: 'Rellenas el formulario con tu web y lo que quieres conseguir. Dos minutos.' },
-        { t: 'Revisamos tu visibilidad', d: 'Analizamos tu web, tu posición en Google y cómo te ven los asistentes de IA, frente a tu competencia.' },
-        { t: 'Te proponemos un plan', d: 'Te enviamos los puntos de mejora más urgentes y, si quieres seguir, una propuesta con alcance y precio cerrados.' },
-      ],
-    },
-    planes: {
-      titulo: 'Planes claros, <em>sin permanencia</em>',
-      intro: 'Elige por dónde empezar o deja que te lo recomendemos tras el diagnóstico.',
+    cuesta: {
+      titulo: 'Tres planes, <em>un mismo método</em>',
+      intro: 'Está publicado a propósito: si tu presupuesto está por debajo, te ahorramos la llamada.',
+      nota: 'Son los mismos precios que publicamos en la web: no hay tarifa distinta por venir de un anuncio. Sin permanencia.',
     },
     garantias: {
-      titulo: 'Resultados transparentes, <em>cero ataduras</em>',
+      titulo: 'Tu tranquilidad <em>no es negociable</em>',
+      intro: 'Nos ganamos tu confianza mes a mes.',
       items: [
-        { t: 'Sin letra pequeña', d: 'Estrategias SEO éticas, sostenibles y alineadas con tus objetivos.' },
-        { t: 'Transparencia total', d: 'Informes claros con las métricas que de verdad importan: conversiones y retorno de la inversión.' },
-        { t: 'Expectativas honestas', d: 'No prometemos posiciones concretas ni apariciones garantizadas en la IA. Sí trabajo constante y medido.' },
-        { t: 'Experiencia de gran marca', d: 'Venimos de los equipos de marketing de grandes marcas y llevamos ese método a tu negocio.' },
+        { t: 'Sin permanencia', d: 'No pedimos contratos de 6 o 12 meses. Si no aportamos el valor que tu empresa necesita, eres libre de irte.' },
+        { t: 'Transparencia total', d: 'Informes claros con las métricas que de verdad importan: contactos, ventas y retorno de la inversión.' },
+        { t: 'Expectativas honestas', d: 'No prometemos posiciones concretas ni apariciones garantizadas en la IA. Nadie puede hacerlo con honestidad.' },
+        { t: 'Equipo certificado', d: 'Certificaciones de Google Analytics, HubSpot y SEO para ecommerce, entre otras. Están en [nuestros perfiles](/sobre-nosotros/).' },
       ],
     },
     faq: {
-      titulo: 'Antes de pedir tu diagnóstico',
+      titulo: 'Lo que nos preguntáis antes de contratar',
       preguntas: [
-        { p: '¿El diagnóstico tiene algún coste o compromiso?', r: 'No. Es gratuito y no te obliga a nada. Revisamos tu punto de partida y te decimos qué mejorarías primero; si quieres seguir con nosotros, te enviamos una propuesta aparte.' },
-        { p: '¿Qué diferencia hay entre SEO y GEO?', r: 'El SEO trabaja la visibilidad de tu web en buscadores como Google. El GEO busca que tu marca se entienda y aparezca en las respuestas que generan los asistentes de IA. Se trabajan juntos: una web bien posicionada y con autoridad es la base de los dos.' },
-        { p: '¿Podéis garantizar que aparezca primero o que me cite ChatGPT?', r: 'No, y desconfía de quien lo haga. Ni Google ni los asistentes de IA permiten garantizar una posición o una mención. Lo que sí hacemos es trabajar lo que aumenta tus opciones y medirlo con indicadores claros.' },
-        { p: '¿Cuánto tiempo se tarda en ver resultados?', r: 'Depende del estado de la web, la competencia y lo rápido que se implementen los cambios. Tras el diagnóstico te proponemos prioridades e indicadores para revisar la evolución, sin prometer fechas.' },
-        { p: '¿Tengo que rehacer mi web?', r: 'No necesariamente. Primero vemos qué conviene conservar, mejorar o crear. A veces bastan ajustes en páginas concretas.' },
-        { p: '¿Trabajáis solo en Valencia y A Coruña?', r: 'Tenemos sede en las dos ciudades, pero el posicionamiento SEO y GEO lo trabajamos en remoto para empresas de toda España.' },
+        { p: '¿Cuánto cuesta?', r: 'El Plan SEO Esencial son 690 € al mes y el Crecimiento, 990 €. Para proyectos grandes, el Plan Expert va desde 1.490 €. La auditoría suelta va desde 1.290 € de pago único. Sin permanencia.' },
+        { p: '¿Cuánto tarda en notarse?', r: 'Depende del estado de tu web, de la competencia y de lo rápido que se apliquen los cambios. El Plan Esencial se plantea con objetivos a 3 meses. Desconfía de quien te dé una fecha exacta para una posición.' },
+        { p: '¿Me garantizáis salir en ChatGPT o en Google?', r: 'No, y nadie puede hacerlo con honestidad. Lo que sí hacemos es trabajar lo que aumenta tus opciones de aparecer y de ser citado, y medirlo cada mes con indicadores claros.' },
+        { p: '¿Qué necesitáis de mí para empezar?', r: 'Acceso a tu web, a Google Search Console y a Analytics. Si no los tienes configurados, te los montamos nosotros.' },
+        { p: '¿Y si mi presupuesto es menor?', r: 'Te lo decimos y no te hacemos perder el tiempo: por eso los precios están escritos y el formulario pregunta por la inversión. Si tienes un negocio local, el SEO Local Start (240 € de pago único) puede ser un buen punto de partida.' },
+        { p: '¿Puedo contratar solo la auditoría?', r: 'Sí. La Auditoría SEO Completa va desde 1.290 € de pago único, con su documento de hallazgos priorizado y una hoja de ruta a 6-12 meses. No obliga a contratar nada después.' },
+        { p: '¿Trabajáis fuera de A Coruña y Valencia?', r: 'Sí. Tenemos sede en las dos ciudades y trabajamos para empresas de toda España por videollamada.' },
       ],
     },
     cierre: {
-      titulo: '¿Vemos dónde estás <em>y por dónde empezar</em>?',
-      texto: 'Déjanos tu web y tu objetivo. Te respondemos con un diagnóstico gratuito y sin compromiso.',
+      titulo: 'Dinos tu web y <em>te decimos qué le pasa</em>',
+      texto: 'Sin compromiso y sin llamada comercial de por medio. Si no hay nada que mejorar, también te lo decimos.',
     },
   },
 ];

@@ -5,13 +5,14 @@
 import Logo from './Logo.astro';
 import Iconos from './Iconos.astro';
 import { SITIO, whatsappUrl } from '../data/sitio';
-export interface Props { cta: string }
-const { cta } = Astro.props;
+export interface Props { cta: string; enlaces?: { href: string; texto: string }[] }
+const { cta, enlaces = [] } = Astro.props;
 ---
 <header class="lp-cabecera">
   <div class="contenedor lp-cabecera-in">
     <a href="/" class="lp-logo" aria-label="EOS Studio, inicio"><Logo /></a>
     <div class="lp-acciones">
+      {enlaces.length > 0 && <nav class="lp-nav" aria-label="En esta página">{enlaces.map((e) => <a href={e.href}>{e.texto}</a>)}</nav>}
       <a class="lp-wa" href={whatsappUrl()} target="_blank" rel="noopener">
         <Iconos nombre="whatsapp" tam={18} /> <span>{SITIO.whatsappVisible}</span>
       </a>
@@ -28,6 +29,10 @@ const { cta } = Astro.props;
   :global(html){scroll-padding-top:96px;}
   .lp-logo{text-decoration:none;}
   .lp-acciones{display:flex;align-items:center;gap:18px;}
+  .lp-nav{display:flex;gap:22px;font-size:.95rem;}
+  .lp-nav a{color:var(--tinta-2);text-decoration:none;}
+  .lp-nav a:hover{color:var(--tinta);}
+  @media (max-width:1100px){ .lp-nav{display:none;} }
   .lp-wa{display:inline-flex;align-items:center;gap:8px;color:var(--tinta-2);text-decoration:none;font-size:.95rem;}
   .lp-wa:hover{color:#1C9E4C;}
   .lp-cta{padding:7px 8px 7px 18px;font-size:.92rem;white-space:nowrap;}

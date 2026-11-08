@@ -1,17 +1,20 @@
 ---
 // Landing pages de captación: /lp/<slug>/. Datos en src/data/landings.ts.
 // noindex: son para campañas; las páginas que posicionan son las de servicio.
+//
+// Orden: promesa + tres datos + formulario (en móvil el formulario sube a la
+// primera pantalla: los datos se repiten en «Qué te llevas») → qué te llevas →
+// lo que cuesta → garantías → preguntas → cierre.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuroraFondo from '../../components/AuroraFondo.astro';
 import Formulario from '../../components/Formulario.astro';
-import Experiencia from '../../components/Experiencia.astro';
 import Escena from '../../components/Escena.astro';
 import Faq from '../../components/Faq.astro';
 import { LANDINGS, type Landing } from '../../data/landings';
 import { PAGINAS } from '../../data/paginas';
 import { SITIO, whatsappUrl } from '../../data/sitio';
 import { md } from '../../lib/texto';
-import type { Plan } from '../../data/tipos';
+import type { Plan, Extra } from '../../data/tipos';
 
 export function getStaticPaths() {
   return LANDINGS.map((l) => ({ params: { slug: l.slug }, props: { l } }));
@@ -20,54 +23,43 @@ const { l } = Astro.props as { l: Landing };
 
 const pagina = PAGINAS.find((p) => p.slug === l.servicio);
 if (!pagina) throw new Error(`Landing ${l.slug}: el servicio ${l.servicio} no tiene página`);
-const bloquePlanes = pagina.bloques.find((b) => b.tipo === 'planes');
-const planes: Plan[] = bloquePlanes && bloquePlanes.tipo === 'planes' ? bloquePlanes.planes : [];
-const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+const planes: Plan[] = pagina.bloques.flatMap((b) => (b.tipo === 'planes' ? b.planes : []));
+const extras: Extra[] = pagina.bloques.flatMap((b) => (b.tipo === 'extras' ? b.items : []));
+const f = l.formulario;
+const enlaces = [
+  { href: '#que-te-llevas', texto: 'Qué te llevas' },
+  ...(planes.length ? [{ href: '#precios', texto: 'Precios' }] : []),
+  { href: '#preguntas', texto: 'Preguntas' },
+];
 ---
-<BaseLayout title={l.title} description={l.description} noindex landing={{ cta: l.hero.cta }}>
+<BaseLayout title={l.title} description={l.description} noindex landing={{ cta: 'Diagnóstico gratis', enlaces }}>
   <section class="hero contenedor lp-hero">
     <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra letra--sin">✦</span>{l.hero.eyebrow}</span>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>{l.hero.antetitulo}</span>
       <h1 set:html={l.hero.h1} />
-      <p class="lead">{l.hero.intro}</p>
-      <ul class="lista-sol">{l.hero.puntos.map((p) => <li set:html={md(p)} />)}</ul>
+      <p class="lead">{l.hero.entrada}</p>
+      <ul class="lp-datos">
+        {l.hero.datos.map((d) => <li><strong>{d.t}</strong><span>{d.d}</span></li>)}
+      </ul>
+      <a class="lp-baja" href="#que-te-llevas">Sigue y descubre cómo trabajamos ↓</a>
     </div>
     <div class="tarjeta lp-form" id="formulario">
-      <p class="lp-form-titulo">{l.formulario.titulo}</p>
-      <p class="lp-form-sub">{l.formulario.subtitulo}</p>
-      <Formulario tipo="landing" servicio={l.hero.eyebrow} objetivos={l.formulario.objetivos} boton={l.formulario.boton} />
+      <h2 class="lp-form-titulo">{f.titulo}</h2>
+      <p class="lp-form-sub">{f.subtitulo}</p>
+      <Formulario tipo="landing" servicio={f.servicio} necesidades={f.necesidades} inversiones={f.inversiones} siguientes={f.siguientes} boton={f.boton} />
     </div>
   </section>
 
-  <section class="seccion seccion--piedra">
-    <div class="contenedor"><Experiencia /></div>
-  </section>
-
-  <section class="seccion">
-    <div class="contenedor lp-dos">
-      <div>
-        <div class="cabecera-seccion">
-          <span class="eyebrow"><span class="letra">Α</span>El problema</span>
-          <h2 set:html={l.problema.titulo} />
-        </div>
-        <ol class="lp-dolores aparece">
-          {l.problema.puntos.map((p, i) => <li><span class="romano">{ROMANOS[i]}</span><span set:html={md(p)} /></li>)}
-        </ol>
-      </div>
-      <Escena nombre={pagina.escena} class="lp-escena" />
-    </div>
-  </section>
-
-  <section class="seccion seccion--piedra">
+  <section class="seccion seccion--piedra" id="que-te-llevas">
     <div class="contenedor">
       <div class="cabecera-seccion">
-        <span class="eyebrow"><span class="letra">Β</span>Qué hacemos</span>
-        <h2 set:html={l.trabajo.titulo} />
-        <p class="lead" set:html={md(l.trabajo.intro)} />
+        <span class="eyebrow"><span class="letra">Α</span>Qué te llevas</span>
+        <h2 set:html={l.llevas.titulo} />
+        <p class="lead">{l.llevas.intro}</p>
       </div>
-      <div class="rejilla rejilla--4">
-        {l.trabajo.items.map((it, i) => (
+      <div class="lp-llevas">
+        {l.llevas.items.map((it, i) => (
           <article class="tarjeta lp-item aparece">
             <span class="lp-num">{String(i + 1).padStart(2, '0')}</span>
             <h3>{it.t}</h3>
@@ -78,26 +70,13 @@ const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
     </div>
   </section>
 
-  <section class="seccion seccion--noche">
-    <div class="contenedor">
-      <div class="cabecera-seccion">
-        <span class="eyebrow"><span class="letra">Γ</span>Cómo empezamos</span>
-        <h2>{l.pasos.titulo}</h2>
-      </div>
-      <ol class="lp-pasos">
-        {l.pasos.items.map((p, i) => <li class="aparece"><span class="lp-paso-num">{ROMANOS[i]}</span><h3>{p.t}</h3><p set:html={md(p.d)} /></li>)}
-      </ol>
-      <a class="btn btn--aurora" href="#formulario">{l.formulario.boton} <span class="flecha">→</span></a>
-    </div>
-  </section>
-
   {planes.length > 0 && (
-    <section class="seccion">
+    <section class="seccion" id="precios">
       <div class="contenedor">
         <div class="cabecera-seccion cabecera-seccion--centro">
-          <span class="eyebrow"><span class="letra">Δ</span>Planes</span>
-          <h2 set:html={l.planes.titulo} />
-          <p class="lead">{l.planes.intro}</p>
+          <span class="eyebrow"><span class="letra">Β</span>Lo que cuesta</span>
+          <h2 set:html={l.cuesta.titulo} />
+          <p class="lead">{l.cuesta.intro}</p>
         </div>
         <div class="lp-planes">
           {planes.map((pl) => (
@@ -106,82 +85,115 @@ const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
               <h3>{pl.nombre}</h3>
               <p class="lp-precio"><span>{pl.precio}</span> <small>{pl.periodo}</small></p>
               {pl.paraQuien && <p class="lp-para">{pl.paraQuien}</p>}
+              {pl.base && <p class="lp-base">{pl.base}</p>}
+              <ul class="lp-lista">{pl.incluye.slice(0, 5).map((x) => <li>{x}</li>)}</ul>
               <a class:list={['btn', pl.destacado ? 'btn--aurora' : 'btn--tinta']} href="#formulario" data-plan={pl.nombre}>Me interesa <span class="flecha">→</span></a>
             </article>
           ))}
         </div>
-        <p class="nota lp-planes-nota"><a href={`/servicios/${pagina.slug}/#planes`}>Ver qué incluye cada plan</a></p>
+        {extras.length > 0 && (
+          <div class="lp-extras">
+            {extras.map((x) => (
+              <div class="lp-extra aparece">
+                <p class="lp-extra-cab"><strong>{x.nombre}</strong><span>{x.precio}</span></p>
+                <p>{x.paraQuien}</p>
+                <a href="#formulario" data-plan={x.nombre}>Me interesa →</a>
+              </div>
+            ))}
+          </div>
+        )}
+        <p class="nota lp-nota">{l.cuesta.nota} <a href={`/servicios/${pagina.slug}/#planes`}>Ver qué incluye cada plan</a>.</p>
       </div>
     </section>
   )}
 
-  <section class="seccion seccion--piedra">
+  <section class="seccion seccion--noche" id="garantias">
     <div class="contenedor">
       <div class="cabecera-seccion">
-        <span class="eyebrow"><span class="letra">Ε</span>Nuestro compromiso</span>
+        <span class="eyebrow"><span class="letra">Γ</span>Garantías</span>
         <h2 set:html={l.garantias.titulo} />
+        <p class="lead">{l.garantias.intro}</p>
       </div>
-      <div class="rejilla rejilla--4">
+      <div class="lp-garantias">
         {l.garantias.items.map((g) => <div class="lp-garantia aparece"><h3>{g.t}</h3><p set:html={md(g.d)} /></div>)}
       </div>
     </div>
   </section>
 
-  <Faq titulo={l.faq.titulo} preguntas={l.faq.preguntas} letra="Ϛ" />
+  <Faq titulo={l.faq.titulo} preguntas={l.faq.preguntas} letra="Δ" />
 
-  <section class="banda-cta">
-    <div class="contenedor banda-in aparece">
-      <span class="eyebrow"><span class="letra">Ζ</span>Diagnóstico gratis</span>
-      <h2 set:html={l.cierre.titulo} />
-      <p class="lead">{l.cierre.texto}</p>
-      <div class="hero-botones" style="justify-content:center">
-        <a class="btn btn--aurora" href="#formulario">{l.formulario.boton} <span class="flecha">→</span></a>
-        <a class="btn btn--linea btn--claro" href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp {SITIO.whatsappVisible}</a>
+  <section class="seccion seccion--piedra">
+    <div class="contenedor lp-cierre">
+      <div class="aparece">
+        <span class="eyebrow"><span class="letra">Ε</span>Contacto</span>
+        <h2 set:html={l.cierre.titulo} />
+        <p class="lead">{l.cierre.texto}</p>
+        <div class="hero-botones">
+          <a class="btn btn--aurora" href="#formulario">{f.boton} <span class="flecha">→</span></a>
+          <a class="btn btn--linea" href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp {SITIO.whatsappVisible}</a>
+        </div>
       </div>
+      <Escena nombre={pagina.escena} />
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .lp-hero{grid-template-columns:1.05fr 1fr;align-items:start;}
-  .lp-hero h1{font-size:clamp(2.6rem,5.4vw,4.6rem);}
-  .lp-form{padding:34px;box-shadow:var(--sombra);display:grid;gap:10px;background:var(--papel);}
-  .lp-form-titulo{font-family:var(--serif);font-size:2rem;line-height:1.05;}
+  .lp-hero{grid-template-columns:1.05fr minmax(0,.95fr);align-items:start;}
+  .lp-hero h1{font-size:clamp(2.6rem,5.2vw,4.6rem);}
+  .lp-datos{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:10px;border-top:1px solid var(--linea);}
+  .lp-datos li{display:grid;gap:2px;padding:16px 16px 0 0;font-size:.9rem;color:var(--tinta-2);}
+  .lp-datos li + li{padding-left:16px;border-left:1px solid var(--linea);}
+  .lp-datos strong{font-family:var(--serif);font-size:1.45rem;font-weight:400;line-height:1.1;color:var(--tinta);}
+  .lp-baja{font-size:.9rem;color:var(--tinta-3);text-decoration:none;margin-top:8px;}
+  .lp-baja:hover{color:var(--tinta);}
+  .lp-form{padding:30px;box-shadow:var(--sombra);display:grid;gap:8px;background:var(--papel);}
+  .lp-form-titulo{font-size:2rem;line-height:1.05;}
   .lp-form-sub{color:var(--tinta-2);font-size:.95rem;margin-bottom:8px;}
-  @media (max-width:900px){ .lp-hero{grid-template-columns:1fr;} .lp-form{padding:24px;} }
+  /* Móvil: el formulario en la primera pantalla. Los datos vuelven a salir en «Qué te llevas». */
+  @media (max-width:900px){
+    .lp-hero{grid-template-columns:1fr;gap:26px;}
+    .lp-hero .lead,.lp-datos,.lp-baja{display:none;}
+    .lp-form{padding:22px;}
+  }
 
-  .lp-dos{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;}
-  @media (max-width:900px){ .lp-dos{grid-template-columns:1fr;} }
-  .lp-dolores{list-style:none;display:grid;border-top:1px solid var(--linea);}
-  .lp-dolores li{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:20px 0;border-bottom:1px solid var(--linea);font-size:1.08rem;}
-  .romano{font-family:var(--serif);font-size:1.6rem;line-height:1;color:var(--aurora-ink);}
-
-  .lp-item{display:grid;gap:10px;align-content:start;}
-  .lp-item h3{font-size:1.6rem;}
-  .lp-item p{color:var(--tinta-2);font-size:.98rem;}
+  .lp-llevas{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));}
+  .lp-item{display:grid;gap:10px;align-content:start;background:var(--papel);}
+  .lp-item h3{font-size:1.55rem;}
+  .lp-item p{color:var(--tinta-2);font-size:.97rem;}
   .lp-num{font-family:var(--mono);font-size:.8rem;color:var(--oro);}
 
-  .lp-pasos{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-bottom:44px;}
-  .lp-pasos li{border-top:1px solid rgba(255,255,255,.18);padding-top:22px;display:grid;gap:10px;align-content:start;}
-  .lp-pasos h3{font-size:1.8rem;color:#FBF4E8;}
-  .lp-pasos p{color:#CFC8BD;}
-  .lp-paso-num{font-family:var(--serif);font-size:2.2rem;line-height:1;color:var(--azafran);}
-  @media (max-width:760px){ .lp-pasos{grid-template-columns:1fr;} }
-
-  .lp-planes{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));}
+  .lp-planes{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));align-items:stretch;}
   .lp-plan{position:relative;background:var(--papel);border:1px solid var(--linea);border-radius:22px;padding:30px 28px;display:flex;flex-direction:column;gap:12px;}
   .lp-plan h3{font-size:1.8rem;}
   .lp-precio span{font-family:var(--serif);font-size:2.8rem;line-height:1;font-variant-numeric:lining-nums;}
   .lp-precio small{color:var(--tinta-3);}
-  .lp-para{color:var(--tinta-2);font-size:.95rem;flex:1;}
+  .lp-para{color:var(--tinta-2);font-size:.95rem;}
+  .lp-base{font-size:.92rem;font-weight:500;}
+  .lp-lista{list-style:none;display:grid;gap:8px;flex:1;align-content:start;margin-bottom:6px;}
+  .lp-lista li{position:relative;padding-left:24px;font-size:.93rem;color:var(--tinta-2);}
+  .lp-lista li::before{content:"";position:absolute;left:2px;top:.5em;width:11px;height:6px;border-left:2.2px solid var(--aurora);border-bottom:2.2px solid var(--aurora);transform:rotate(-45deg);}
   .lp-plan .btn{align-self:flex-start;}
   .lp-plan--destacado{background:var(--noche);border-color:var(--noche);color:#E8E1D5;box-shadow:0 30px 60px -30px rgba(23,26,54,.6);}
-  .lp-plan--destacado h3{color:#FBF4E8;}
-  .lp-plan--destacado .lp-para,.lp-plan--destacado .lp-precio small{color:#CFC8BD;}
+  .lp-plan--destacado h3,.lp-plan--destacado .lp-base{color:#FBF4E8;}
+  .lp-plan--destacado .lp-para,.lp-plan--destacado .lp-precio small,.lp-plan--destacado .lp-lista li{color:#CFC8BD;}
+  .lp-plan--destacado .lp-lista li::before{border-color:var(--azafran);}
   .lp-cinta{position:absolute;top:-13px;left:28px;background:var(--azafran);color:var(--tinta);font-family:var(--etiqueta);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-weight:700;}
-  .lp-planes-nota{text-align:center;margin-top:26px;}
+  .lp-extras{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));margin-top:22px;}
+  .lp-extra{border:1px dashed var(--linea-2);border-radius:18px;padding:20px 22px;display:grid;gap:8px;font-size:.95rem;color:var(--tinta-2);}
+  .lp-extra-cab{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;}
+  .lp-extra-cab strong{font-family:var(--serif);font-weight:400;font-size:1.45rem;color:var(--tinta);}
+  .lp-extra-cab span{font-family:var(--mono);font-size:.9rem;color:var(--aurora-ink);}
+  .lp-extra a{font-weight:500;text-decoration:none;}
+  .lp-nota{text-align:center;margin:28px auto 0;max-width:72ch;}
 
-  .lp-garantia{border-top:2px solid var(--aurora);padding-top:18px;display:grid;gap:8px;align-content:start;}
-  .lp-garantia h3{font-size:1.5rem;}
-  .lp-garantia p{color:var(--tinta-2);font-size:.97rem;}
+  .lp-garantias{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));}
+  .lp-garantia{border-top:1px solid rgba(255,255,255,.2);padding-top:20px;display:grid;gap:8px;align-content:start;}
+  .lp-garantia h3{font-size:1.6rem;color:#FBF4E8;}
+  .lp-garantia p{color:#CFC8BD;font-size:.97rem;}
+  .lp-garantia :global(a){color:var(--azafran);}
+
+  .lp-cierre{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;}
+  .lp-cierre > div{display:grid;gap:20px;}
+  @media (max-width:900px){ .lp-cierre{grid-template-columns:1fr;} }
 </style>

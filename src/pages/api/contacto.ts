@@ -28,7 +28,7 @@ const limpio = (v: unknown, max = 300) => (typeof v === 'string' ? v.trim().slic
 
 const CAMPOS: Record<string, string> = {
   nombre: 'Nombre', email: 'Correo', telefono: 'Teléfono', empresa: 'Empresa', web: 'Web',
-  servicio: 'Le interesa', plan: 'Plan', objetivo: 'Objetivo', mensaje: 'Mensaje',
+  servicio: 'Le interesa', plan: 'Plan', objetivo: 'Objetivo / necesita', inversion: 'Inversión mensual', mensaje: 'Mensaje',
   pagina: 'Página', origen: 'Origen de la visita',
 };
 const TITULOS = { contacto: 'Nuevo contacto desde eosstudio.es', diagnostico: 'Petición de diagnóstico gratuito', landing: 'Lead desde una landing page' };

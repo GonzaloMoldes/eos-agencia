@@ -18,10 +18,12 @@ import { SITIO, whatsappUrl } from '../data/sitio';
 export interface Props {
   tipo?: 'contacto' | 'diagnostico' | 'landing';
   servicio?: string;      // landing: servicio fijo
-  objetivos?: string[];   // landing: opciones de «¿Qué quieres conseguir?»
+  necesidades?: string[]; // landing: opciones de «¿Qué necesitas?»
+  inversiones?: string[]; // landing: opciones de «¿Qué inversión mensual manejas?»
+  siguientes?: { t: string; d: string }[];  // landing: «¿Qué pasa ahora?» tras enviar
   boton?: string;         // texto del botón de envío
 }
-const { tipo = 'contacto', servicio = '', objetivos = [], boton } = Astro.props;
+const { tipo = 'contacto', servicio = '', necesidades = [], inversiones = [], siguientes = [], boton } = Astro.props;
 const diag = tipo === 'diagnostico';
 const landing = tipo === 'landing';
 const textoBoton = boton || (diag ? 'Pedir mi diagnóstico' : landing ? 'Quiero mi diagnóstico' : 'Enviar mensaje');
@@ -39,22 +41,35 @@ const id = `form-${tipo}`;
 
   {landing ? (
     <>
-      <div class="f-fila">
-        <label><span>Web de tu empresa <b aria-hidden="true">*</b></span>
+      <div class="f-fila f-fila--abajo">
+        {necesidades.length > 0 && (
+          <label>¿Qué necesitas?
+            <select name="objetivo">
+              <option value="">Elige una opción</option>
+              {necesidades.map((o) => <option>{o}</option>)}
+            </select>
+          </label>
+        )}
+        <label><span>URL de tu web <b aria-hidden="true">*</b> <small class="f-ayuda">Sin ella no podemos decirte nada útil.</small></span>
           <input name="web" type="url" inputmode="url" placeholder="https://" required>
         </label>
-        <label>Teléfono
+      </div>
+      <div class="f-fila f-fila--abajo">
+        {inversiones.length > 0 && (
+          <label><span>¿Qué inversión mensual manejas? <small class="f-ayuda">Por si buscas algo fuera de nuestro rango.</small></span>
+            <select name="inversion">
+              <option value="">Elige una opción</option>
+              {inversiones.map((o) => <option>{o}</option>)}
+            </select>
+          </label>
+        )}
+        <label><span>Teléfono <small class="f-opc">(opcional)</small></span>
           <input name="telefono" type="tel" autocomplete="tel">
         </label>
       </div>
-      {objetivos.length > 0 && (
-        <label>¿Qué quieres conseguir?
-          <select name="objetivo">
-            <option value="">Elige una opción (opcional)</option>
-            {objetivos.map((o) => <option>{o}</option>)}
-          </select>
-        </label>
-      )}
+      <label><span>Cuéntanos lo que quieras <small class="f-opc">(opcional)</small></span>
+        <textarea name="mensaje" rows="2"></textarea>
+      </label>
       <input type="hidden" name="servicio" value={servicio}>
       <input type="hidden" name="plan" value="">
     </>
@@ -114,6 +129,12 @@ const id = `form-${tipo}`;
   <button class="btn btn--aurora" type="submit">{textoBoton} <span class="flecha">→</span></button>
 
   <div class="f-estado" role="status" aria-live="polite"></div>
+  {siguientes.length > 0 && (
+    <div class="f-gracias" hidden>
+      <p class="f-gracias-t">¿Qué pasa ahora?</p>
+      <ol>{siguientes.map((x) => <li><strong>{x.t}</strong><span>{x.d}</span></li>)}</ol>
+    </div>
+  )}
   <div class="f-error" hidden>
     <p>No hemos podido enviar el formulario. Escríbenos directamente y te respondemos igual:</p>
     <p><a class="btn btn--tinta" href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp <span class="flecha">→</span></a> <a class="btn btn--linea" href={`mailto:${SITIO.email}`}>{SITIO.email}</a></p>
@@ -123,6 +144,7 @@ const id = `form-${tipo}`;
 <style>
   .formulario{display:grid;gap:16px;}
   .f-fila{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .f-fila--abajo{align-items:end;}
   @media (max-width:600px){ .f-fila{grid-template-columns:1fr;} }
   .formulario label{display:grid;gap:7px;font-size:.9rem;font-weight:500;color:var(--tinta-2);}
   .formulario label b{color:var(--terracota);font-weight:600;}
@@ -139,6 +161,15 @@ const id = `form-${tipo}`;
   .f-estado.ok{color:#2F6B2A;font-weight:500;}
   .f-estado.mal{color:#B3261E;}
   .f-error[hidden]{display:none;}
+  .f-ayuda{display:block;font-weight:400;font-size:.8rem;color:var(--tinta-3);}
+  .f-opc{font-weight:400;font-size:.8rem;color:var(--tinta-3);}
+  .f-gracias[hidden]{display:none;}
+  .f-gracias{border:1px solid var(--linea);border-radius:14px;padding:16px 18px;background:var(--marmol);display:grid;gap:10px;}
+  .f-gracias-t{font-family:var(--etiqueta);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aurora-ink);}
+  .f-gracias ol{list-style:none;counter-reset:paso;display:grid;gap:10px;}
+  .f-gracias li{counter-increment:paso;position:relative;padding-left:36px;display:grid;font-size:.92rem;color:var(--tinta-2);}
+  .f-gracias li::before{content:counter(paso);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;border:1px solid var(--aurora);color:var(--aurora-ink);display:grid;place-items:center;font-size:.8rem;font-weight:600;}
+  .f-gracias strong{color:var(--tinta);}
   .f-error{background:rgba(255,255,255,.7);border:1px solid var(--linea);border-radius:14px;padding:16px;display:grid;gap:10px;}
   .f-error p:last-child{display:flex;flex-wrap:wrap;gap:10px;}
 </style>
@@ -222,6 +253,8 @@ const id = `form-${tipo}`;
           ? '¡Recibido! Revisaremos tu web y te enviaremos el diagnóstico por correo.'
           : '¡Gracias! Hemos recibido tu mensaje y te responderemos muy pronto.';
         estado.classList.add('ok');
+        const gracias = form.querySelector<HTMLElement>('.f-gracias');
+        if (gracias) gracias.hidden = false;
       } catch {
         estado.textContent = '';
         error.hidden = false;
