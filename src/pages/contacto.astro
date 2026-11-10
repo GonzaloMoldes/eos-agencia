@@ -4,7 +4,7 @@ import AuroraFondo from '../components/AuroraFondo.astro';
 import Formulario from '../components/Formulario.astro';
 import Iconos from '../components/Iconos.astro';
 import { SITIO, whatsappUrl } from '../data/sitio';
-import { EQUIPO } from '../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO } from '../data/equipo';
 import { BASE_URL } from '../lib/seo';
 
 const pasos = [
@@ -33,7 +33,15 @@ const schema = { '@context': 'https://schema.org', '@type': 'ContactPage', name:
             <span><strong>WhatsApp</strong><small>{SITIO.whatsappVisible}</small></span>
           </a>
         </li>
-        {EQUIPO.map((p) => (
+        {EQUIPO_ANONIMO && (
+          <li>
+            <a class="canal" href={`mailto:${SITIO.email}`}>
+              <span class="canal-icono">@</span>
+              <span><strong>Correo</strong><small>{SITIO.email}</small></span>
+            </a>
+          </li>
+        )}
+        {!EQUIPO_ANONIMO && EQUIPO.map((p) => (
           <li>
             <a class="canal" href={`mailto:${p.email}`}>
               <span class="canal-icono">@</span>

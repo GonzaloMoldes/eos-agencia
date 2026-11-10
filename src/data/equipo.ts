@@ -11,6 +11,7 @@ export interface Certificacion {
 
 export interface Persona {
   nombre: string;
+  perfil: string;     // cómo se presenta mientras EQUIPO_ANONIMO esté activo
   iniciales: string;
   cargo: string;
   sede: string;
@@ -22,9 +23,16 @@ export interface Persona {
   certificaciones: Certificacion[];
 }
 
+// TEMPORAL: mientras sea true, la web no muestra nombres, iniciales, LinkedIn ni
+// correos personales de los fundadores (ni en Sobre nosotros, ni en el inicio, ni en
+// los datos estructurados, ni en llms.txt). Se mantienen sedes, especialidades y
+// certificaciones. Para volver a mostrarlos: poner false.
+export const EQUIPO_ANONIMO = true;
+
 export const EQUIPO: Persona[] = [
   {
     nombre: 'Gonzalo Moldes',
+    perfil: 'Proyectos y automatización',
     iniciales: 'GM',
     cargo: 'Cofundador · Desarrollo de proyectos',
     sede: 'A Coruña',
@@ -48,6 +56,7 @@ export const EQUIPO: Persona[] = [
   },
   {
     nombre: 'AnaMaria Vaduva',
+    perfil: 'SEO y captación',
     iniciales: 'AV',
     cargo: 'Cofundadora · Adquisición y generación de leads',
     sede: 'Valencia',

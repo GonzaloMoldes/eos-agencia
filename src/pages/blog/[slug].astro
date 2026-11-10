@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuroraFondo from '../../components/AuroraFondo.astro';
 import { render } from 'astro:content';
 import { entradas, TIPOS, minutosLectura, fechaLarga, type Entrada } from '../../lib/blog';
-import { EQUIPO } from '../../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO } from '../../data/equipo';
 import { SERVICIOS, urlServicio } from '../../data/servicios';
 import { BASE_URL } from '../../lib/seo';
 
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 const { entrada, lista } = Astro.props as { entrada: Entrada; lista: Entrada[] };
 const { Content, headings } = await render(entrada);
 const d = entrada.data;
-const autor = EQUIPO.find((p) => p.nombre === d.autor);
+const autor = EQUIPO_ANONIMO ? undefined : EQUIPO.find((p) => p.nombre === d.autor);
 const servicio = d.servicio ? SERVICIOS.find((s) => s.slug === d.servicio && s.publicado) : undefined;
 const otras = lista.filter((e) => e.id !== entrada.id).slice(0, 2);
 const indice = headings.filter((h) => h.depth === 2);

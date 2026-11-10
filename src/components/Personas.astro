@@ -2,7 +2,7 @@
 // Tarjetas del equipo: retrato en arco (foto o iniciales), cargo, sede,
 // especialidades, trayectoria y enlaces. Datos en src/data/equipo.ts.
 import Iconos from './Iconos.astro';
-import { EQUIPO } from '../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO as anon } from '../data/equipo';
 export interface Props { compacto?: boolean }
 const { compacto = false } = Astro.props;
 ---
@@ -10,15 +10,15 @@ const { compacto = false } = Astro.props;
   {EQUIPO.map((p) => (
     <li class="persona aparece">
       <div class="retrato" aria-hidden={p.foto ? undefined : 'true'}>
-        {p.foto
+        {p.foto && !anon
           ? <img src={`/equipo/${p.foto}`} alt={`Retrato de ${p.nombre}`} width="400" height="400" loading="lazy" />
-          : <span class="iniciales">{p.iniciales}</span>}
+          : <span class="iniciales">{anon ? '✦' : p.iniciales}</span>}
         <span class="retrato-sol"></span>
       </div>
       <div class="persona-texto">
         <p class="persona-sede">{p.sede}</p>
-        <h3>{p.nombre}</h3>
-        <p class="persona-cargo">{p.cargo}</p>
+        <h3>{anon ? p.perfil : p.nombre}</h3>
+        <p class="persona-cargo">{anon ? p.cargo.replace(/^Cofundadora?\s·\s/, '') : p.cargo}</p>
         {!compacto && p.especialidades.length > 0 && <ul class="chips">{p.especialidades.map((e) => <li>{e}</li>)}</ul>}
         {!compacto && p.bio && <p class="persona-bio">{p.bio}</p>}
         {!compacto && p.certificaciones.length > 0 && (
@@ -31,10 +31,10 @@ const { compacto = false } = Astro.props;
             </ul>
           </details>
         )}
-        <p class="persona-enlaces">
+        {!anon && <p class="persona-enlaces">
           <a href={p.linkedin} target="_blank" rel="noopener" aria-label={`LinkedIn de ${p.nombre}`}><Iconos nombre="linkedin" tam={16} /> LinkedIn</a>
           {!compacto && <a href={`mailto:${p.email}`}>{p.email}</a>}
-        </p>
+        </p>}
       </div>
     </li>
   ))}

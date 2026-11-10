@@ -4,7 +4,7 @@ import AuroraFondo from '../components/AuroraFondo.astro';
 import Personas from '../components/Personas.astro';
 import Experiencia from '../components/Experiencia.astro';
 import { SITIO } from '../data/sitio';
-import { EQUIPO } from '../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO } from '../data/equipo';
 import { BASE_URL } from '../lib/seo';
 
 const principios = [
@@ -16,12 +16,19 @@ const principios = [
   { t: 'Tus sistemas, bajo tu control', d: 'Cuentas, datos y accesos a tu nombre, conforme a lo acordado.' },
 ];
 
+const historia = [
+  { t: 'Coincidimos trabajando', d: 'Nos conocimos como compañeros de trabajo, en el día a día de equipos de marketing de grandes marcas.' },
+  { t: 'Pasamos por muchos departamentos', d: 'SEO, captación, contenidos, email, automatización, datos y gestión de proyectos. Vimos cómo encajan las piezas, y dónde suelen romperse.' },
+  { t: 'Y por muchas marcas', d: 'Sectores y tamaños distintos, y una misma conclusión: lo que funciona es el método, no el presupuesto. Y casi nunca llega a las empresas pequeñas.' },
+  { t: 'Decidimos crear EOS Studio', d: 'Un servicio con esa forma de trabajar al alcance de cualquier negocio: sencillo, claro, sin letra pequeña y con la calidad de los grandes.' },
+];
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   name: `Sobre ${SITIO.nombre}`,
   url: `${BASE_URL}/sobre-nosotros/`,
-  mainEntity: EQUIPO.map((p) => ({
+  mainEntity: EQUIPO_ANONIMO ? { '@id': `${BASE_URL}/#organization` } : EQUIPO.map((p) => ({
     '@type': 'Person', name: p.nombre, jobTitle: p.cargo, email: p.email, url: p.linkedin, sameAs: [p.linkedin],
     worksFor: { '@id': `${BASE_URL}/#organization` },
     hasCredential: p.certificaciones.map((c) => ({ '@type': 'EducationalOccupationalCredential', name: c.nombre, recognizedBy: { '@type': 'Organization', name: c.emisor } })),
@@ -30,37 +37,49 @@ const schema = {
 };
 ---
 <BaseLayout
-  title="Sobre nosotros: el equipo de EOS Studio | A Coruña y Valencia"
-  description="Somos EOS Studio, agencia de SEO, GEO y marketing con sede en A Coruña y Valencia. Venimos de los equipos de marketing de grandes marcas y llevamos esa calidad a las pymes, de forma sencilla y sin letra pequeña."
+  title="Sobre nosotros: la historia de EOS Studio | A Coruña y Valencia"
+  description="EOS Studio nace de dos compañeros de trabajo que, tras años en distintos departamentos y marcas, crearon otra forma de hacer SEO, GEO y marketing: sencilla, clara y sin letra pequeña."
   schema={schema}
 >
   <section class="hero contenedor hero--simple">
     <AuroraFondo />
     <div class="hero-texto">
       <span class="eyebrow"><span class="letra letra--sin">✦</span>Sobre nosotros · {SITIO.sedes.join(' · ')}</span>
-      <h1>Antiguos colegas, <em>una misma forma de trabajar</em></h1>
-      <p class="lead">Somos un equipo multidisciplinar de profesionales que coincidimos en los equipos de marketing de grandes marcas: SEO, contenidos, datos, automatización y CRM. Compartimos una forma de trabajar y de hacer las cosas —ordenada, clara y sin letra pequeña— y la ponemos al servicio de cada proyecto.</p>
+      <h1>Dos compañeros de trabajo, <em>una forma nueva de trabajar</em></h1>
+      <p class="lead">EOS Studio nace de dos compañeros que trabajaron juntos durante años, pasaron por varios departamentos y marcas, y decidieron unir lo aprendido en un servicio propio: marketing ordenado, claro y sin letra pequeña.</p>
     </div>
   </section>
 
   <section class="seccion seccion--sin-arriba">
-    <div class="contenedor">
+    <div class="contenedor historia">
       <div class="cabecera-seccion">
-        <span class="eyebrow"><span class="letra letra--sin">✦</span>Fundadores</span>
-        <h2>Quienes pusieron <em>en marcha EOS</em></h2>
-        <p class="lead">Gonzalo y AnaMaria fundaron EOS Studio y coordinan cada proyecto. En cada caso reúnen a los especialistas del equipo que tu negocio necesita, para que tengas siempre a una persona de referencia y, detrás, a quien sabe hacer cada parte.</p>
+        <span class="eyebrow"><span class="letra letra--sin">✦</span>Nuestra historia</span>
+        <h2>De compartir equipo <em>a crear el nuestro</em></h2>
       </div>
-      <Personas />
+      <ol class="historia-pasos">
+        {historia.map((h, i) => <li class="aparece"><span class="historia-n">{['I', 'II', 'III', 'IV'][i]}</span><h3>{h.t}</h3><p>{h.d}</p></li>)}
+      </ol>
     </div>
   </section>
 
   <section class="seccion seccion--piedra">
     <div class="contenedor">
-      <Experiencia />
+      <div class="cabecera-seccion">
+        <span class="eyebrow"><span class="letra letra--sin">✦</span>Dos perfiles</span>
+        <h2>Dos perfiles <em>que se completan</em></h2>
+        <p class="lead">Uno se ocupa de que te encuentren; el otro, de que cada contacto tenga seguimiento y cada proyecto llegue a término. Coordinan cada trabajo y suman a los especialistas que tu negocio necesita.</p>
+      </div>
+      <Personas />
     </div>
   </section>
 
   <section class="seccion">
+    <div class="contenedor">
+      <Experiencia />
+    </div>
+  </section>
+
+  <section class="seccion seccion--piedra">
     <div class="contenedor">
       <div class="cabecera-seccion">
         <span class="eyebrow"><span class="letra">Α</span>Cómo trabajamos</span>
@@ -86,6 +105,13 @@ const schema = {
 </BaseLayout>
 
 <style>
+  .historia-pasos{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;}
+  .historia-pasos li{border-top:1px solid var(--linea-2);padding-top:20px;display:grid;gap:10px;align-content:start;}
+  .historia-n{font-family:var(--serif);font-size:2rem;line-height:1;color:var(--aurora-ink);}
+  .historia-pasos h3{font-size:1.6rem;}
+  .historia-pasos p{color:var(--tinta-2);font-size:.98rem;}
+  @media (max-width:900px){ .historia-pasos{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .historia-pasos{grid-template-columns:1fr;} }
   .principios{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;}
   .principios li{border-top:1px solid var(--linea-2);padding:20px 0 26px;}
   .principios h3{font-size:1.6rem;margin-bottom:6px;}

@@ -3,7 +3,7 @@ import { SERVICIOS, urlServicio } from '../data/servicios';
 import { PAGINAS } from '../data/paginas';
 import { SITIO } from '../data/sitio';
 import { BASE_URL } from '../lib/seo';
-import { EQUIPO } from '../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO } from '../data/equipo';
 import { entradas } from '../lib/blog';
 
 export async function GET() {
@@ -17,9 +17,9 @@ EOS Studio es una agencia de marketing digital con sede en ${SITIO.ciudad} (Espa
 
 ## Fundadores
 
-Equipo multidisciplinar de profesionales que coincidieron en los equipos de marketing de grandes marcas, fundado por:
+Fundada por dos compañeros de trabajo que, tras años en distintos departamentos y marcas, crearon un servicio propio:
 
-${EQUIPO.map((p) => `- ${p.nombre} (${p.cargo}, ${p.sede}): ${p.linkedin}`).join('\n')}
+${EQUIPO.map((p) => EQUIPO_ANONIMO ? `- ${p.perfil} (${p.sede}): ${p.especialidades.join(', ')}` : `- ${p.nombre} (${p.cargo}, ${p.sede}): ${p.linkedin}`).join('\n')}
 
 ## Servicios
 

@@ -115,7 +115,7 @@ export const LANDINGS: Landing[] = [
         { t: 'Sin permanencia', d: 'No pedimos contratos de 6 o 12 meses. Si no aportamos el valor que tu empresa necesita, eres libre de irte.' },
         { t: 'Transparencia total', d: 'Informes claros con las métricas que de verdad importan: contactos, ventas y retorno de la inversión.' },
         { t: 'Expectativas honestas', d: 'No prometemos posiciones concretas ni apariciones garantizadas en la IA. Nadie puede hacerlo con honestidad.' },
-        { t: 'Equipo certificado', d: 'Certificaciones de Google Analytics, HubSpot y SEO para ecommerce, entre otras. Están en [nuestros perfiles](/sobre-nosotros/).' },
+        { t: 'Equipo certificado', d: 'Certificaciones de Google Analytics, HubSpot y SEO para ecommerce, entre otras. Están en [Sobre nosotros](/sobre-nosotros/).' },
       ],
     },
     faq: {
@@ -269,7 +269,7 @@ export const LANDINGS: Landing[] = [
         { t: 'Alcance definido', d: 'Conoces los flujos, las campañas y las integraciones incluidos en el servicio.' },
         { t: 'Tus sistemas, bajo tu control', d: 'Las cuentas, los datos y los accesos se gestionan conforme a lo acordado en la propuesta.' },
         { t: 'Medición transparente', d: 'Recibes información de las acciones realizadas y de los indicadores disponibles, sin adornos.' },
-        { t: 'Equipo certificado', d: 'Certificaciones de Klaviyo (producto y entregabilidad) y de HubSpot en inbound marketing, entre otras. Están en [nuestros perfiles](/sobre-nosotros/).' },
+        { t: 'Equipo certificado', d: 'Certificaciones de Klaviyo (producto y entregabilidad) y de HubSpot en inbound marketing, entre otras. Están en [Sobre nosotros](/sobre-nosotros/).' },
       ],
     },
     faq: {

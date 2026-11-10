@@ -2,7 +2,7 @@
 // BreadcrumbList generado desde la URL. Lo emite BaseLayout.
 import { SITIO } from '../data/sitio';
 import { SERVICIOS } from '../data/servicios';
-import { EQUIPO } from '../data/equipo';
+import { EQUIPO, EQUIPO_ANONIMO } from '../data/equipo';
 
 export const BASE_URL = SITIO.url;
 
@@ -21,7 +21,7 @@ export const organizationSchema = {
   ],
   telephone: '+34671887372',
   areaServed: [{ '@type': 'City', name: 'A Coruña' }, { '@type': 'City', name: 'Valencia' }, { '@type': 'Country', name: 'España' }],
-  founder: EQUIPO.map((p) => ({ '@type': 'Person', name: p.nombre, url: p.linkedin, sameAs: [p.linkedin] })),
+  ...(EQUIPO_ANONIMO ? {} : { founder: EQUIPO.map((p) => ({ '@type': 'Person', name: p.nombre, url: p.linkedin, sameAs: [p.linkedin] })) }),
   knowsAbout: ['SEO', 'GEO (Generative Engine Optimization)', 'SEO local', 'SEO para YouTube', 'Digital PR', 'Link building', 'Marketing automation', 'Consultoría CRM'],
 };
 
