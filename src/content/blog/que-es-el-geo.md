@@ -15,11 +15,14 @@ El **GEO** (*Generative Engine Optimization*) es el trabajo para que eso cambie:
 
 El SEO busca que tu web aparezca en los resultados de un buscador. El GEO busca que tu marca aparezca **dentro de la respuesta** que redacta una IA. No compiten: el GEO se apoya en el SEO.
 
-| | SEO | GEO |
-|---|---|---|
-| Dónde apareces | En la lista de resultados | Dentro de la respuesta del asistente |
-| Qué se gana | Clics hacia tu web | Menciones, recomendaciones y citas |
-| Qué pesa más | Relevancia, enlaces, experiencia de página | Claridad de la información, autoridad y consenso entre fuentes |
+<table>
+<thead><tr><td></td><th scope="col">SEO</th><th scope="col">GEO</th></tr></thead>
+<tbody>
+<tr><th scope="row">Dónde apareces</th><td>En la lista de resultados</td><td>Dentro de la respuesta del asistente</td></tr>
+<tr><th scope="row">Qué se gana</th><td>Clics hacia tu web</td><td>Menciones, recomendaciones y citas</td></tr>
+<tr><th scope="row">Qué pesa más</th><td>Relevancia, enlaces, experiencia de página</td><td>Claridad de la información, autoridad y consenso entre fuentes</td></tr>
+</tbody>
+</table>
 
 Muchos asistentes consultan buscadores en tiempo real antes de responder. Por eso una web bien posicionada y con autoridad sigue siendo la base de todo.
 

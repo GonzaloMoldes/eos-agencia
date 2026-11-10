@@ -36,7 +36,7 @@ const schema = {
   keywords: d.etiquetas.join(', '),
 };
 ---
-<BaseLayout title={`${d.titulo} | EOS Studio`} description={d.descripcion} schema={schema} migaFinal={d.titulo} ogType="article">
+<BaseLayout title={d.titulo.length > 50 ? d.titulo : `${d.titulo} | EOS Studio`} description={d.descripcion} schema={schema} migaFinal={d.titulo} ogType="article">
   <section class="hero contenedor hero--simple">
     <AuroraFondo />
     <div class="hero-texto">

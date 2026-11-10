@@ -73,7 +73,7 @@ export function bocadillo({ x, y, texto, cola = 'izq', i = 0, icono = null, suav
       : icono === 'sol'
         ? `<g transform="translate(${x + 30} ${y + alto / 2 + 5})" stroke="${tinta}" stroke-width="2.6" stroke-linecap="round" fill="none"><path d="M0 -17v4M-10 -12l2.6 2.6M10 -12l-2.6 2.6M-15 -2h3M12 -2h3"/><path d="M-7 0a7 7 0 0 1 14 0"/><path d="M-11 4h22"/></g>`
         : '';
-  const texto_ = lineas.map((l, k) => `<text x="${x + sangria}" y="${f(y + 14 + tam * 0.95 + k * tam * 1.2)}" font-family="DM Sans, sans-serif" font-weight="700" font-size="${tam}" fill="${tinta}">${l}</text>`).join('');
+  const texto_ = lineas.map((l, k) => `<text x="${x + sangria}" y="${f(y + 14 + tam * 0.95 + k * tam * 1.2)}" font-family="Inter Tight, sans-serif" font-weight="700" font-size="${tam}" fill="${tinta}">${l}</text>`).join('');
   return `<g class="esc-burbuja" style="--i:${i}">` +
     `<path d="M${x + 22} ${y}H${x + ancho - 22}Q${x + ancho} ${y} ${x + ancho} ${y + 22}V${y + alto - 22}Q${x + ancho} ${y + alto} ${x + ancho - 22} ${y + alto}H${cx + dir * 18}Q${cx + dir * 2} ${y + alto + 6} ${cx - dir * 8} ${y + alto + 24}Q${cx - dir * 4} ${y + alto + 8} ${cx - dir * 6} ${y + alto}H${x + 22}Q${x} ${y + alto} ${x} ${y + alto - 22}V${y + 22}Q${x} ${y} ${x + 22} ${y}Z" fill="${fondo}"/>` +
     ic + texto_ + `</g>`;
@@ -88,7 +88,7 @@ export const destello = (x, y, s = 1, i = 0, color = AZAFRAN) =>
 export const cruz = (x, y, s = 1) => `<path d="M${x} ${y - 9 * s}v${18 * s}M${x - 9 * s} ${y}h${18 * s}" stroke="${DECO}" stroke-width="2" stroke-linecap="round"/>`;
 export const zigzag = (x, y) => `<path d="M${x} ${y}l9 9 9-9 9 9 9-9 9 9 9-9" fill="none" stroke="${DECO}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
 export const moneda = (x, y, simbolo = '€', i = 0) =>
-  `<g class="esc-flota" style="animation-delay:${i * 0.6}s"><circle cx="${x}" cy="${y}" r="16" fill="#FFFFFF"/><text x="${x}" y="${y + 6}" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="17" fill="${DECO}">${simbolo}</text></g>`;
+  `<g class="esc-flota" style="animation-delay:${i * 0.6}s"><circle cx="${x}" cy="${y}" r="16" fill="#FFFFFF"/><text x="${x}" y="${y + 6}" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="700" font-size="17" fill="${DECO}">${simbolo}</text></g>`;
 
 // Planta de línea en maceta blanca (como en la referencia), o rama de olivo.
 export function planta(x, y, s = 1) {
@@ -206,14 +206,14 @@ export function claqueta(x, y, s = 1, rot = 0) {
 export function pipeline(x, y, s = 1) {
   const madera = '#B98A62';
   const col = (cx, titulo, n, color) =>
-    `<text x="${cx}" y="-238" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="#8A8496">${titulo}</text>` +
+    `<text x="${cx}" y="-238" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="12" fill="#8A8496">${titulo}</text>` +
     Array.from({ length: n }, (_, i) => `<rect x="${cx - 36}" y="${-224 + i * 40}" width="72" height="30" rx="5" fill="${color}"/><path d="M${cx - 26} ${-213 + i * 40}h34M${cx - 26} ${-203 + i * 40}h20" stroke="#FFFFFF" stroke-opacity=".8" stroke-width="3.4" stroke-linecap="round"/>`).join('');
   return `<g transform="translate(${x} ${y}) scale(${s})">` +
     `<path d="M-110 0L-80 -270M110 0L80 -270M0 -270V-30" stroke="${madera}" stroke-width="8" stroke-linecap="round"/>` +
     `<rect x="-150" y="-262" width="300" height="200" rx="8" fill="#FFFFFF"/>` +
     `<path d="M-50 -250V-74M50 -250V-74" stroke="${MARMOL_S}" stroke-width="2.4"/>` +
     col(-100, 'NUEVO', 3, '#C9CEE6') + col(0, 'PROPUESTA', 2, '#F3CF93') +
-    `<text x="100" y="-238" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="#8A8496">GANADO</text>` +
+    `<text x="100" y="-238" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="12" fill="#8A8496">GANADO</text>` +
     `<g class="esc-tarjeta"><rect x="64" y="-224" width="72" height="30" rx="5" fill="#A9C27A"/><path class="esc-traza" pathLength="1" d="M88 -210l7 7 13-13" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>` +
     `<path d="M-60 -62h120" stroke="${madera}" stroke-width="8" stroke-linecap="round"/>` +
     `</g>`;

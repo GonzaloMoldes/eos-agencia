@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "ilustraciones": "node scripts/ilustraciones/generar.mjs",
     "build": "node scripts/ilustraciones/generar.mjs && astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "og": "node scripts/og/generar.cjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^11.0.5",

@@ -9,7 +9,8 @@ export default defineConfig({
   trailingSlash: 'always',
   adapter: vercel(),
   build: {
-    // CSS en linea en el HTML: sin peticiones bloqueantes de render.
-    inlineStylesheets: 'always',
+    // El CSS común va en un fichero que el navegador guarda en caché entre páginas
+    // (_astro/*.css, caché de un año); solo los trozos pequeños van en línea.
+    inlineStylesheets: 'auto',
   },
 });

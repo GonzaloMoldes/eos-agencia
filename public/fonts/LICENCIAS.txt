@@ -1,0 +1,5 @@
+Tipografías alojadas en la web (solo el juego latino), descargadas de Fontsource:
+- Instrument Serif (Rodrigo Fuenzalida, Jordan Egstad)
+- Inter Tight (The Inter Project Authors)
+- Cinzel (Natanael Gama)
+Todas con licencia SIL Open Font License 1.1: https://openfontlicense.org

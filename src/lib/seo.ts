@@ -12,7 +12,8 @@ export const organizationSchema = {
   '@id': `${BASE_URL}/#organization`,
   name: SITIO.nombre,
   url: `${BASE_URL}/`,
-  logo: `${BASE_URL}/favicon.svg`,
+  logo: { '@type': 'ImageObject', url: `${BASE_URL}/logo.png`, width: 512, height: 512 },
+  image: `${BASE_URL}/og/inicio.png`,
   description: SITIO.descripcion,
   email: SITIO.email,
   address: [
@@ -22,6 +23,7 @@ export const organizationSchema = {
   telephone: '+34671887372',
   areaServed: [{ '@type': 'City', name: 'A Coruña' }, { '@type': 'City', name: 'Valencia' }, { '@type': 'Country', name: 'España' }],
   ...(EQUIPO_ANONIMO ? {} : { founder: EQUIPO.map((p) => ({ '@type': 'Person', name: p.nombre, url: p.linkedin, sameAs: [p.linkedin] })) }),
+  ...(Object.values(SITIO.redes).some(Boolean) ? { sameAs: Object.values(SITIO.redes).filter(Boolean) } : {}),
   knowsAbout: ['SEO', 'GEO (Generative Engine Optimization)', 'SEO local', 'SEO para YouTube', 'Digital PR', 'Link building', 'Marketing automation', 'Consultoría CRM'],
 };
 
