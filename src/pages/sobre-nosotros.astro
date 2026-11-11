@@ -17,10 +17,10 @@ const principios = [
 ];
 
 const historia = [
-  { t: 'Coincidimos trabajando', d: 'Nos conocimos como compañeros de trabajo, en el día a día de equipos de marketing de grandes marcas.' },
+  { t: 'Coincidimos trabajando', d: 'Nos conocimos como compañeros, en el día a día de equipos de marketing de grandes marcas.' },
   { t: 'Pasamos por muchos departamentos', d: 'SEO, captación, contenidos, email, automatización, datos y gestión de proyectos. Vimos cómo encajan las piezas, y dónde suelen romperse.' },
   { t: 'Y por muchas marcas', d: 'Sectores y tamaños distintos, y una misma conclusión: lo que funciona es el método, no el presupuesto. Y casi nunca llega a las empresas pequeñas.' },
-  { t: 'Decidimos crear EOS Studio', d: 'Un servicio con esa forma de trabajar al alcance de cualquier negocio: sencillo, claro, sin letra pequeña y con la calidad de los grandes.' },
+  { t: 'Nos unimos en EOS Studio', d: 'Bajo una misma idea: llevar esa forma de trabajar a cualquier negocio. Sencillo, claro, sin letra pequeña y con la calidad de los grandes.' },
 ];
 
 const schema = {
@@ -32,21 +32,20 @@ const schema = {
     '@type': 'Person', name: p.nombre, jobTitle: p.cargo, email: p.email, url: p.linkedin, sameAs: [p.linkedin],
     worksFor: { '@id': `${BASE_URL}/#organization` },
     hasCredential: p.certificaciones.map((c) => ({ '@type': 'EducationalOccupationalCredential', name: c.nombre, recognizedBy: { '@type': 'Organization', name: c.emisor } })),
-    address: { '@type': 'PostalAddress', addressLocality: p.sede, addressCountry: 'ES' },
   })),
 };
 ---
 <BaseLayout
-  title="Sobre nosotros: la historia de EOS Studio | A Coruña y Valencia"
-  description="EOS Studio nace de dos compañeros de trabajo que, tras años en distintos departamentos y marcas, crearon otra forma de hacer SEO, GEO y marketing."
+  title="Sobre nosotros: la historia de EOS Studio"
+  description="EOS Studio reúne a antiguos compañeros de trabajo que, tras años en distintos departamentos y marcas, se unen bajo una misma idea y una forma de trabajar."
   schema={schema}
 >
   <section class="hero contenedor hero--simple">
     <AuroraFondo />
     <div class="hero-texto">
-      <span class="eyebrow"><span class="letra letra--sin">✦</span>Sobre nosotros · {SITIO.sedes.join(' · ')}</span>
-      <h1>Dos compañeros de trabajo, <em>una forma nueva de trabajar</em></h1>
-      <p class="lead">EOS Studio nace de dos compañeros que trabajaron juntos durante años, pasaron por varios departamentos y marcas, y decidieron unir lo aprendido en un servicio propio: marketing ordenado, claro y sin letra pequeña.</p>
+      <span class="eyebrow"><span class="letra letra--sin">✦</span>Sobre nosotros</span>
+      <h1>Antiguos compañeros, <em>una misma forma de trabajar</em></h1>
+      <p class="lead">EOS Studio reúne a un grupo de antiguos compañeros de trabajo. Pasamos años en distintos departamentos y marcas, y nos unimos bajo una misma idea y una forma de trabajar: marketing ordenado, claro y sin letra pequeña.</p>
     </div>
   </section>
 
@@ -65,9 +64,9 @@ const schema = {
   <section class="seccion seccion--piedra">
     <div class="contenedor">
       <div class="cabecera-seccion">
-        <span class="eyebrow"><span class="letra letra--sin">✦</span>Dos perfiles</span>
-        <h2>Dos perfiles <em>que se completan</em></h2>
-        <p class="lead">Uno se ocupa de que te encuentren; el otro, de que cada contacto tenga seguimiento y cada proyecto llegue a término. Coordinan cada trabajo y suman a los especialistas que tu negocio necesita.</p>
+        <span class="eyebrow"><span class="letra letra--sin">✦</span>El equipo</span>
+        <h2>Perfiles <em>que se completan</em></h2>
+        <p class="lead">Unos se ocupan de que te encuentren; otros, de que cada contacto tenga seguimiento y cada proyecto llegue a término. Cada trabajo tiene una persona de referencia que reúne a quien sabe hacer cada parte.</p>
       </div>
       <Personas />
     </div>

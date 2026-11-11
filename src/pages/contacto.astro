@@ -15,8 +15,8 @@ const pasos = [
 const schema = { '@context': 'https://schema.org', '@type': 'ContactPage', name: `Contacto · ${SITIO.nombre}`, url: `${BASE_URL}/contacto/` };
 ---
 <BaseLayout
-  title="Contacto | EOS Studio, agencia SEO en A Coruña y Valencia"
-  description="Cuéntanos tu proyecto: formulario, WhatsApp o una llamada de 30 minutos. EOS Studio, agencia de SEO, GEO y marketing en A Coruña y Valencia."
+  title="Contacto | EOS Studio, agencia de SEO, GEO y marketing"
+  description="Cuéntanos tu proyecto: formulario, WhatsApp o una llamada de 30 minutos. EOS Studio, agencia de SEO, GEO y marketing para toda España."
   schema={schema}
 >
   <section class="hero contenedor contacto">
@@ -58,7 +58,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'ContactPage', name:
           </li>
         )}
       </ul>
-      <p class="sedes"><span>Sedes</span> {SITIO.sedes.join(' · ')}</p>
+      <p class="sedes"><span>Dónde</span> En remoto para {SITIO.ambito}</p>
     </div>
 
     <div class="tarjeta form-caja">

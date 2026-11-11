@@ -25,7 +25,7 @@ export interface Persona {
 
 // TEMPORAL: mientras sea true, la web no muestra nombres, iniciales, LinkedIn ni
 // correos personales de los fundadores (ni en Sobre nosotros, ni en el inicio, ni en
-// los datos estructurados, ni en llms.txt). Se mantienen sedes, especialidades y
+// los datos estructurados, ni en llms.txt), ni sus ciudades. Se mantienen especialidades y
 // certificaciones. Para volver a mostrarlos: poner false.
 export const EQUIPO_ANONIMO = true;
 

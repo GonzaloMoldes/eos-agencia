@@ -80,7 +80,7 @@ const limpiar = (s) => s.replace(/<(?!\/?em\b)[^>]+>/g, '').replace(/\s+/g, ' ')
       <div class="texto">
         <div class="logo">${sol().replace('__W', '44').replace('__H', '30')}<b>EOS</b><i>Studio</i></div>
         <div><p class="ante">${ante}</p><h1 style="--t:${tam}px">${h1}</h1></div>
-        <p class="pie">eosstudio.es · A Coruña · Valencia</p>
+        <p class="pie">eosstudio.es</p>
       </div>
       <div class="escena">${escena}</div></body>`);
     await pagina.goto('file://' + tmp);

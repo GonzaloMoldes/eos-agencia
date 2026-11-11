@@ -56,7 +56,7 @@ export const LANDINGS: Landing[] = [
     hero: {
       antetitulo: 'SEO y GEO con método de gran marca',
       h1: 'Agencia SEO y GEO <em>para que te encuentren y te elijan</em>',
-      entrada: 'Somos antiguos colegas de los equipos de marketing de grandes marcas. Trabajamos desde A Coruña y Valencia para toda España. Lo que cambia entre una agencia y otra no son las promesas: es qué hacen cada mes con tu web y si te lo cuentan.',
+      entrada: 'Somos antiguos colegas de los equipos de marketing de grandes marcas. Trabajamos en remoto para empresas de toda España. Lo que cambia entre una agencia y otra no son las promesas: es qué hacen cada mes con tu web y si te lo cuentan.',
       datos: [
         { t: 'Desde 690 €/mes', d: 'precio publicado y sin permanencia' },
         { t: 'Informe y reunión', d: 'cada mes, con lo hecho y lo que viene' },
@@ -100,7 +100,7 @@ export const LANDINGS: Landing[] = [
         { t: 'Medición montada', d: 'Configuramos GA4 y Search Console y te dejamos un panel con lo que importa: visitas que acaban en contacto o en venta.' },
         { t: 'Contenidos que trabajan', d: 'Proponemos y redactamos los contenidos, y ordenamos el enlazado interno para que las páginas clave ganen fuerza.' },
         { t: 'Tus cuentas, a tu nombre', d: 'Datos, accesos y herramientas siempre bajo tu control. Nuestros honorarios por un lado; licencias de terceros, por otro.' },
-        { t: 'Para toda España', d: 'Desde A Coruña y Valencia, con reuniones por videollamada y todo lo importante por escrito.' },
+        { t: 'Para toda España', d: 'En remoto, con reuniones por videollamada y todo lo importante por escrito.' },
       ],
     },
     cuesta: {
@@ -127,7 +127,7 @@ export const LANDINGS: Landing[] = [
         { p: '¿Qué necesitáis de mí para empezar?', r: 'Acceso a tu web, a Google Search Console y a Analytics. Si no los tienes configurados, te los montamos nosotros.' },
         { p: '¿Y si mi presupuesto es menor?', r: 'Te lo decimos y no te hacemos perder el tiempo: por eso los precios están escritos y el formulario pregunta por la inversión. Si tienes un negocio local, el SEO Local Start (240 € de pago único) puede ser un buen punto de partida.' },
         { p: '¿Puedo contratar solo la auditoría?', r: 'Sí. La Auditoría SEO Completa va desde 1.290 € de pago único, con su documento de hallazgos priorizado y una hoja de ruta a 6-12 meses. No obliga a contratar nada después.' },
-        { p: '¿Trabajáis fuera de A Coruña y Valencia?', r: 'Sí. Tenemos sede en las dos ciudades y trabajamos para empresas de toda España por videollamada.' },
+        { p: '¿Trabajáis con empresas de toda España?', r: 'Sí. Trabajamos en remoto para empresas de cualquier zona, con reuniones por videollamada.' },
       ],
     },
     cierre: {

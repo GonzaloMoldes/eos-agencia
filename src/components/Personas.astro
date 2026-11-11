@@ -16,7 +16,7 @@ const { compacto = false } = Astro.props;
         <span class="retrato-sol"></span>
       </div>
       <div class="persona-texto">
-        <p class="persona-sede">{p.sede}</p>
+        {!anon && <p class="persona-sede">{p.sede}</p>}
         <h3>{anon ? p.perfil : p.nombre}</h3>
         <p class="persona-cargo">{anon ? p.cargo.replace(/^Cofundadora?\s·\s/, '') : p.cargo}</p>
         {!compacto && p.especialidades.length > 0 && <ul class="chips">{p.especialidades.map((e) => <li>{e}</li>)}</ul>}

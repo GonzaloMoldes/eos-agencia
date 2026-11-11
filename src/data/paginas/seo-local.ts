@@ -33,9 +33,9 @@ export const pagina: PaginaServicio = {
     },
     {
       tipo: 'zona',
-      titulo: 'SEO local en Valencia <em>y alrededores</em>',
+      titulo: 'SEO local <em>en tu zona</em>',
       parrafos: [
-        'Trabajamos la presencia local de empresas que quieren llegar a clientes de Valencia y de las zonas donde realmente ofrecen sus servicios. El área prioritaria depende de tu ubicación, tu tipo de negocio y la competencia.',
+        'Trabajamos la presencia local de empresas que quieren llegar a clientes de su ciudad y de las zonas donde realmente ofrecen sus servicios. El área prioritaria depende de tu ubicación, tu tipo de negocio y la competencia.',
         'Si prestas servicio en varios municipios, definimos contigo qué zonas tiene sentido trabajar y qué páginas o contenidos ayudan a explicarlo con claridad.',
       ],
     },

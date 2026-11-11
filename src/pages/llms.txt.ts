@@ -13,13 +13,13 @@ export async function GET() {
 
 > ${SITIO.descripcion}
 
-EOS Studio es una agencia de marketing digital con sede en ${SITIO.ciudad} (España). Contacto: ${SITIO.email} · WhatsApp +${SITIO.whatsapp}
+EOS Studio es una agencia de marketing digital que trabaja en remoto para empresas de ${SITIO.ambito}. Contacto: ${SITIO.email} · WhatsApp +${SITIO.whatsapp}
 
-## Fundadores
+## Equipo
 
-Fundada por dos compañeros de trabajo que, tras años en distintos departamentos y marcas, crearon un servicio propio:
+Un grupo de antiguos compañeros de trabajo que, tras años en distintos departamentos y marcas, se unen bajo una misma idea y una forma de trabajar. Perfiles del equipo:
 
-${EQUIPO.map((p) => EQUIPO_ANONIMO ? `- ${p.perfil} (${p.sede}): ${p.especialidades.join(', ')}` : `- ${p.nombre} (${p.cargo}, ${p.sede}): ${p.linkedin}`).join('\n')}
+${EQUIPO.map((p) => EQUIPO_ANONIMO ? `- ${p.perfil}: ${p.especialidades.join(', ')}` : `- ${p.nombre} (${p.cargo}, ${p.sede}): ${p.linkedin}`).join('\n')}
 
 ## Servicios
 

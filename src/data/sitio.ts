@@ -4,10 +4,10 @@ export const SITIO = {
   nombre: 'EOS Studio',
   url: 'https://www.eosstudio.es',
   email: 'hola@eosstudio.es',
-  sedes: ['A Coruña', 'Valencia'],
-  ciudad: 'A Coruña y Valencia',
+  // Sin ciudades en la web: trabajamos en remoto para toda España.
+  ambito: 'toda España',
   descripcion:
-    'Agencia de SEO, GEO y marketing con sede en A Coruña y Valencia. Posicionamiento en Google y en la IA, autoridad digital, marketing automation y CRM para que tu marca amanezca en cada búsqueda.',
+    'Agencia de SEO, GEO y marketing para empresas de toda España. Posicionamiento en Google y en la IA, autoridad digital, marketing automation y CRM para que tu marca amanezca en cada búsqueda.',
 
   // WhatsApp: número en formato internacional, sin «+» ni espacios.
   whatsapp: '34671887372',

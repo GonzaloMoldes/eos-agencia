@@ -10,7 +10,7 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
   <div class="contenedor pie-in">
     <div class="pie-marca">
       <Logo claro />
-      <p>Agencia de SEO, GEO y marketing en {SITIO.ciudad}. Cada mañana, Eos abre las puertas del día. Nosotros abrimos las de tu marca en Google y en la IA.</p>
+      <p>Agencia de SEO, GEO y marketing para empresas de {SITIO.ambito}. Cada mañana, Eos abre las puertas del día. Nosotros abrimos las de tu marca en Google y en la IA.</p>
       <div class="pie-botones">
         <a class="btn btn--aurora" href="/contacto/">Hablemos <span class="flecha">→</span></a>
         <a class="btn pie-wa" href={whatsappUrl()} target="_blank" rel="noopener"><Iconos nombre="whatsapp" tam={18} /> {SITIO.whatsappVisible}</a>
@@ -33,12 +33,10 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
         <li><a href="/contacto/">Contacto</a></li>
         <li><a href={`mailto:${SITIO.email}`}>{SITIO.email}</a></li>
       </ul>
-      <p class="pie-titulo pie-sedes-t">Sedes</p>
-      <p class="pie-sedes">{SITIO.sedes.join(' · ')}</p>
     </nav>
   </div>
   <div class="contenedor pie-legal">
-    <span>© {new Date().getFullYear()} {SITIO.nombre} · {SITIO.sedes.join(' · ')}</span>
+    <span>© {new Date().getFullYear()} {SITIO.nombre} · En remoto para {SITIO.ambito}</span>
     <nav class="pie-legales" aria-label="Legal">
       <a href="/legal/aviso-legal/">Aviso legal</a>
       <a href="/legal/privacidad/">Privacidad</a>
@@ -60,8 +58,6 @@ import { PUBLICADOS, urlServicio } from '../data/servicios';
   .pie-botones{display:flex;flex-wrap:wrap;gap:10px;}
   .pie-wa{display:inline-flex;gap:8px;border-color:rgba(255,255,255,.2);color:#EDE3DA;padding:14px 22px;}
   .pie-wa:hover{border-color:#25D366;color:#fff;}
-  .pie-sedes-t{margin-top:26px;}
-  .pie-sedes{color:#EDE3DA;}
   .pie-legales{display:flex;gap:18px;flex-wrap:wrap;}
   .pie-legales a{color:#CDBFB4;text-decoration:none;}
   .pie-legales a:hover{color:var(--azafran);}
