@@ -29,7 +29,7 @@ export interface Extra {
   nota?: string;
 }
 
-export type Bloque =
+export type Bloque = (
   | { tipo: 'problema'; titulo: string; intro?: string; puntos: string[] }
   | { tipo: 'enfoque'; titulo: string; intro?: string; items: Item[] }
   | { tipo: 'paraQuien'; titulo: string; intro?: string; puntos: string[] }
@@ -43,7 +43,8 @@ export type Bloque =
   | { tipo: 'logros'; titulo: string; items: Item[]; cta?: string }
   | { tipo: 'formula'; titulo: string; texto: string; formula: string[]; resultado: string; cierre: string; cta?: string }
   | { tipo: 'ayuda'; titulo: string; items: Item[] }
-  | { tipo: 'cta'; titulo: string; texto: string; boton: string; nota?: string };
+  | { tipo: 'cta'; titulo: string; texto: string; boton: string; nota?: string }
+) & { etiqueta?: string }; // etiqueta: sustituye el antetítulo por defecto del bloque
 
 export interface PaginaServicio {
   slug: string;

@@ -167,6 +167,7 @@ export const pagina: PaginaServicio = {
     },
     {
       tipo: 'garantias',
+      etiqueta: 'En qué te ayudamos',
       titulo: '¿En qué te <em>podemos ayudar</em>?',
       puntos: [
         { t: 'Auditorías SEO', d: 'diagnóstico profundo de la salud de tu sitio web.' },

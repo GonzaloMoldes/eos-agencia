@@ -56,7 +56,7 @@ const letra = () => LETRAS[n++ % LETRAS.length];
   </section>
 
   {pagina.bloques.map((b) => {
-    const eti = ETIQUETAS[b.tipo];
+    const eti = b.etiqueta || ETIQUETAS[b.tipo];
     const cab = (centro = false) => (
       <div class:list={['cabecera-seccion', { 'cabecera-seccion--centro': centro }]}>
         <span class="eyebrow"><span class="letra">{letra()}</span>{eti}</span>

@@ -37,7 +37,7 @@ export const CATEGORIAS: Record<Categoria, { nombre: string; letra: string; desc
 export const SERVICIOS: Servicio[] = [
   { slug: 'seo-geo-valencia', nombre: 'SEO y GEO en Valencia', resumen: 'Posicionamiento en Google y en buscadores de IA para que te encuentren y te elijan.', categoria: 'posicionamiento', publicado: true },
   { slug: 'seo-local', nombre: 'SEO local', resumen: 'Google Business Profile, reseñas y búsquedas «cerca de mí» en tu zona.', categoria: 'posicionamiento', publicado: true },
-  { slug: 'seo-ecommerce', nombre: 'SEO para ecommerce', resumen: 'Categorías, fichas de producto y arquitectura que venden.', categoria: 'posicionamiento', publicado: false },
+  { slug: 'seo-ecommerce', nombre: 'SEO y GEO para ecommerce', resumen: 'Categorías y fichas de producto en Google y en las respuestas de la IA.', categoria: 'posicionamiento', publicado: true },
   { slug: 'seo-youtube', nombre: 'SEO para YouTube', resumen: 'Canal y vídeos optimizados para el segundo buscador del mundo.', categoria: 'posicionamiento', publicado: true },
   { slug: 'seo-pinterest', nombre: 'SEO para Pinterest', resumen: 'Pines y tableros que captan tráfico durante meses.', categoria: 'posicionamiento', publicado: false },
   { slug: 'chatgpt-ads', nombre: 'ChatGPT Ads', resumen: 'Publicidad en asistentes de IA, medida desde el primer euro.', categoria: 'posicionamiento', publicado: false },

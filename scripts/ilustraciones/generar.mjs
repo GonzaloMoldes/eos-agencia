@@ -66,6 +66,22 @@ const ESCENAS = {
     A.bocadillo({ x: 450, y: 60, texto: ['Y citada', 'por la IA'], i: 1, icono: 'sol', suave: true, cola: 'der' }),
   ),
 
+  // SEO y GEO para ecommerce: la tienda online vende y la IA la recomienda.
+  'seo-ecommerce': () => svg(
+    'Ilustración: la dueña de una tienda online celebra junto a su escaparate mientras las columnas de ventas crecen y una consultora le enseña los pedidos en la tablet',
+    fondo() +
+    A.aurora(470, 470, 90) +
+    A.suelo(360, 486, 660) +
+    A.tienda(250, 476, 0.95) +
+    A.columna(430, 470, 100, 34, 'esc-crece') + A.columna(486, 470, 150, 34, 'esc-crece esc-c2') + A.columna(542, 470, 205, 34, 'esc-crece esc-c3') +
+    A.moneda(486, 190, '€', 0) + A.moneda(600, 150, '€', 1) + A.destello(410, 230, 0.6, 1) +
+    personaje(dafne, { x: 92, y: 488, mira: 1, brazoDel: 'arriba', brazoTra: 'cadera', respira: 0.3 }) +
+    personaje(AU, { x: 640, y: 486, mira: -1, brazoDel: 'sostieneAlto', brazoTra: 'cadera', respira: 0,
+      accesorio: ({ mano }) => A.tablet(mano[0] - 6, mano[1] - 18, 0.75, 'grafico') }) +
+    A.bocadillo({ x: 30, y: 50, texto: ['+ pedidos'], i: 0, icono: 'check' }) +
+    A.bocadillo({ x: 440, y: 50, texto: ['Recomendada', 'por la IA'], i: 1, icono: 'sol', suave: true, cola: 'der' }),
+  ),
+
   // SEO local: la tienda de barrio y el pin de Maps.
   'seo-local': () => svg(
     'Ilustración: la dueña de un comercio saluda en la puerta mientras un gran pin de mapa con una estrella marca su tienda y una consultora le enseña las reseñas en el móvil',
