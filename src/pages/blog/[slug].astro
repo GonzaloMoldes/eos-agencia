@@ -6,6 +6,9 @@ import { entradas, TIPOS, minutosLectura, fechaLarga, type Entrada } from '../..
 import { EQUIPO, EQUIPO_ANONIMO } from '../../data/equipo';
 import { SERVICIOS, urlServicio } from '../../data/servicios';
 import { BASE_URL } from '../../lib/seo';
+import DescargaRecurso from '../../components/DescargaRecurso.astro';
+import Faq from '../../components/Faq.astro';
+import { recurso as buscarRecurso } from '../../data/recursos';
 
 export async function getStaticPaths() {
   const lista = await entradas();
@@ -16,6 +19,7 @@ const { Content, headings } = await render(entrada);
 const d = entrada.data;
 const autor = EQUIPO_ANONIMO ? undefined : EQUIPO.find((p) => p.nombre === d.autor);
 const servicio = d.servicio ? SERVICIOS.find((s) => s.slug === d.servicio && s.publicado) : undefined;
+const rec = buscarRecurso(d.recurso);
 const otras = lista.filter((e) => e.id !== entrada.id).slice(0, 2);
 const indice = headings.filter((h) => h.depth === 2);
 const url = `${BASE_URL}/blog/${entrada.id}/`;
@@ -49,6 +53,7 @@ const schema = {
         {d.actualizado && <>{' · actualizado el '}<time datetime={d.actualizado.toISOString()}>{fechaLarga(d.actualizado)}</time></>}
         {` · ${minutosLectura(entrada.body)} min de lectura`}
       </p>
+      {rec && <p><a class="btn btn--aurora" href="#descarga">Descarga gratis: {rec.titulo} <span class="flecha">→</span></a></p>}
     </div>
   </section>
 
@@ -60,9 +65,14 @@ const schema = {
           <ol>{indice.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
         </nav>
       )}
-      <article class="prosa-larga"><Content /></article>
+      <article class="prosa-larga">
+        <Content />
+        {rec && <DescargaRecurso recurso={rec} />}
+      </article>
     </div>
   </section>
+
+  {d.faq.length > 0 && <Faq titulo="Preguntas frecuentes" preguntas={d.faq} letra="✦" />}
 
   <section class="seccion seccion--piedra">
     <div class="contenedor cierre">

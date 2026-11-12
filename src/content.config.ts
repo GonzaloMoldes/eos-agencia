@@ -17,6 +17,9 @@ const blog = defineCollection({
     etiquetas: z.array(z.string()).default([]),
     servicio: z.string().optional(),   // slug de servicio relacionado (enlaza al final)
     borrador: z.boolean().default(false),
+    recurso: z.string().optional(),    // id de src/data/recursos.ts: muestra el recuadro de descarga
+    // Preguntas frecuentes al final del artículo (con su schema FAQPage)
+    faq: z.array(z.object({ p: z.string(), r: z.string() })).default([]),
   }),
 });
 

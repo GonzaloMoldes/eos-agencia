@@ -1,0 +1,126 @@
+---
+// Recuadro de descarga de un recurso (lead magnet): vista previa, qué incluye y
+// formulario corto. Al enviarlo, /api/contacto/ registra el lead, le manda el
+// enlace por correo y devuelve la URL: aquí aparece el botón de descarga.
+import type { Recurso } from '../data/recursos';
+export interface Props { recurso: Recurso }
+const { recurso: r } = Astro.props;
+---
+<section class="descarga" id="descarga" aria-labelledby="descarga-t">
+  <div class="descarga-vista">
+    <img src={r.imagen} alt={`Vista previa: ${r.titulo}`} width="1200" height="640" loading="lazy" decoding="async">
+  </div>
+  <div class="descarga-texto">
+    <p class="descarga-ante">Descarga gratuita</p>
+    <h2 id="descarga-t">{r.titulo}</h2>
+    <p class="descarga-sub">{r.subtitulo}</p>
+    <ul class="lista-sol">{r.incluye.map((x) => <li>{x}</li>)}</ul>
+
+    <form class="descarga-form" data-recurso={r.id} novalidate>
+      <div class="df-fila">
+        <label><span>Nombre <b aria-hidden="true">*</b></span><input name="nombre" autocomplete="name" required></label>
+        <label><span>Correo <b aria-hidden="true">*</b></span><input name="email" type="email" autocomplete="email" required></label>
+      </div>
+      <label><span>Empresa <small>(opcional)</small></span><input name="empresa" autocomplete="organization"></label>
+      <label class="df-trampa" aria-hidden="true">No rellenar <input name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="df-consent"><input type="checkbox" name="consent" required>
+        <span>Acepto la <a href="/legal/privacidad/">política de privacidad</a> y que EOS Studio me envíe el kit por correo. <b aria-hidden="true">*</b></span></label>
+      <label class="df-consent"><input type="checkbox" name="novedades" value="Sí">
+        <span>Quiero recibir de vez en cuando consejos de marketing de EOS Studio (opcional; puedo darme de baja cuando quiera).</span></label>
+      <button class="btn btn--aurora" type="submit">Descargar el kit gratis <span class="flecha">→</span></button>
+      <p class="df-estado" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="descarga-ok" hidden>
+      <p class="descarga-ok-t">¡Listo! Aquí tienes tu kit.</p>
+      <a class="btn btn--tinta" href="#" download data-descarga>Descargar ahora (.zip) <span class="flecha">→</span></a>
+      <p class="descarga-ok-n">También te lo hemos enviado por correo. Empieza por la guía en PDF: en 10 minutos lo tienes funcionando.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .descarga{margin:48px 0;display:grid;grid-template-columns:minmax(0,1fr);gap:0;background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;box-shadow:var(--sombra);scroll-margin-top:110px;}
+  .descarga-vista{background:linear-gradient(180deg,#F8E6DE,#F4F1EB);padding:22px 22px 0;}
+  .descarga-vista img{width:100%;height:auto;display:block;}
+  .descarga-texto{padding:26px 28px 30px;display:grid;gap:14px;}
+  .descarga-ante{font-family:var(--etiqueta);letter-spacing:.14em;color:var(--terracota);font-size:.85rem;margin:0;}
+  .descarga h2{font-size:clamp(1.9rem,3.4vw,2.4rem);margin:0;}
+  .descarga-sub{color:var(--tinta-2);margin:0;}
+  .descarga .lista-sol{gap:8px;font-size:.95rem;}
+  .descarga-form{display:grid;gap:12px;margin-top:6px;}
+  .descarga-form[hidden]{display:none;}
+  .descarga .btn{text-decoration:none;}
+  .descarga .btn--tinta{color:#FBF4E8;}
+  .descarga .btn--aurora{color:var(--tinta);}
+  .df-fila{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media (max-width:600px){ .df-fila{grid-template-columns:1fr;} .descarga-texto{padding:22px 18px 26px;} }
+  .descarga-form label{display:grid;gap:6px;font-size:.88rem;font-weight:500;color:var(--tinta-2);}
+  .descarga-form label b{color:var(--terracota);}
+  .descarga-form small{font-weight:400;color:var(--tinta-3);}
+  .descarga-form input:not([type=checkbox]){font:inherit;font-size:1rem;color:var(--tinta);padding:12px 14px;border:1px solid var(--linea-2);border-radius:12px;background:#fff;width:100%;}
+  .descarga-form input:focus{outline:2px solid var(--aurora);outline-offset:1px;border-color:transparent;}
+  .descarga-form [aria-invalid="true"]{border-color:#B3261E;}
+  .df-trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .df-consent{display:flex !important;align-items:flex-start;gap:10px !important;font-weight:400 !important;font-size:.84rem !important;}
+  .df-consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--aurora);flex:none;}
+  .descarga-form button{justify-self:start;}
+  .descarga-form button[disabled]{opacity:.6;cursor:wait;}
+  .df-estado{font-size:.92rem;min-height:1.3em;margin:0;}
+  .df-estado.mal{color:#B3261E;}
+  .descarga-ok[hidden]{display:none;}
+  .descarga-ok{display:grid;gap:12px;justify-items:start;border-top:1px solid var(--linea);padding-top:16px;}
+  .descarga-ok-t{font-family:var(--serif);font-size:1.6rem;color:var(--tinta);margin:0;}
+  .descarga-ok-n{color:var(--tinta-2);font-size:.92rem;margin:0;}
+</style>
+
+<script>
+  // Origen de la visita (utm_*, gclid…), igual que en el resto de formularios.
+  const CLAVES = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'msclkid'];
+  const q = new URLSearchParams(location.search);
+  const visto = CLAVES.filter((k) => q.get(k)).map((k) => `${k}=${q.get(k)!.slice(0, 120)}`).join(' · ');
+  let origen = '';
+  try {
+    if (visto) sessionStorage.setItem('eos_origen', `${visto} · entrada ${location.pathname}`);
+    origen = sessionStorage.getItem('eos_origen') || '';
+    if (!origen && document.referrer && !document.referrer.startsWith(location.origin)) origen = `referer=${new URL(document.referrer).hostname}`;
+  } catch { origen = visto; }
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form.descarga-form')) {
+    const caja = form.closest('.descarga')!;
+    const estado = form.querySelector<HTMLElement>('.df-estado')!;
+    const boton = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      estado.className = 'df-estado';
+      let primero: HTMLElement | null = null;
+      for (const el of form.querySelectorAll<HTMLInputElement>('[required]')) {
+        const malo = el.type === 'checkbox' ? !el.checked : !el.value.trim() || (el.type === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value.trim()));
+        el.setAttribute('aria-invalid', String(malo));
+        if (malo && !primero) primero = el;
+      }
+      if (primero) { estado.textContent = 'Revisa los campos marcados: faltan datos o el correo no es válido.'; estado.classList.add('mal'); primero.focus(); return; }
+      const datos: Record<string, unknown> = Object.fromEntries(new FormData(form));
+      Object.assign(datos, { consent: true, tipo: 'recurso', recurso: form.dataset.recurso, pagina: location.pathname, origen });
+      boton.disabled = true;
+      estado.textContent = 'Preparando tu descarga…';
+      try {
+        const r = await fetch('/api/contacto/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j.url) throw new Error(String(r.status));
+        window.eosEvento?.('generate_lead', { form_tipo: 'recurso', recurso: form.dataset.recurso, pagina: location.pathname });
+        const enlace = caja.querySelector<HTMLAnchorElement>('[data-descarga]')!;
+        enlace.href = j.url;
+        enlace.addEventListener('click', () => window.eosEvento?.('descarga_recurso', { recurso: form.dataset.recurso }), { once: true });
+        form.hidden = true;
+        caja.querySelector<HTMLElement>('.descarga-ok')!.hidden = false;
+        enlace.focus();
+      } catch {
+        estado.innerHTML = 'No hemos podido preparar la descarga. Escríbenos a <a href="mailto:hola@eosstudio.es">hola@eosstudio.es</a> y te lo enviamos.';
+        estado.classList.add('mal');
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  }
+</script>
